@@ -1,1 +1,1 @@
-java -cp target/propaganda-0.1.1.1-SNAPSHOT-jexec.jar propaganda.appl.ServerAppl "$@"
+java -cp target/propaganda-0.1.1.1-jexec.jar propaganda.appl.ServerAppl "$@"
