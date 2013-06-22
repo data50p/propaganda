@@ -1,1 +1,1 @@
-java -cp target/propaganda-0.1.1.1-jexec.jar propaganda.appl.MqttDemo
+java -cp target/propaganda-0.1.2.0-SNAPSHOT-jexec.jar com.femtioprocent.propaganda.appl.MqttDemo
