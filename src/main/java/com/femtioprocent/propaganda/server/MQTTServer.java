@@ -28,7 +28,7 @@ import com.femtioprocent.propaganda.data.AddrType;
 import com.femtioprocent.propaganda.data.Datagram;
 import static com.femtioprocent.propaganda.server.HttpWSServer.server;
 
-public class HttpMQTTServer {
+public class MQTTServer {
 
     static int cnt = 1;
     static PropagandaServer server;
@@ -46,7 +46,7 @@ public class HttpMQTTServer {
     }
     MqttClient mqttClient;
 
-    public HttpMQTTServer(PropagandaServer server) {
+    public MQTTServer(PropagandaServer server) {
         this.server = server;
         startMqttBroker();
         mqttClient = new MqttClient();
@@ -59,7 +59,7 @@ public class HttpMQTTServer {
                 final Message receive = connection.receive(100, TimeUnit.MILLISECONDS);
                 if (receive != null) {
                     List<Datagram> dgrList = createDatagrams(receive);
-                    System.out.println("HttpMQTTServer: got(mqtt) " + dgrList);
+                    System.out.println("MQTTServer: got(mqtt) " + dgrList);
                     for (Datagram dgr : dgrList) {
                         server.dispatcher.dispatchMsg(connector, dgr);
                     }
@@ -68,12 +68,12 @@ public class HttpMQTTServer {
                 final Datagram recvMsg = connector.recvMsg(100);
                 if (recvMsg != null) {
                     final AddrType r = recvMsg.getReceiver();
-                    System.out.println("HttpMQTTServer: got(p) " + "propaganda-" + r.getName() + ' ' + recvMsg);
+                    System.out.println("MQTTServer: got(p) " + "propaganda-" + r.getName() + ' ' + recvMsg);
                     connection.publish("propaganda-" + r.getName(), recvMsg.getMessage().getText().getBytes("utf-8"), QoS.AT_MOST_ONCE, true);
                 }
             }
         } catch (Exception ex) {
-            Logger.getLogger(HttpMQTTServer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MQTTServer.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
             connection.disconnect();
@@ -84,7 +84,7 @@ public class HttpMQTTServer {
     public void start(PropagandaServer server) throws Exception {
         try {
             String mqConnectUrl = "tcp://localhost:1883";
-            System.out.println("HttpMQTTServer: connecting to " + mqConnectUrl);
+            System.out.println("MQTTServer: connecting to " + mqConnectUrl);
             mqtt.setHost(mqConnectUrl);
             mqtt.setClientId(new UTF8Buffer("propaganda"));
             connection = mqtt.blockingConnection();
@@ -92,9 +92,9 @@ public class HttpMQTTServer {
             //connection.publish("propaganda-io", ". @ register;request-id mqtt-1@MQTT".getBytes("utf-8"), QoS.AT_MOST_ONCE, true);
             //connection.publish("propaganda-register", "mqtt-1".getBytes("utf-8"), QoS.AT_MOST_ONCE, true);
             connection.subscribe(new Topic[]{new Topic("propaganda", QoS.AT_MOST_ONCE), new Topic("propaganda-i", QoS.AT_MOST_ONCE), new Topic("propaganda-i", QoS.AT_MOST_ONCE), new Topic("propaganda-io", QoS.AT_MOST_ONCE)});
-            System.out.println("HttpMQTTServer, MQTT bridge: subscribe topic propaganda");
+            System.out.println("MQTTServer, MQTT bridge: subscribe topic propaganda");
         } catch (URISyntaxException ex) {
-            Logger.getLogger(HttpMQTTServer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MQTTServer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     AtomicInteger i_cnt = new AtomicInteger();
@@ -121,27 +121,27 @@ public class HttpMQTTServer {
             list.add(d);
             list.add(d2);
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(HttpMQTTServer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MQTTServer.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
 
     void startMqttBroker() {
-        if (Appl.flags.containsKey("MB")) {
+        if (false && Appl.flags.containsKey("MB")) {
             try {
                 String[] args = {};
                 // unsupported org.dna.mqtt.moquette.server.Server.main(args);
-                //System.out.println("HttpMQTTServer: moquette started");
+                //System.out.println("MQTTServer: moquette started");
                 //Thread.sleep(2000);
 
 //            } catch (IOException ex) {
-//                Logger.getLogger(HttpMQTTServer.class.getName()).log(Level.SEVERE, null, ex);
+//                Logger.getLogger(MQTTServer.class.getName()).log(Level.SEVERE, null, ex);
 //            } catch (InterruptedException ex) {
-//                Logger.getLogger(HttpMQTTServer.class.getName()).log(Level.SEVERE, null, ex);
+//                Logger.getLogger(MQTTServer.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
 	    }
         } else {
-              System.out.println("HttpMQTTServer: no moquette broker here");            
+              System.out.println("MQTTServer: no moquette broker here");            
         }
     }
 }

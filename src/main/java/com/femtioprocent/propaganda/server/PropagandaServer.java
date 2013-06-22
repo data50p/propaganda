@@ -180,10 +180,6 @@ public class PropagandaServer {
                 public void run() {
                     try {
                         for (;;) {
-//                            Connector_Plain.initListen(port);
-//                            Socket so = Connector_Plain.acceptClient();
-//                            Connector_Plain connector_plain = (Connector_Plain) PropagandaConnectorFactory.create("Plain", "plain-" + cnt.incrementAndGet(), PropagandaServer.this, null);
-//                            connector_plain.serve(so);
                             HttpWSServer.start(PropagandaServer.this);
                             break;
                         }
@@ -212,11 +208,7 @@ public class PropagandaServer {
                 public void run() {
                     try {
                         for (;;) {
-//                            Connector_Plain.initListen(port);
-//                            Socket so = Connector_Plain.acceptClient();
-//                            Connector_Plain connector_plain = (Connector_Plain) PropagandaConnectorFactory.create("Plain", "plain-" + cnt.incrementAndGet(), PropagandaServer.this, null);
-//                            connector_plain.serve(so);
-                            HttpMQTTServer s = new HttpMQTTServer(PropagandaServer.this);
+                            MQTTServer s = new MQTTServer(PropagandaServer.this);
                             s.start(PropagandaServer.this);
                             for(;;)
                                 s.processMqttPayload();
