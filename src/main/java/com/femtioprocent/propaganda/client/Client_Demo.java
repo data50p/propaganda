@@ -15,6 +15,7 @@ import com.femtioprocent.propaganda.data.MessageType;
 import com.femtioprocent.propaganda.exception.PropagandaException;
 import com.femtioprocent.propaganda.server.PropagandaServer;
 import com.femtioprocent.fpd.sundry.S;
+import java.util.Random;
 
 
 public class Client_Demo extends PropagandaClient
@@ -45,8 +46,9 @@ public class Client_Demo extends PropagandaClient
 			AddrType receiver_at = createAddrType("*@DEMO");
 
 			int cnt = 0;
+                        Random rand = new Random();
 			for(;;) {
-			    S.m_sleep(S.rand(cnt == 0 ? 2000 : 20000));
+			    S.m_sleep(rand.nextInt(cnt == 0 ? 2000 : 20000));
 			    sendMsg(new Datagram(getDefaultAddrType(), receiver_at, new Message("hello-" + name + '-' + cnt++)));
 			}
 		    }

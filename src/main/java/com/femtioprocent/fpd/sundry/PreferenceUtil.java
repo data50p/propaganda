@@ -104,6 +104,5 @@ public class PreferenceUtil {
 	hm.put(args[0], args[1]);
 	pu.save("test_obj", hm);
 	S.pL("saved " + hm);
-	S.flush();
     }
 }

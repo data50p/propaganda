@@ -29,7 +29,7 @@ public class Client_Status extends PropagandaClient
 		{
 		    while ( connector == null ) {
 			S.m_sleep(1000);
-			S.pe_(".");
+			System.err.print(".");
 		    }
 		    
 		    for(;;) {
