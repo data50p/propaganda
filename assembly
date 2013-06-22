@@ -1,0 +1,2 @@
+mvn assembly:assembly
+#cp -p target/propaganda-1.0.0-SNAPSHOT-jexec.jar ../invoke
