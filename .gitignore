@@ -4,3 +4,13 @@
 *.jar
 *.war
 *.ear
+
+/src/main/java/com/femtioprocent/propaganda/Version.java
+dist
+build
+*~
+logs
+derby.log
+.DS_Store
+#.build_number
+target/
