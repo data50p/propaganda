@@ -1,14 +1,5 @@
-propaganda
-==========
-
-Propaganda is a messaging system.
-
-mvn clean install assembly:assembly
-
--------------------------------
-
 Connecting via socket
----------------------
+=====================
 
 Step 1)
 
@@ -30,27 +21,27 @@ where <myId> is your unique id. Expect a response like:
 
 Step 4)
 
-Send a message server and read the response.
+Send another request to server and read the response.
 
+Send:
 	_ *@DEMO ;This is my message
 
 All other registred on @DEMO will reveive the message (including yourself):
 
-	aa@DEMO *@DEMO plain 1334489087597;This is my message
+	aa@DEMO <other-id>@DEMO plain 1334489087597;This is my message
 
 
-Note
-=====
+Note:
 
-* Each message is only ONE line of text.
+	Each message is only ONE line of text.
 
-* Message consist of: <envelop>;<message-text>
+	Message consist of: <envelop>;<message-text>
 
-* envelop consit of: <sender-address> <receiver-address> [timestamp]
+	envelop consit of: <sender-address> <receiver-address> [timestamp]
 
-* sender/receiver-address: <uniq-id>@<group>
+	sender/receiver-address: <uniq-id>@<group>
 
-* special address:
+	special address:
 			@ -> the message system it self
 			*@<group> -> all in the group
 			. -> anonymous
