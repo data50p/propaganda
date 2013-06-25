@@ -115,24 +115,47 @@
             <artifactId>mqtt-client</artifactId>
             <version>1.5</version>
         </dependency>
-<!-- - ->
-        <dependency>
-   		<groupId>org.dna.mqtt</groupId>
-    		<artifactId>moquette-broker</artifactId>
-    		<version>0.1</version>
-        </dependency>
-<!- - -->
+        <!-- - ->
+                <dependency>
+                        <groupId>org.dna.mqtt</groupId>
+                        <artifactId>moquette-broker</artifactId>
+                        <version>0.1</version>
+                </dependency>
+        <!- - -->
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>ingot2</id>
+            <properties>
+                <artifactory.host>http://repo.got2.androtech.se:8081</artifactory.host>
+            </properties>
+        </profile>
+        <profile>
+            <id>togot2</id>
+            <properties>
+                <artifactory.host>http://195-198-69-249.customer.telia.com</artifactory.host>
+            </properties>
+        </profile>
+    </profiles>
+
     <distributionManagement>
+
         <repository>
             <id>repo.got2.androtech.se</id>
             <name>repo.got2.androtech.se-releases</name>
-            <url>http://repo.got2.androtech.se:8081/artifactory/ext-release-local</url>
+            <url>${artifactory.host}/artifactory/ext-release-local</url>
         </repository>
+
+        <snapshotRepository>
+            <id>repo.got2.androtech.se</id>
+            <name>repo.got2.androtech.se-snapshots</name>
+            <url>${artifactory.host}/artifactory/ext-snapshot-local</url>
+        </snapshotRepository>
+
     </distributionManagement>
 
 </project>
