@@ -3,40 +3,44 @@ propaganda
 
 Propaganda is a messaging system.
 
-mvn clean install assembly:assembly
+A message is one line of text consisting of an envelop and a arbitrary utf-8 text. The envelop contains at least a sender address and a receiver address. The first ';' separates envelop and the payload text.
+Messages can be sent thru a variaty of protocols.
 
--------------------------------
+* Simple socket
+* HTTP
+* MQTT
+* Web Service (soap)
+
+
+Building instructions
+---------------------
+
+    mvn clean install assembly:assembly
+In target there will be an executable jar file. 
+
 
 Connecting via socket
 ---------------------
 
-Step 1)
+1. Start the server (runServer) (on default port 8899)
 
-Start the server (runServer) (on default port 8899)
+2. In your client program, make a TCP connection to server on port 8899
 
-Step 2)
+3. Register yourself as a member in propaganda group by sending this to the server
 
-In your client program, make a TCP connection to server on port 8899
+       . @ register; request-id <myId>@DEMO
+  
+  	As response you get:
+  
+       @ aa@DEMO 1334489038115; registered aa@DEMO @[DEMO]
 
-Step 3)
+4. Send a message server and wait for the response.
 
-Register yourself as a member in propaganda group by sending this to the server
+	   _ *@DEMO ;This is my one line message
 
-	 . @ register; request-id <myId>@DEMO
+5. All other registred on @DEMO will reveive the message (including yourself):
 
-where <myId> is your unique id. Expect a response like:
-
-      @ aa@DEMO 1334489038115; registered aa@DEMO @[DEMO]
-
-Step 4)
-
-Send a message server and read the response.
-
-	_ *@DEMO ;This is my message
-
-All other registred on @DEMO will reveive the message (including yourself):
-
-	aa@DEMO *@DEMO plain 1334489087597;This is my message
+       aa@DEMO *@DEMO plain 1334489087597;This is my message
 
 
 Note
@@ -51,7 +55,10 @@ Note
 * sender/receiver-address: <uniq-id>@<group>
 
 * special address:
-			@ -> the message system it self
-			*@<group> -> all in the group
-			. -> anonymous
-			_ -> my default address (first registred)
+	
+Address  | Meaning
+---------| :----------------
+@        | the message system it self
+*@group  | all in the group
+.        | anonymous
+_        | my default address (first registred, or automatic)
