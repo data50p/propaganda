@@ -1,7 +1,7 @@
 package com.femtioprocent.fpd.sundry;
 
 //*********************************************************************
-//* Base64 - a simple base64 encoder and decoder.
+//* Base64 - a simple base64 encoder and decoder. Modified by lars50p
 //*
 //*     Copyright (c) 1999, Bob Withers - bwit@pobox.com
 //*
@@ -13,7 +13,7 @@ package com.femtioprocent.fpd.sundry;
 
 public class Base64
 {
-    private static final int    fillchar = '=';
+    private static final int    fillchar = '-';
 
                                     // 00000000001111111111222222
                                     // 01234567890123456789012345
@@ -25,7 +25,7 @@ public class Base64
 
                                     // 555555556666
                                     // 234567890123
-                                    + "0123456789+/";
+                                    + "0123456789_~";
 
     public static String encode(String data)
     {

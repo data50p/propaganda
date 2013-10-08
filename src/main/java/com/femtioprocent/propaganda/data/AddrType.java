@@ -1,12 +1,23 @@
 package com.femtioprocent.propaganda.data;
 
+import com.femtioprocent.fpd.sundry.Base64;
+import com.femtioprocent.propaganda.util.SecureUtil;
+import com.femtioprocent.propaganda.util.Util;
 
+
+/**
+ * name@id
+ * 
+ * @author lars
+ */
 public class AddrType
 {
     String name;
+    String unsecureName;
     String id;
     String addr_type = "?";
     boolean regex = false;
+    boolean secure = false;
 
     public static AddrType serverAddrType = new AddrType("@");
     public static AddrType anonymousAddrType = new AddrType(".");
@@ -41,6 +52,16 @@ public class AddrType
 	return addr_type;
     }
 
+    public static AddrType createSecureAddrType(String at)
+    {
+	AddrType addr_type = new AddrType(at);
+        addr_type.unsecureName = addr_type.name;
+        addr_type.name = SecureUtil.getSecureName(addr_type.name);
+        addr_type.addr_type = addr_type.name + '@' + addr_type.id;
+        addr_type.secure = true;
+	return addr_type;
+    }
+
     public static AddrType createAddrType(String s)
     {
 	if ( s == null )
@@ -71,6 +92,11 @@ public class AddrType
 	return this.name;
     }
 
+    public String getUnsecureName()
+    {
+	return secure ? this.unsecureName : this.name;
+    }
+
     public String getAddrTypeId()
     {
 	return this.id;
@@ -79,7 +105,10 @@ public class AddrType
     @Override
     public String toString()
     {
-	return "AddrType{" + getName() + ',' + getAddrTypeId() + ',' + getAddrTypeString() + "}";
+        if ( secure )
+            return "AddrType{(" + unsecureName + ")," + getAddrTypeId() + ',' + getAddrTypeString() + "}";
+        else
+            return "AddrType{" + getName() + ',' + getAddrTypeId() + ',' + getAddrTypeString() + "}";
     }
 
     @Override
