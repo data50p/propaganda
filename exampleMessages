@@ -4,9 +4,14 @@ echo nc localhost 8899
 echo
 echo '. @ register; request-id aa@TESTING'
 echo '. @ register; request-id a3@TESTING'
+echo '. @ register; request-secure-id a4@CCFCLIENT'
+echo '_ @ register; unsecure-id'
 
 echo '_ @;list'
+echo '_ @;list-id'
+echo '_ @;list-group'
 echo '_ @ unregister;'
 
 echo "http://ccf.femtioprocent.com:8888/?to=500&d1=.+@+register;request-id+a@AA&d2=_+@;list}"
+
 
