@@ -44,10 +44,17 @@ public class Client_Admin extends PropagandaClient {
                         getLogger().finest("datagram: " + S.ct() + ' ' + name + " =----> " + datagram);
                         if ("list-id".equals(datagram.getMessage().getMessage())) {
                             try {
+                                StringBuilder sb = new StringBuilder();
+                                for (final ClientGhost cg : server.clientghost_hm.values()) {
+                                    if (sb.length() > 0) {
+                                        sb.append(";");
+                                    }
+                                    sb.append(cg.getDefaultSecureAddrType().getUnsecureId());
+                                }
                                 sendMsg(new Datagram(serverAddrType,
                                         datagram.getSender(),
                                         new Message("list-id-is",
-                                        "" + server.clientghost_hm.keySet())));
+                                        sb.toString())));
                             } catch (PropagandaException ex) {
                                 S.pL("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
                             }
@@ -55,14 +62,13 @@ public class Client_Admin extends PropagandaClient {
                         } else if ("list".equals(datagram.getMessage().getMessage())) {
                             try {
                                 StringBuilder sb = new StringBuilder();
-                                for (String key : server.clientghost_hm.keySet()) {
+                                for (final ClientGhost cg : server.clientghost_hm.values()) {
                                     if (sb.length() > 0) {
                                         sb.append(";");
                                     }
-                                    sb.append(key);
-                                    final ClientGhost cg = server.clientghost_hm.get(key);
-                                    final Set<String> addrTypeIdSet = cg.getAddrTypeIdSet();
-                                    sb.append("@" + addrTypeIdSet.toString().replace(" ", ""));
+                                    sb.append(cg.getDefaultSecureAddrType().getUnsecureId());
+                                    final Set<String> atgSet = cg.getAddrTypeGroupSet();
+                                    sb.append("@" + atgSet.toString().replace(" ", ""));
                                 }
                                 sendMsg(new Datagram(serverAddrType,
                                         datagram.getSender(),
@@ -124,12 +130,12 @@ public class Client_Admin extends PropagandaClient {
         } else if ("unsecure-id".equals(datagram.getMessage().getMessage())) {
             client_addr = datagram.getSender();
             ClientGhost client_ghost = null;
-            client_ghost = server.getRegisteredClientGhost(client_addr.getName());
+            client_ghost = server.getRegisteredClientGhostSecured(client_addr.getId());
             try {
                 client_ghost.sendToClient(new Datagram(serverAddrType,
                         client_addr,
                         new Message("unsecure-id-is",
-                        SecureUtil.lookupUnsecureName(client_ghost.getName()) + "@" + client_addr.getAddrTypeId())));
+                        SecureUtil.lookupUnsecureId(client_ghost.getId()) + "@" + client_addr.getAddrTypeGroup())));
             } catch (PropagandaException ex) {
                 Logger.getLogger(Client_Admin.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -143,21 +149,21 @@ public class Client_Admin extends PropagandaClient {
         if (client_addr != null) {
             getLogger().finest("register: " + client_addr);
             ClientGhost client_ghost = null;
-            if (!client_addr.getAddrTypeId().equals("$ADMIN")) {
-                client_ghost = server.getRegisteredClientGhost(client_addr.getName());
+            if (!client_addr.getAddrTypeGroup().equals("$ADMIN")) {
+                client_ghost = server.getRegisteredClientGhost(client_addr.getId());
                 if (client_ghost == null) {
                     if (request_status) {
                         // can't send; no recipient
                         return null;
                     } else {
-                        client_ghost = new ClientGhost(client_addr.getName(), client_addr.getAddrTypeId(), orig_connector);
+                        client_ghost = new ClientGhost(client_addr.getId(), client_addr.getUnsecureIdALt(), client_addr.getAddrTypeGroup(), orig_connector);
                         orig_connector.attachClientGhost(client_ghost); // this connector might have another ClGh.othername FATAL?
                         boolean again = server.addClientGhost(client_ghost);
                         try {
                             client_ghost.sendToClient(new Datagram(serverAddrType,
                                     client_addr,
                                     new Message("registered",
-                                    client_addr.getAddrTypeString() + " @" + client_ghost.getAddrTypeIdSet())));
+                                    client_addr.getAddrTypeString() + " @" + client_ghost.getAddrTypeGroupSet())));
                         } catch (PropagandaException ex) {
                             S.pL("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
                         }
@@ -188,7 +194,7 @@ public class Client_Admin extends PropagandaClient {
                                 client_ghost.sendToClient(new Datagram(serverAddrType,
                                         client_addr,
                                         new Message("registered",
-                                        client_addr.getAddrTypeString() + " @" + client_ghost.getAddrTypeIdSet() + status)));
+                                        client_addr.getAddrTypeString() + " @" + client_ghost.getAddrTypeGroupSet() + status)));
                             } catch (PropagandaException ex) {
                                 S.pL("ClientGhost.registerMsg: Can't send 'registered' (2) " + ex);
                             }
@@ -199,17 +205,17 @@ public class Client_Admin extends PropagandaClient {
                                 client_ghost.sendToClient(new Datagram(serverAddrType,
                                         client_addr,
                                         new Message("already-registered",
-                                        client_addr.getAddrTypeString() + " @" + client_ghost.getAddrTypeIdSet())));
+                                        client_addr.getAddrTypeString() + " @" + client_ghost.getAddrTypeGroupSet())));
                             } catch (PropagandaException ex) {
                                 S.pL("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
                             }
                         } else {
-                            client_ghost.addAddrTypeId(client_addr.getAddrTypeId());
+                            client_ghost.addAddrTypeGroup(client_addr.getAddrTypeGroup());
                             try {
                                 client_ghost.sendToClient(new Datagram(serverAddrType,
                                         client_addr,
                                         new Message("registered",
-                                        client_addr.getAddrTypeString() + " @" + client_ghost.getAddrTypeIdSet() + status)));
+                                        client_addr.getAddrTypeString() + " @" + client_ghost.getAddrTypeGroupSet() + status)));
                             } catch (PropagandaException ex) {
                                 S.pL("ClientGhost.registerMsg: Can't send 'registered' (2) " + ex);
                             }
@@ -228,11 +234,11 @@ public class Client_Admin extends PropagandaClient {
         getLogger().finest("args: " + datagram + ' ' + orig_connector);
 
         AddrType client_addr = datagram.getSender();
-        ClientGhost client_ghost = server.getRegisteredClientGhost(client_addr.getName());
+        ClientGhost client_ghost = server.getRegisteredClientGhost(client_addr.getId());
         if (client_ghost != null) {
             PropagandaConnector current_connector = client_ghost.getConnector();
             current_connector.dettachClientGhost(client_ghost);
-            server.deleteRegisteredClientGhost(client_addr.getName(), client_addr.getAddrTypeId(), orig_connector); // remove client ghost if it has no more addr_type_id left
+            server.deleteRegisteredClientGhost(client_addr.getId(), client_addr.getAddrTypeGroup(), orig_connector); // remove client ghost if it has no more addr_type_id left
         }
     }
 }

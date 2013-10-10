@@ -161,7 +161,7 @@ public class Datagram {
     }
 
     private MessageType parseMessageType(String s) {
-        if (s.startsWith("RM:")) // this type contains 'RM:id:duration'
+        if (s.startsWith("RM:")) // this type contains 'RM:group:duration'
         {
             return MessageType.RM;
         }

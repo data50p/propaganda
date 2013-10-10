@@ -21,24 +21,24 @@ abstract public class PropagandaClient
 {
     PropagandaConnector connector;
     public String name;
-    ArrayList<String> addrtypeid_list;
+    ArrayList<String> addrtypeGroup_list;
 
     public PropagandaClient()
     {
 	this.name = "anonymous-" + hashCode();
-	addrtypeid_list = new ArrayList<String>();
+	addrtypeGroup_list = new ArrayList<String>();
     }
 
     public PropagandaClient(String name)
     {
 	this.name = name;
-	addrtypeid_list = new ArrayList<String>();
+	addrtypeGroup_list = new ArrayList<String>();
     }
 
     public PropagandaClient(String name, PropagandaConnector conn)
     {
 	this.name = name;
-	addrtypeid_list = new ArrayList<String>();
+	addrtypeGroup_list = new ArrayList<String>();
 	setConnectorAndAttach(conn);
     }
 
@@ -46,50 +46,50 @@ abstract public class PropagandaClient
     {
     }
 
-    public void register(String addr_type_id) throws PropagandaException
+    public void register(String addr_type_group) throws PropagandaException
     {
-        int ix = addr_type_id.indexOf('@');
+        int ix = addr_type_group.indexOf('@');
         if ( ix != -1 ) {
-            String id = addr_type_id.substring(0, ix);
-            String at = addr_type_id.substring(ix + 1);
+            String id = addr_type_group.substring(0, ix);
+            String at = addr_type_group.substring(ix + 1);
             register(id, at);
             return;
         }
         
-	if ( addrtypeid_list.contains(addr_type_id) )
-	    throw new PropagandaException("Already used: " + addr_type_id);
+	if ( addrtypeGroup_list.contains(addr_type_group) )
+	    throw new PropagandaException("Already used: " + addr_type_group);
 
 	Datagram register_datagram = new Datagram(anonymousAddrType,
 						  serverAddrType,
 						  MessageType.register,
 						  new Message("request-id",
-							      createAddrType(name, addr_type_id).getAddrTypeString()));
+							      createAddrType(name, addr_type_group).getAddrTypeString()));
 
 	getLogger().finest("datagram: " + register_datagram);
 
 	sendMsg(register_datagram);
 
-	addrtypeid_list.add(addr_type_id);
+	addrtypeGroup_list.add(addr_type_group);
 	// wait for confirmation?
     }
 
-    public void register(String id, String addr_type_id) throws PropagandaException
+    public void register(String id, String addr_type_group) throws PropagandaException
     {
-        String id_at = id + '@' + addr_type_id;
-	if ( addrtypeid_list.contains(id_at) )
-	    throw new PropagandaException("Already used: " + id_at);
+        String at_id = id + '@' + addr_type_group;
+	if ( addrtypeGroup_list.contains(at_id) )
+	    throw new PropagandaException("Already used: " + at_id);
 
 	Datagram register_datagram = new Datagram(anonymousAddrType,
 						  serverAddrType,
 						  MessageType.register,
 						  new Message("request-id",
-							      createAddrType(id, addr_type_id).getAddrTypeString()));
+							      createAddrType(id, addr_type_group).getAddrTypeString()));
 
 	getLogger().finest("datagram: " + register_datagram);
 
 	sendMsg(register_datagram);
 
-	addrtypeid_list.add(id_at);
+	addrtypeGroup_list.add(at_id);
 	// wait for confirmation?
     }
 
@@ -98,16 +98,16 @@ abstract public class PropagandaClient
 	return name;
     }
 
-    public AddrType getDefaultAddrType(String addr_type_id)
+    public AddrType getDefaultAddrType(String addr_type_group)
     {
-	return createAddrType(name, addr_type_id);
+	return createAddrType(name, addr_type_group);
     }
 
     public AddrType getDefaultAddrType()
     {
-	if ( addrtypeid_list.size() > 0 )
-	    return getDefaultAddrType(addrtypeid_list.get(0));
-	return AddrType.unknownAddrType;
+	if ( addrtypeGroup_list.size() > 0 )
+	    return getDefaultAddrType(addrtypeGroup_list.get(0));
+	return AddrType.defaultAddrType;
     }
 
 
@@ -149,7 +149,7 @@ abstract public class PropagandaClient
     public boolean sendMsg(String to_addr, String msg)
     {
 	try {
-	    Datagram datagram = new Datagram(AddrType.unknownAddrType,
+	    Datagram datagram = new Datagram(AddrType.defaultAddrType,
 					     createAddrType(to_addr),
 					     new Message(msg));
 	    getLogger().finest("sending >>>>> " + connector + ' ' + datagram);
@@ -200,6 +200,6 @@ abstract public class PropagandaClient
     @Override
     public String toString()
     {
-	return name + '@' + addrtypeid_list + ' ' + connector;
+	return name + '@' + addrtypeGroup_list + ' ' + connector;
     }
 }

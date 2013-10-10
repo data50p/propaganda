@@ -42,7 +42,7 @@ public class Dispatcher {
         try {
             AddrType sender = null;
             if (orig_connector != null && orig_connector.getDefaultClientGhost() != null) {
-                sender = orig_connector.getDefaultClientGhost().getDefaultAddrType();
+                sender = orig_connector.getDefaultClientGhost().getDefaultSecureAddrType();
             }
             if (sender == null) {
                 sender = AddrType.serverAddrType;
@@ -235,8 +235,8 @@ public class Dispatcher {
                 sendToMonitor(orig_connector, datagram, "invalid-sender-address");
                 return 0;
             }
-            String[] message_type_arg_Arr = datagram.getMessageTypeArg().split(":");    // id:duration
-            String key_id = datagram.getSender().getName() + ':' + message_type_arg_Arr[0];
+            String[] message_type_arg_Arr = datagram.getMessageTypeArg().split(":");    // group:duration
+            String key_id = datagram.getSender().getId() + ':' + message_type_arg_Arr[0];
             String duration_s = message_type_arg_Arr[1];
 
             long valid_upto = calculateValidUpTo(duration_s);
@@ -287,7 +287,7 @@ public class Dispatcher {
                     }
                 } catch (PropagandaException ex) {
                     S.pL("" + ex);
-                    clientghost_hm.remove(client_ghost.getName());
+                    clientghost_hm.remove(client_ghost.getId());
                 }
             } else {
                 getLogger().fine("msg: ->| " + client_ghost + " |<- " + datagram);

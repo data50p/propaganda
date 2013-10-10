@@ -6,15 +6,15 @@ import com.femtioprocent.propaganda.util.Util;
 
 
 /**
- * name@id
+ * id@group
  * 
  * @author lars
  */
 public class AddrType
 {
-    String name;
-    String unsecureName;
-    String id;
+    private String id;
+    String unsecureId;
+    String group;
     String addr_type = "?";
     boolean regex = false;
     boolean secure = false;
@@ -22,42 +22,42 @@ public class AddrType
     public static AddrType serverAddrType = new AddrType("@");
     public static AddrType anonymousAddrType = new AddrType(".");
     public static AddrType anyAddrType = new AddrType("*");
-    public static AddrType unknownAddrType = new AddrType("_"); // changed to first registred
+    public static AddrType defaultAddrType = new AddrType("_"); // changed to first registred
 
     private AddrType(String s)
     {
 	int ix = s.indexOf('@');
 	if ( ix == -1 ) {
-	    this.name = s;
-	    this.id   = "";
+	    this.id = s;
+	    this.group   = "";
 	    this.addr_type = s;
 	}
 	else {
-	    this.name = s.substring(0, ix);
-	    this.id   = s.substring(ix+1);
+	    this.id = s.substring(0, ix);
+	    this.group   = s.substring(ix+1);
 	    this.addr_type = s;
 	}
     }
 
-    private AddrType(String name, String id)
+    private AddrType(String id, String group)
     {
-	this.name = name;
 	this.id = id;
-	this.addr_type = name + '@' + id;
+	this.group = group;
+	this.addr_type = id + '@' + group;
     }
 
-    public static AddrType createAddrType(String name, String id)
+    public static AddrType createAddrType(String id, String group)
     {
-	AddrType addr_type = new AddrType(name, id);
+	AddrType addr_type = new AddrType(id, group);
 	return addr_type;
     }
 
     public static AddrType createSecureAddrType(String at)
     {
 	AddrType addr_type = new AddrType(at);
-        addr_type.unsecureName = addr_type.name;
-        addr_type.name = SecureUtil.getSecureName(addr_type.name);
-        addr_type.addr_type = addr_type.name + '@' + addr_type.id;
+        addr_type.unsecureId = addr_type.id;
+        addr_type.id = SecureUtil.getSecureId(addr_type.id);
+        addr_type.addr_type = addr_type.id + '@' + addr_type.group;
         addr_type.secure = true;
 	return addr_type;
     }
@@ -65,10 +65,10 @@ public class AddrType
     public static AddrType createAddrType(String s)
     {
 	if ( s == null )
-	    return unknownAddrType;
+	    return defaultAddrType;
 
 	if ( s.equals("_") )
-	    return unknownAddrType;
+	    return defaultAddrType;
 
 	if ( s.equals(".") )
 	    return anonymousAddrType;
@@ -84,31 +84,45 @@ public class AddrType
 
     public String getAddrTypeString()
     {
+        if ( addr_type == null )
+            addr_type = id + '@' + group;
 	return addr_type;
     }
 
-    public String getName()
+    public String getUnsecureAddrTypeString()
     {
-	return this.name;
+        if ( secure )
+            return getUnsecureId() + "@" + getAddrTypeGroup();
+        return getId() + "@" + getAddrTypeGroup();
     }
 
-    public String getUnsecureName()
-    {
-	return secure ? this.unsecureName : this.name;
-    }
-
-    public String getAddrTypeId()
+    public String getId()
     {
 	return this.id;
+    }
+
+    public String getUnsecureId()
+    {
+	return secure ? "(" + this.unsecureId + ")" : this.id;
+    }
+
+    public String getUnsecureIdALt()
+    {
+	return secure ? this.unsecureId : this.id;
+    }
+
+    public String getAddrTypeGroup()
+    {
+	return this.group;
     }
 
     @Override
     public String toString()
     {
         if ( secure )
-            return "AddrType{(" + unsecureName + ")," + getAddrTypeId() + ',' + getAddrTypeString() + "}";
+            return "AddrType{" + getUnsecureAddrTypeString() + "}";
         else
-            return "AddrType{" + getName() + ',' + getAddrTypeId() + ',' + getAddrTypeString() + "}";
+            return "AddrType{" + getAddrTypeString() + "}";
     }
 
     @Override

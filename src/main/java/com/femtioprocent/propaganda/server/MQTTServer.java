@@ -68,8 +68,8 @@ public class MQTTServer {
                 final Datagram recvMsg = connector.recvMsg(100);
                 if (recvMsg != null) {
                     final AddrType r = recvMsg.getReceiver();
-                    System.out.println("MQTTServer: got(p) " + "propaganda-" + r.getName() + ' ' + recvMsg);
-                    connection.publish("propaganda-" + r.getName(), recvMsg.getMessage().getText().getBytes("utf-8"), QoS.AT_MOST_ONCE, true);
+                    System.out.println("MQTTServer: got(p) " + "propaganda-" + r.getId() + ' ' + recvMsg);
+                    connection.publish("propaganda-" + r.getId(), recvMsg.getMessage().getText().getBytes("utf-8"), QoS.AT_MOST_ONCE, true);
                 }
             }
         } catch (Exception ex) {
@@ -135,9 +135,9 @@ public class MQTTServer {
                 //Thread.sleep(2000);
 
 //            } catch (IOException ex) {
-//                Logger.getLogger(MQTTServer.class.getName()).log(Level.SEVERE, null, ex);
+//                Logger.getLogger(MQTTServer.class.getId()).log(Level.SEVERE, null, ex);
 //            } catch (InterruptedException ex) {
-//                Logger.getLogger(MQTTServer.class.getName()).log(Level.SEVERE, null, ex);
+//                Logger.getLogger(MQTTServer.class.getId()).log(Level.SEVERE, null, ex);
             } finally {
 	    }
         } else {

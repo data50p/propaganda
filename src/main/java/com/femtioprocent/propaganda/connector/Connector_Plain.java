@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 import static com.femtioprocent.propaganda.context.Config.getLogger;
 import static com.femtioprocent.propaganda.data.AddrType.anonymousAddrType;
 import static com.femtioprocent.propaganda.data.AddrType.serverAddrType;
-import static com.femtioprocent.propaganda.data.AddrType.unknownAddrType;
+import static com.femtioprocent.propaganda.data.AddrType.defaultAddrType;
 import static com.femtioprocent.propaganda.data.MessageType.register;
 
 import java.io.BufferedOutputStream;
@@ -150,12 +150,12 @@ public class Connector_Plain extends PropagandaConnector
 		    try {
 			Datagram datagram = new Datagram(sin);
 
-			if ( datagram.getSender() == unknownAddrType ) {
+			if ( datagram.getSender() == defaultAddrType ) {
 			    ClientGhost gc = getDefaultClientGhost();
 			    if ( gc != null )
 				datagram.setSender(gc.getDefaultAddrType());
 			}
-			if ( datagram.getReceiver() == unknownAddrType ) {
+			if ( datagram.getReceiver() == defaultAddrType ) {
 			    ClientGhost gc = getDefaultClientGhost();
 			    if ( gc != null )
 				datagram.setReceiver(gc.getDefaultAddrType());

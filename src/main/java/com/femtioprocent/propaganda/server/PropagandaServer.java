@@ -25,6 +25,7 @@ import com.femtioprocent.fpd.sundry.S;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PropagandaServer {
+
     private static PropagandaServer default_server;
     public HashMap<String, ClientGhost> clientghost_hm;
     public Client_Monitor client_monitor;
@@ -65,7 +66,7 @@ public class PropagandaServer {
                 client_admin = (Client_Admin) PropagandaClientFactory.create("Admin", "propaganda-admin");
                 Connector_Local connector_local = (Connector_Local) client_admin.createConnector("Local", "propaganda-admin", this);
                 // we need to attach the ClientGhost since Admin can't register itself in the normal way
-                ClientGhost client_ghost = new ClientGhost(client_admin.getName(), "$ADMIN", connector_local);
+                ClientGhost client_ghost = new ClientGhost(client_admin.getName(), client_admin.getName(), "$ADMIN", connector_local);
                 connector_local.attachClientGhost(client_ghost);
                 client_admin.setServer(this);
                 addClientGhost(client_ghost);
@@ -192,7 +193,7 @@ public class PropagandaServer {
         }
     }
 
-        public class MqttConnectorSupport {
+    public class MqttConnectorSupport {
 
         private AtomicInteger cnt = new AtomicInteger(1000);
         int port;
@@ -210,8 +211,9 @@ public class PropagandaServer {
                         for (;;) {
                             MQTTServer s = new MQTTServer(PropagandaServer.this);
                             s.start(PropagandaServer.this);
-                            for(;;)
+                            for (;;) {
                                 s.processMqttPayload();
+                            }
                         }
                     } catch (Exception ex) {
                         S.pL("Can't run MqttConnectorSupport: " + ex);
@@ -223,11 +225,34 @@ public class PropagandaServer {
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    /**
+     * using the secured address (not SHA1)
+     * @param client_name
+     * @return 
+     */
     public ClientGhost getRegisteredClientGhost(String client_name) {
         client_name = client_name.toLowerCase();
 
         getLogger().finest(": " + client_name + ' ' + clientghost_hm.keySet() + ' ' + clientghost_hm.get(client_name.toLowerCase()));
         return clientghost_hm.get(client_name.toLowerCase());
+    }
+
+    /**
+     * Using the secure address (SHA1)
+     * @param secured_client_name
+     * @return 
+     */
+    public ClientGhost getRegisteredClientGhostSecured(String secured_client_name) {
+        secured_client_name = secured_client_name.toLowerCase();
+
+        for (ClientGhost cg : clientghost_hm.values()) {
+            getLogger().finest(": trying " + secured_client_name + ' ' + cg);
+            if (cg.getId().equals(secured_client_name)) {
+                getLogger().finest(": " + secured_client_name + ' ' + cg);
+                return cg;
+            }
+        }
+        return null;
     }
 
     public void deleteRegisteredClientGhost(String client_name, String addr_type_id, PropagandaConnector orig_connector) {
@@ -246,10 +271,10 @@ public class PropagandaServer {
     }
 
     /**
-     * Any old client with same name are silently removed.
+     * Any old client with same name are removed.
      */
     public boolean addClientGhost(ClientGhost client_ghost) {
-        String client_name = client_ghost.getName().toLowerCase();
+        String client_name = client_ghost.getId().toLowerCase();
 
         boolean again = clientghost_hm.containsKey(client_name);
 

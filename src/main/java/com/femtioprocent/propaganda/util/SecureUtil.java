@@ -21,7 +21,7 @@ public class SecureUtil {
     
     private static String salt = "" + System.getProperty("os.name") + System.nanoTime() + System.getProperty("user.name");
 
-    public static String getSecureName(String s) {
+    public static String getSecureId(String s) {
         MessageDigest md = null;
         try {
             String us = s + ":" + salt;
@@ -37,7 +37,7 @@ public class SecureUtil {
         }
     }
 
-    public static String lookupUnsecureName(String name) {
-        return m.get(name);
+    public static String lookupUnsecureId(String id) {
+        return m.get(id);
     }
 }

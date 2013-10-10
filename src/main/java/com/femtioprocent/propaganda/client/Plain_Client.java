@@ -12,7 +12,7 @@ public class Plain_Client extends PropagandaClient
     {
 	super(name);
 	this.name = name;
-	addrtypeid_list = new ArrayList<String>();
+	addrtypeGroup_list = new ArrayList<String>();
 	conn = new Connector_Plain("Conn-" + name, this);
 	setConnectorAndAttach(conn);
     }

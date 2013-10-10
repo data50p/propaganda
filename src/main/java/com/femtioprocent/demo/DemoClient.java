@@ -64,7 +64,7 @@ public class DemoClient extends javax.swing.JFrame {
                                 System.err.println("got datagram: " + name + " =----> PING " + datagram);
                             } else if (datagram.getMessageType() == MessageType.pong) {
                                 System.err.println("got datagram: " + name + " =----> PONG " + datagram);
-                                receivedMsgs.append("received PONG from " + datagram.getSender().getAddrTypeString() + "\n");
+                                receivedMsgs.append("received PONG from " + datagram.getSender().getUnsecureAddrTypeString() + "\n");
                             } else if (datagram.getMessageType() == MessageType.plain) {
                                 System.err.println("got datagram: " + name + " =----> " + datagram);
                                 if (eval != null) {
@@ -109,8 +109,8 @@ public class DemoClient extends javax.swing.JFrame {
             public String eval(PropagandaConnector connector, Datagram datagram) {
                 String msg = datagram.getMessage().getText();
                 rcnt++;
-                receivedMsgs.append("" + rcnt + " received from: " + datagram.getSender().getAddrTypeString() +
-                        " to: " + datagram.getReceiver().getAddrTypeString() + " msg: " + msg + "\n");
+                receivedMsgs.append("" + rcnt + " received from: " + datagram.getSender().getUnsecureAddrTypeString() +
+                        " to: " + datagram.getReceiver().getUnsecureAddrTypeString() + " msg: " + msg + "\n");
                 receivedMsgs.setCaretPosition(receivedMsgs.getText().length());
                 return msg;
             }
@@ -338,7 +338,7 @@ public class DemoClient extends javax.swing.JFrame {
         String send_to = sendTo.getSelectedItem().toString();
         System.err.println("send_to: " + send_to);
         try {
-            propagandaClient.sendMsg(new Datagram(AddrType.unknownAddrType, AddrType.createAddrType(send_to), MessageType.ping, new Message("")));
+            propagandaClient.sendMsg(new Datagram(AddrType.defaultAddrType, AddrType.createAddrType(send_to), MessageType.ping, new Message("")));
         } catch (PropagandaException ex) {
             receivedMsgs.append("" + ex + "\n");
         }

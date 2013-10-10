@@ -16,38 +16,40 @@ import com.femtioprocent.propaganda.server.PropagandaServer;
 
 public class ClientGhost
 {
-    private String      name;
-    private Set<String> addr_type_id_set;
+    private String      id;
+    public String       unsecure_id;
+    private Set<String> addr_type_group_set;
             PropagandaServer      server;
             PropagandaConnector   connector;
     private HashMap<String, Object> clientData;
 
-    public ClientGhost(String name, String addr_type_id, PropagandaConnector connector)
+    public ClientGhost(String id, String unsecure_id, String addr_type_group, PropagandaConnector connector)
     {
-	this.name = name;
-	addr_type_id_set = new TreeSet<String>();
-	addAddrTypeId(addr_type_id);
+	this.id = id;
+        this.unsecure_id = unsecure_id;
+	addr_type_group_set = new TreeSet<String>();
+	addAddrTypeGroup(addr_type_group);
 	this.connector = connector;
     }
 
-    public String getName()
+    public String getId()
     {
-	return name;
+	return id;
     }
 
     public boolean removeAddrTypeId(String id)
     {
 	if ( id.equals("*") )
-	    addr_type_id_set = new TreeSet<String>();
+	    addr_type_group_set = new TreeSet<String>();
 	else
-	    addr_type_id_set.remove(id);
+	    addr_type_group_set.remove(id);
 
-	return addr_type_id_set.size() == 0;
+	return addr_type_group_set.size() == 0;
     }
 
-    public void addAddrTypeId(String addr_type_id)
+    public void addAddrTypeGroup(String addr_type_group)
     {
-	addr_type_id_set.add(addr_type_id);
+	addr_type_group_set.add(addr_type_group);
     }
 
     private boolean matchString(String s_match, String s_with)
@@ -70,42 +72,52 @@ public class ClientGhost
 
     private boolean matchAddrTypeId(String matching_addr_type_id) // abcde or ab*
     {
-	for(String s : addr_type_id_set ) {
+	for(String s : addr_type_group_set ) {
 	    if ( matchString(matching_addr_type_id, s) )
 		return true;
 	}
 	return false;
     }
 
-    private boolean matchAddrName(String matching_addr_name)
+    private boolean matchAddrId(String matching_addr_id)
     {
-	if ( matchString(matching_addr_name, name) )
+	if ( matchString(matching_addr_id, id) )
 	    return true;
 	return false;
     }
 
     public boolean matchAddrType(AddrType addr_type)
     {
-	String id = addr_type.getAddrTypeId();
-	String name    = addr_type.getName();
+	String g = addr_type.getAddrTypeGroup();
+	String id    = addr_type.getId();
 
-	if ( id.equals("") && matchAddrTypeId("$ADMIN") )
+	if ( g.equals("") && matchAddrTypeId("$ADMIN") )
 	    return true;
-	if ( id.equals("*") && matchAddrName(name) )
+	if ( g.equals("*") && matchAddrId(id) )
 	    return true;
-	if ( id.equals("*") && name.equals("*") )
+	if ( g.equals("*") && id.equals("*") )
 	    return true;
-	if ( name.equals("*") && matchAddrTypeId(id) )
+	if ( id.equals("*") && matchAddrTypeId(g) )
 	    return true;
-	if ( matchAddrName(name) && matchAddrTypeId(id) )
+	if ( matchAddrId(id) && matchAddrTypeId(g) )
 	    return true;
 	return false;
     }
 
     public AddrType getDefaultAddrType()
     {
-        if ( addr_type_id_set.size() > 0 )
-            return createAddrType(name, addr_type_id_set.iterator().next());
+        if ( addr_type_group_set.size() > 0 )
+            return createAddrType(id, addr_type_group_set.iterator().next());
+        return createAddrType("@");
+    }
+
+    public AddrType getDefaultSecureAddrType()
+    {
+        if ( id.equalsIgnoreCase(unsecure_id) ) {
+            return getDefaultAddrType();
+        }
+        if ( addr_type_group_set.size() > 0 )
+            return AddrType.createSecureAddrType(unsecure_id + "@" + addr_type_group_set.iterator().next());
         return createAddrType("@");
     }
 
@@ -124,8 +136,8 @@ public class ClientGhost
 	connector.sendToClient(datagram);
     }
 
-    public Set<String> getAddrTypeIdSet() {
-	return addr_type_id_set;
+    public Set<String> getAddrTypeGroupSet() {
+	return addr_type_group_set;
     }
 
      public HashMap<String, Object> getClientData() {
@@ -139,6 +151,6 @@ public class ClientGhost
     @Override
     public String toString()
     {
-	return "ClientGhost{" + name + ' ' + addr_type_id_set + ' ' + connector + ' ' + clientData + "}";
+	return "ClientGhost{" + id + ' ' + addr_type_group_set + ' ' + connector + ' ' + clientData + "}";
     }
 }
