@@ -52,14 +52,14 @@ public class AddrType
 	return addr_type;
     }
 
-    public static AddrType createSecureAddrType(String at)
+    public static AddrType createSecureAddrType(String addr_type, String seasalt)
     {
-	AddrType addr_type = new AddrType(at);
-        addr_type.unsecureId = addr_type.id;
-        addr_type.id = SecureUtil.getSecureId(addr_type.id);
-        addr_type.addr_type = addr_type.id + '@' + addr_type.group;
-        addr_type.secure = true;
-	return addr_type;
+	AddrType at = new AddrType(addr_type);
+        at.unsecureId = at.id;
+        at.id = SecureUtil.getSecureId(at.id, seasalt);
+        at.addr_type = at.id + '@' + at.group;
+        at.secure = true;
+	return at;
     }
 
     public static AddrType createAddrType(String s)

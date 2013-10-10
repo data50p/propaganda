@@ -32,6 +32,10 @@ public class Message
 	return text;
     }
 
+    public String getTrimmedText() {
+	return text == null ? "" : text.trim();
+    }
+
     public String getAddendum() {
 	return addendum;
     }

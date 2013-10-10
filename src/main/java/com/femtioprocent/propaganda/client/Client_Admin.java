@@ -14,6 +14,9 @@ import java.util.Set;
 import static com.femtioprocent.propaganda.data.AddrType.*;
 import static com.femtioprocent.propaganda.context.Config.*;
 import com.femtioprocent.propaganda.util.SecureUtil;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,28 +47,30 @@ public class Client_Admin extends PropagandaClient {
                         getLogger().finest("datagram: " + S.ct() + ' ' + name + " =----> " + datagram);
                         if ("list-id".equals(datagram.getMessage().getMessage())) {
                             try {
-                                StringBuilder sb = new StringBuilder();
+                                Set<String> set = new HashSet<String>();
                                 for (final ClientGhost cg : server.clientghost_hm.values()) {
-                                    if (sb.length() > 0) {
-                                        sb.append(";");
-                                    }
-                                    sb.append(cg.getDefaultSecureAddrType().getUnsecureId());
+                                    set.add(cg.getDefaultSecureAddrType().getUnsecureId());
                                 }
                                 sendMsg(new Datagram(serverAddrType,
                                         datagram.getSender(),
                                         new Message("list-id-is",
-                                        sb.toString())));
+                                        "" + set.toString().replace(" ", ""))));
                             } catch (PropagandaException ex) {
                                 S.pL("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
                             }
 
                         } else if ("list".equals(datagram.getMessage().getMessage())) {
                             try {
-                                StringBuilder sb = new StringBuilder();
+                                HashMap<String, ClientGhost> map = new HashMap<String, ClientGhost>();
                                 for (final ClientGhost cg : server.clientghost_hm.values()) {
-                                    if (sb.length() > 0) {
+                                    map.put(cg.getDefaultAddrType().getId(), cg);
+                                }
+                                StringBuilder sb = new StringBuilder();
+                                for (Map.Entry<String, ClientGhost> ent : map.entrySet()) {
+                                    String id = ent.getKey();
+                                    ClientGhost cg = ent.getValue();
+                                    if ( sb.length() > 0 )
                                         sb.append(";");
-                                    }
                                     sb.append(cg.getDefaultSecureAddrType().getUnsecureId());
                                     final Set<String> atgSet = cg.getAddrTypeGroupSet();
                                     sb.append("@" + atgSet.toString().replace(" ", ""));
@@ -74,6 +79,20 @@ public class Client_Admin extends PropagandaClient {
                                         datagram.getSender(),
                                         new Message("list-is",
                                         "" + sb.toString())));
+                            } catch (PropagandaException ex) {
+                                S.pL("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
+                            }
+
+                        } else if ("list-group".equals(datagram.getMessage().getMessage())) {
+                            try {
+                                Set<String> set = new HashSet<String>();
+                                for (final ClientGhost cg : server.clientghost_hm.values()) {
+                                    set.addAll(cg.getAddrTypeGroupSet());
+                                }
+                                sendMsg(new Datagram(serverAddrType,
+                                        datagram.getSender(),
+                                        new Message("list-group-is",
+                                        "" + set.toString().replace(" ", ""))));
                             } catch (PropagandaException ex) {
                                 S.pL("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
                             }
@@ -126,7 +145,14 @@ public class Client_Admin extends PropagandaClient {
         } else if ("request-id".equals(datagram.getMessage().getMessage())) {
             client_addr = createAddrType(mkAddrType(datagram.getMessage().getAddendum()));
         } else if ("request-secure-id".equals(datagram.getMessage().getMessage())) {
-            client_addr = createSecureAddrType(mkAddrType(datagram.getMessage().getAddendum()));
+            String at = datagram.getMessage().getAddendum();
+            String salt = "";
+            int ix = at.indexOf(' ');
+            if ( ix > 0 ) {
+                salt = at.substring(ix).trim();
+                at = at.substring(0, ix).trim();
+            }
+            client_addr = createSecureAddrType(mkAddrType(at), salt);
         } else if ("unsecure-id".equals(datagram.getMessage().getMessage())) {
             client_addr = datagram.getSender();
             ClientGhost client_ghost = null;
@@ -234,7 +260,8 @@ public class Client_Admin extends PropagandaClient {
         getLogger().finest("args: " + datagram + ' ' + orig_connector);
 
         AddrType client_addr = datagram.getSender();
-        ClientGhost client_ghost = server.getRegisteredClientGhost(client_addr.getId());
+//        ClientGhost client_ghost = server.getRegisteredClientGhost(client_addr.getId());
+        ClientGhost client_ghost = server.getRegisteredClientGhostSecured(client_addr.getId());
         if (client_ghost != null) {
             PropagandaConnector current_connector = client_ghost.getConnector();
             current_connector.dettachClientGhost(client_ghost);

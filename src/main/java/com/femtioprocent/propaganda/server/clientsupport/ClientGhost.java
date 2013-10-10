@@ -117,7 +117,7 @@ public class ClientGhost
             return getDefaultAddrType();
         }
         if ( addr_type_group_set.size() > 0 )
-            return AddrType.createSecureAddrType(unsecure_id + "@" + addr_type_group_set.iterator().next());
+            return AddrType.createSecureAddrType(unsecure_id + "@" + addr_type_group_set.iterator().next(), "");
         return createAddrType("@");
     }
 

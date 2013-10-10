@@ -21,10 +21,10 @@ public class SecureUtil {
     
     private static String salt = "" + System.getProperty("os.name") + System.nanoTime() + System.getProperty("user.name");
 
-    public static String getSecureId(String s) {
+    public static String getSecureId(String s, String seasalt) {
         MessageDigest md = null;
         try {
-            String us = s + ":" + salt;
+            String us = s + (seasalt == null || seasalt.length() == 0 ? "" : ":" + seasalt) + ":" + salt;
             md = MessageDigest.getInstance("SHA-1");
             String ss = new String(md.digest(us.getBytes("utf-8")));
             ss = Util.toAscii(ss);
