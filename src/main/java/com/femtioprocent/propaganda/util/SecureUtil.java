@@ -26,8 +26,9 @@ public class SecureUtil {
         try {
             String us = s + (seasalt == null || seasalt.length() == 0 ? "" : ":" + seasalt) + ":" + salt;
             md = MessageDigest.getInstance("SHA-1");
-            String ss = new String(md.digest(us.getBytes("utf-8")));
-            ss = Util.toAscii(ss);
+            byte[] d = md.digest(us.getBytes("utf-8"));
+            String ss = Util.toAscii(d);
+            System.err.println("SHA1: 2 " + ss.length());
             m.put(ss, s);
             return ss;
         } catch (NoSuchAlgorithmException e) {
