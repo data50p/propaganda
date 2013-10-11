@@ -17,6 +17,7 @@ import com.femtioprocent.propaganda.util.SecureUtil;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,6 +32,8 @@ public class Client_Admin extends PropagandaClient {
 
     PropagandaServer server;
 
+    static AtomicInteger ordinal = new AtomicInteger((int)System.currentTimeMillis());
+    
     public Client_Admin(String name) {
         super(name);
         init();
@@ -123,7 +126,7 @@ public class Client_Admin extends PropagandaClient {
 
     private String mkAddrType(String s) {
         if (s == null || s.length() == 0) {
-            return null;
+            return mkAddrType();
         }
         if (s.startsWith("@")) {
             String nId = server.createDefaultId();
@@ -131,6 +134,10 @@ public class Client_Admin extends PropagandaClient {
         } else {
             return s;
         }
+    }
+
+    private String mkAddrType() {
+        return "propaganda-" + SecureUtil.getSecureId("" + ordinal.incrementAndGet(), "autoId");
     }
 
     public ClientGhost registerMsg(Datagram datagram, PropagandaConnector orig_connector) {
