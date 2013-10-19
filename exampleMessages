@@ -6,6 +6,7 @@ echo '. @ register; request-id aa@TESTING'
 echo '. @ register; request-id a3@TESTING'
 echo '. @ register; request-secure-id a4@CCFCLIENT'
 echo '_ @ register; unsecure-id'
+echo '. @ register'
 
 echo '_ @;list'
 echo '_ @;list-id'

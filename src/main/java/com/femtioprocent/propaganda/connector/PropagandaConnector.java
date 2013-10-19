@@ -7,6 +7,8 @@ import com.femtioprocent.propaganda.data.Datagram;
 import com.femtioprocent.propaganda.exception.PropagandaException;
 import com.femtioprocent.propaganda.server.PropagandaServer;
 import com.femtioprocent.propaganda.server.clientsupport.ClientGhost;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
    One client ghost for each registred name.
@@ -43,6 +45,9 @@ abstract public class PropagandaConnector implements ServerConnector, ClientConn
     public void attachClientGhost(ClientGhost client_ghost)
     {
 	client_ghost_li.add(client_ghost);
+//        if ( client_ghost_li.size() > 5 ) {
+//            delay(client_ghost_li.size());
+//        }
     }
 
     public void dettachClientGhost(ClientGhost client_ghost)
@@ -102,6 +107,17 @@ abstract public class PropagandaConnector implements ServerConnector, ClientConn
                 return true;
         }
         return false;
+    }
+
+    private void delay(int size) {
+        try {
+            long a = 1L << size;
+            if ( a > 1000L * 60 * 60 || a <= 0 )
+                a = 1000L * 60 * 60;
+            Thread.sleep(a);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(PropagandaConnector.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

@@ -105,8 +105,10 @@ public class PropagandaServer {
     }
     static AtomicInteger defaultId = new AtomicInteger((int) (System.currentTimeMillis() % 1000000));
 
-    public String createDefaultId() {
-        return "pid-" + defaultId.addAndGet(1);
+    public String createDefaultId(PropagandaConnector connector) {
+        if ( connector == null)
+            return "pid-" + defaultId.addAndGet(1);
+        return connector.name;
     }
 
     public class PlainConnectorSupport {
@@ -127,7 +129,7 @@ public class PropagandaServer {
                         for (;;) {
                             Connector_Plain.initListen(port);
                             Socket so = Connector_Plain.acceptClient();
-                            Connector_Plain connector_plain = (Connector_Plain) PropagandaConnectorFactory.create("Plain", "plain-" + cnt.incrementAndGet(), PropagandaServer.this, null);
+                            Connector_Plain connector_plain = (Connector_Plain) PropagandaConnectorFactory.create("Plain", null, PropagandaServer.this, null);
                             connector_plain.serve(so);
                         }
                     } catch (IOException ex) {

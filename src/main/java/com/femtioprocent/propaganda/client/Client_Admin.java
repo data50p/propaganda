@@ -124,12 +124,12 @@ public class Client_Admin extends PropagandaClient {
         this.server = server;
     }
 
-    private String mkAddrType(String s) {
+    private String mkAddrType(String s, PropagandaConnector connector) {
         if (s == null || s.length() == 0) {
             return mkAddrType();
         }
         if (s.startsWith("@")) {
-            String nId = server.createDefaultId();
+            String nId = server.createDefaultId(connector);
             return "" + nId + s;
         } else {
             return s;
@@ -147,10 +147,10 @@ public class Client_Admin extends PropagandaClient {
         boolean request_status = false;
 
         if ("request-status".equals(datagram.getMessage().getMessage())) {
-            client_addr = createAddrType(mkAddrType(datagram.getMessage().getAddendum()));
+            client_addr = createAddrType(mkAddrType(datagram.getMessage().getAddendum(), orig_connector));
             request_status = true;
         } else if ("request-id".equals(datagram.getMessage().getMessage())) {
-            client_addr = createAddrType(mkAddrType(datagram.getMessage().getAddendum()));
+            client_addr = createAddrType(mkAddrType(datagram.getMessage().getAddendum(), orig_connector));
         } else if ("request-secure-id".equals(datagram.getMessage().getMessage())) {
             String at = datagram.getMessage().getAddendum();
             String salt = "";
@@ -159,7 +159,7 @@ public class Client_Admin extends PropagandaClient {
                 salt = at.substring(ix).trim();
                 at = at.substring(0, ix).trim();
             }
-            client_addr = createSecureAddrType(mkAddrType(at), salt);
+            client_addr = createSecureAddrType(mkAddrType(at, orig_connector), salt);
         } else if ("unsecure-id".equals(datagram.getMessage().getMessage())) {
             client_addr = datagram.getSender();
             ClientGhost client_ghost = null;
@@ -176,7 +176,7 @@ public class Client_Admin extends PropagandaClient {
         }
         if (datagram.getMessage().getAddendum() == null) {
             final String message = datagram.getMessage().getMessage();
-            client_addr = createAddrType(mkAddrType(message));
+            client_addr = createAddrType(mkAddrType(message, orig_connector));
         }
 
         if (client_addr != null) {

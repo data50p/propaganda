@@ -53,7 +53,7 @@ public class HttpServer extends Thread {
 	}
 
 	public void run() {
-	    Connector_Http connector_http = (Connector_Http)PropagandaConnectorFactory.create("Http", "http-" + connection_cnt.incrementAndGet(), server, null);
+	    Connector_Http connector_http = (Connector_Http)PropagandaConnectorFactory.create("Http", "http", server, null);
 	    connector_http.setSocket(connectedSocket);
 
 	    HttpConnectedServer con = new HttpConnectedServer(connector_http, HttpServer.this);

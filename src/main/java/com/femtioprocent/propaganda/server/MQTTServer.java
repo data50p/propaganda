@@ -50,7 +50,7 @@ public class MQTTServer {
         this.server = server;
         startMqttBroker();
         mqttClient = new MqttClient();
-        connector = (Connector_Queue) PropagandaConnectorFactory.create("Queue", "MQTT-" + ws_cnt.incrementAndGet(), server, mqttClient);
+        connector = (Connector_Queue) PropagandaConnectorFactory.create("Queue", "MQTT", server, mqttClient);
     }
 
     public void processMqttPayload() {

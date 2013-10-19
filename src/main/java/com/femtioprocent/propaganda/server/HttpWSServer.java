@@ -33,7 +33,7 @@ public class HttpWSServer {
 
     public HttpWSServer() {
         wsClient = new WsClient();
-        connector = (Connector_Queue) PropagandaConnectorFactory.create("Queue", "WS-" + ws_cnt.incrementAndGet(), server, wsClient);
+        connector = (Connector_Queue) PropagandaConnectorFactory.create("Queue", "WS", server, wsClient);
     }
 
     @WebMethod
@@ -79,10 +79,10 @@ public class HttpWSServer {
     
     AtomicInteger i_cnt = new AtomicInteger();
     
-    private String autoRegister(PropagandaConnector connector, List<String> hm) {
+    private String autoRegister(PropagandaConnector connector, List<String> l) {
 //        String myId = "" + connector.so.getLocalAddress().getHostAddress() + '-' + connector.so.getPort()+ '-' + this.hashCode() + '@' + "AUTOREGISTRED";
         String myId = "" + "WS" + '-' + connector.name + '-' + i_cnt.incrementAndGet() + '@' + "AUTOREGISTRED" + '-' + this.hashCode();
-        hm.add(". @ register;request-id " + myId);
+        l.add(". @ register;request-id " + myId);
         return myId;
     }
 
