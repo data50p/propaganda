@@ -22,6 +22,7 @@ import com.femtioprocent.propaganda.dispatcher.Dispatcher;
 import com.femtioprocent.propaganda.exception.PropagandaException;
 import com.femtioprocent.propaganda.server.clientsupport.ClientGhost;
 import com.femtioprocent.fpd.sundry.S;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PropagandaServer {
@@ -59,7 +60,6 @@ public class PropagandaServer {
         try {
             PropagandaClient client;
             ;
-
 
             if (true) {
                 getLogger().finest("--------- admin --------");
@@ -106,8 +106,9 @@ public class PropagandaServer {
     static AtomicInteger defaultId = new AtomicInteger((int) (System.currentTimeMillis() % 1000000));
 
     public String createDefaultId(PropagandaConnector connector) {
-        if ( connector == null)
+        if (connector == null) {
             return "pid-" + defaultId.addAndGet(1);
+        }
         return connector.name;
     }
 
@@ -229,8 +230,9 @@ public class PropagandaServer {
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     /**
      * using the secured address (not SHA1)
+     *
      * @param client_name
-     * @return 
+     * @return
      */
     public ClientGhost getRegisteredClientGhost(String client_name) {
         client_name = client_name.toLowerCase();
@@ -241,8 +243,9 @@ public class PropagandaServer {
 
     /**
      * Using the secure address (SHA1)
+     *
      * @param secured_client_name
-     * @return 
+     * @return
      */
     public ClientGhost getRegisteredClientGhostSecured(String secured_client_name) {
         secured_client_name = secured_client_name.toLowerCase();

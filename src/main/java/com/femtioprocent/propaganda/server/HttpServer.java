@@ -38,6 +38,7 @@ public class HttpServer extends Thread {
 	try {
 	    for (;;) {
 		pool.execute(new Handler(serverSocket.accept()));
+                getLogger().info("pool status: : " + pool.toString());
 	    }
 	} catch (IOException ex) {
 	    pool.shutdown();
