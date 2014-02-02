@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 import com.femtioprocent.propaganda.connector.Connector_Plain;
 
-public class Plain_Client extends PropagandaClient
+public class Client_Plain extends PropagandaClient
 {
     Connector_Plain conn;
 
-    Plain_Client(String name)
+    Client_Plain(String name)
     {
 	super(name);
 	this.name = name;
@@ -19,7 +19,7 @@ public class Plain_Client extends PropagandaClient
 
     public static boolean sendMsg(String from, String addr_to, String msg) 
     {
-	PropagandaClient client = new Plain_Client(from);
+	PropagandaClient client = new Client_Plain(from);
 	return client.sendMsg(addr_to, msg);
     }
 }
