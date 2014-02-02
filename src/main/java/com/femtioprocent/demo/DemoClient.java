@@ -28,7 +28,7 @@ import com.femtioprocent.propaganda.exception.PropagandaException;
  */
 public class DemoClient extends javax.swing.JFrame {
 
-    PropagandaServer server = PropagandaServer.getDefaultServer();
+    PropagandaServer server = PropagandaServer.getDefaultServer("DemoClient");
     
     public static interface Eval {
 

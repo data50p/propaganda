@@ -5,6 +5,7 @@
 package com.femtioprocent.propaganda.server;
 
 import com.femtioprocent.fpd.sundry.S;
+import com.femtioprocent.propaganda.Version;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.Inet4Address;
@@ -14,7 +15,9 @@ import java.net.MulticastSocket;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -59,8 +62,8 @@ public class BroadcastDiscoverServer {
                             InetAddress a = p.getAddress();
                             int po = p.getPort();
                             S.pL("BroadcastDiscoverServer: from " + a + ' ' + po);
-                            String rpl = "I'm port: " + PropagandaServer.getDefaultServer().serverPort;
 
+                            List<String> hostList = new ArrayList<String>();
                             String ip;
                             try {
                                 Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
@@ -75,10 +78,8 @@ public class BroadcastDiscoverServer {
                                     while (addresses.hasMoreElements()) {
                                         InetAddress addr = addresses.nextElement();
                                         ip = addr.getHostAddress();
-                                        if (iface.getDisplayName().startsWith("en")) {
-                                            if (addr instanceof Inet4Address) {
-                                                rpl += ", host: " + addr.getCanonicalHostName();
-                                            }
+                                        if (!iface.getDisplayName().startsWith("vmnet") && addr instanceof Inet4Address) {
+                                            hostList.add("\"" + addr.getCanonicalHostName() + "\"");
                                         }
                                         System.out.println(iface.getDisplayName() + " " + ip);
                                     }
@@ -87,22 +88,14 @@ public class BroadcastDiscoverServer {
                                 throw new RuntimeException(e);
                             }
 
-//                        InetAddress[] localaddr;
-//
-//                        try {
-//                            localaddr = InetAddress.getAllByName("host.name");
-//
-//                            for (int i = 0; i < localaddr.length; i++) {
-//
-//                                rpl += localaddr[i].getHostAddress() + "\n";
-//
-//                            }
-//
-//
-//                        } catch (UnknownHostException e) {
-//                            // TODO Auto-generated catch block
-//                            e.printStackTrace();
-//                        }
+                            String rpl = "{\"name\":\""
+                                    + PropagandaServer.getDefaultServer().getName() + "\", \"version\":\""
+                                    + Version.projectVersion + "\", \"buildtime\":\""
+                                    + Version.mavenBuildTimestamp + "\", \"hosts\":"
+                                    + hostList.toString().replace(" ", "") + ", \"port\":\""
+                                    + PropagandaServer.getDefaultServer().serverPort
+                                    + "\"}";
+
                             byte[] sbuf = rpl.getBytes("utf-8");
                             p = new DatagramPacket(sbuf, sbuf.length, a, po);
                             s.send(p);

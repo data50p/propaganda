@@ -35,6 +35,7 @@ public class PropagandaServer {
     public Dispatcher dispatcher;
     private Date started = new Date();
     public int serverPort = 8899;
+    private String name = "";
 
     public PropagandaServer() {
         this(8899);
@@ -303,11 +304,20 @@ public class PropagandaServer {
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    public static PropagandaServer getDefaultServer() {
+    public static PropagandaServer getDefaultServer(String name) {
         if (default_server == null) {
             default_server = new PropagandaServer();
+            default_server.name = name;
         }
         return default_server;
+    }
+
+    public static PropagandaServer getDefaultServer() {
+        return getDefaultServer("DefaultPropagandaServer");
+    }
+    
+    public String getName() {
+        return name;
     }
 
     public String toString() {

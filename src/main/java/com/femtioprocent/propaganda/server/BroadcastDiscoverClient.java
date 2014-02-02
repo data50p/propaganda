@@ -11,6 +11,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +32,8 @@ public class BroadcastDiscoverClient {
         this.port = port;
     }
 
-    public String discover() {
+    public List<String> discover() {
+        List<String> arr = new ArrayList<String>();
         try {
             final InetAddress mca = InetAddress.getByName(BroadcastDiscoverServer.MCA);
             String msg = "discover";
@@ -40,6 +43,7 @@ public class BroadcastDiscoverClient {
             s.setSoTimeout(3000);
             System.err.println("BroadcastDiscoverClient: send... " + hi);
             s.send(hi);
+
             // get their responses!
             byte[] buf = new byte[1000];
             DatagramPacket recv = new DatagramPacket(buf, buf.length);
@@ -48,19 +52,21 @@ public class BroadcastDiscoverClient {
                 s.receive(recv);
                 final String rpl = new String(recv.getData(), "utf-8");
                 System.err.println("BroadcastDiscoverClient: got " + rpl);
-                if ( rpl.startsWith("I'm") )
-                    return rpl;
+                if (rpl.startsWith("{\"name\":")) {
+                    arr.add(rpl);
+                }
             }
         } catch (UnknownHostException ex) {
             System.err.println("BroadcastDiscoverClient: " + ex);
         } catch (IOException ex) {
             System.err.println("BroadcastDiscoverClient: " + ex);
         }
-        return null;
+        return arr;
     }
 
     public static void main(String[] args) {
         BroadcastDiscoverClient bdc = new BroadcastDiscoverClient();
-        System.err.println("discovered: " + bdc.discover());
+        final List<String> l = bdc.discover();
+        System.out.println("discovered: " + l);
     }
 }
