@@ -27,21 +27,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PropagandaServer {
 
+    public static final int DEFAULT_SERVER_PORT = 8899;
+
     private static PropagandaServer default_server;
+    public int serverPort;
+    private String serverName;
+
     public HashMap<String, ClientGhost> clientghost_hm;
     public Client_Monitor client_monitor;
     public Client_Admin client_admin;
     public Client_Status client_status;
     public Dispatcher dispatcher;
     private Date started = new Date();
-    public int serverPort = 8899;
-    private String name = "DefaultPropagandaServer";
 
-    public PropagandaServer() {
-        this(8899);
-    }
-
-    public PropagandaServer(int port) {
+    private PropagandaServer(String name, int port) {
+        serverName = name;
         serverPort = port;
         if (default_server == null) {
             default_server = this;
@@ -303,32 +303,30 @@ public class PropagandaServer {
                 + dispatcher.getStatus(level);
     }
 
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    public static PropagandaServer getDefaultServer(String name) {
-        if (default_server == null) {
-            default_server = new PropagandaServer();
-            default_server.name = name;
-        }
-        return default_server;
-    }
-
-    public static PropagandaServer getDefaultServer(String name, int port) {
-        if (default_server == null) {
-            default_server = new PropagandaServer(port);
-            default_server.name = name;
-        }
-        return default_server;
-    }
+    // - - - - - - constructor methods - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     public static PropagandaServer getDefaultServer() {
         return getDefaultServer("DefaultPropagandaServer");
     }
+
+    public static synchronized PropagandaServer getDefaultServer(String name) {
+            return getDefaultServer(name, DEFAULT_SERVER_PORT);
+    }
+
+    public static synchronized PropagandaServer getDefaultServer(String name, int port) {
+        if (default_server == null) {
+            default_server = new PropagandaServer(name, port);
+            default_server.serverName = name;
+        }
+        return default_server;
+    }
     
     public String getName() {
-        return name;
+        return serverName;
     }
 
     public String toString() {
-        return "Server{port=" + serverPort + "}";
+        return "PropagandaServer{name=" + serverName +
+                ",port=" + serverPort + "}";
     }
 }
