@@ -1,1 +1,1 @@
-java -cp target/propaganda-0.1.3.0-SNAPSHOT-jexec.jar com.femtioprocent.propaganda.appl.ServerAppl "$@"
+java -cp target/propaganda-0.1.*.*-jexec.jar com.femtioprocent.propaganda.appl.ServerAppl "$@"
