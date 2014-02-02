@@ -39,6 +39,11 @@ public class PropagandaServer {
     public Client_Status client_status;
     public Dispatcher dispatcher;
     private Date started = new Date();
+<<<<<<< HEAD
+=======
+    public int serverPort = 8899;
+    private String name = "";
+>>>>>>> parent of 6480238... refactor factory
 
     private PropagandaServer(String name, int port) {
         serverName = name;
@@ -313,12 +318,17 @@ public class PropagandaServer {
             return getDefaultServer(name, DEFAULT_SERVER_PORT);
     }
 
+<<<<<<< HEAD
     public static synchronized PropagandaServer getDefaultServer(String name, int port) {
         if (default_server == null) {
             default_server = new PropagandaServer(name, port);
             default_server.serverName = name;
         }
         return default_server;
+=======
+    public static PropagandaServer getDefaultServer() {
+        return getDefaultServer("DefaultPropagandaServer");
+>>>>>>> parent of 6480238... refactor factory
     }
     
     public String getName() {

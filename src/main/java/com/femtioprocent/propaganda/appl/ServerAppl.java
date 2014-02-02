@@ -18,7 +18,7 @@ public class ServerAppl extends Appl
             return;
         }
         
-	server = PropagandaServer.getDefaultServer();
+	server = new PropagandaServer();
 
 	String s = "ALL";
 	if ((s = flags.get("log")) != null)
