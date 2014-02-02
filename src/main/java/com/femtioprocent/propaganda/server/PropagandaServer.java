@@ -49,6 +49,7 @@ public class PropagandaServer {
         getLogger().setLevel(Level.ALL);
         initServer();
         initPropagandaClients();
+        initBroadcastDiscoverServer();
     }
 
     private void initServer() {
@@ -110,6 +111,11 @@ public class PropagandaServer {
             return "pid-" + defaultId.addAndGet(1);
         }
         return connector.name;
+    }
+
+    private void initBroadcastDiscoverServer() {
+        BroadcastDiscoverServer bds = new BroadcastDiscoverServer();
+        bds.start();
     }
 
     public class PlainConnectorSupport {
