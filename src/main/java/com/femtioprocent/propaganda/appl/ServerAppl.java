@@ -14,11 +14,18 @@ public class ServerAppl extends Appl
     @Override
     public void main() {
 	if ( (flags.get("?")) != null) {
-            S.pL("-MB     start Moquette Broker (MQTT)");
+            S.pL("-MB                      start Moquette Broker (MQTT)");
+            S.pL("-propaganda.port=<port>  set the port of propaganda server");
             return;
         }
         
-	server = new PropagandaServer();
+        String port_s = "8899";
+        String fl_port_s;
+        
+	if ((fl_port_s = flags.get("propaganda.port")) != null)
+             port_s = fl_port_s;
+
+        server = PropagandaServer.getDefaultServer("CCF-PropagandaServer", Integer.parseInt(port_s));
 
 	String s = "ALL";
 	if ((s = flags.get("log")) != null)
