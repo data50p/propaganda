@@ -89,17 +89,17 @@ public class ClientGhost
     public boolean matchAddrType(AddrType addr_type)
     {
 	String g = addr_type.getAddrTypeGroup();
-	String id    = addr_type.getId();
+	String at_id    = addr_type.getId();
 
 	if ( g.equals("") && matchAddrTypeId("$ADMIN") )
 	    return true;
-	if ( g.equals("*") && matchAddrId(id) )
+	if ( (g.equals("*")||g.equals("*!")) && matchAddrId(at_id) )
 	    return true;
-	if ( g.equals("*") && id.equals("*") )
+	if ( (g.equals("*")||g.equals("*!")) && at_id.equals("*") )
 	    return true;
-	if ( id.equals("*") && matchAddrTypeId(g) )
+	if ( (at_id.equals("*")||at_id.equals("*!")) && matchAddrTypeId(g) )
 	    return true;
-	if ( matchAddrId(id) && matchAddrTypeId(g) )
+	if ( matchAddrId(at_id) && matchAddrTypeId(g) )
 	    return true;
 	return false;
     }

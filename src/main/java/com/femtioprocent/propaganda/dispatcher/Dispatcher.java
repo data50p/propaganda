@@ -101,7 +101,12 @@ public class Dispatcher {
             getLogger().warning("sending from @ to @, ignored: " + this);
             return false;
         }
-        return receiver.equals(anyAddrType) || client_ghost.matchAddrType(receiver);
+        
+        if ( receiver.getId().equals("*!") ) {
+            if ( datagram.getSender().getId().equals(client_ghost.getDefaultAddrType().getId()))
+                return false;
+        }
+        return receiver.equals(allAddrType) || client_ghost.matchAddrType(receiver);
     }
 
     private long calculateValidUpTo(String duration) {

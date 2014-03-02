@@ -3,6 +3,8 @@ echo
 echo nc localhost 8899
 echo
 echo '. @ register; request-id aa@TESTING'
+echo '. @ register; request-id bb@TESTING'
+echo '. @ register; request-id iMac@PI'
 echo '. @ register; request-id a3@TESTING'
 echo '. @ register; request-secure-id a4@CCFCLIENT'
 echo '_ @ register; unsecure-id'

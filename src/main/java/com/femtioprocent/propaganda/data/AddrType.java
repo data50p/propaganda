@@ -21,7 +21,10 @@ public class AddrType
 
     public static AddrType serverAddrType = new AddrType("@");
     public static AddrType anonymousAddrType = new AddrType(".");
-    public static AddrType anyAddrType = new AddrType("*");
+    @Deprecated
+    public static AddrType anyAddrType = new AddrType("*"); 
+    public static AddrType allAddrType = new AddrType("*");
+    public static AddrType allOtherAddrType = new AddrType("*!"); // all other but myself
     public static AddrType defaultAddrType = new AddrType("_"); // changed to first registred
 
     private AddrType(String s)
@@ -74,7 +77,9 @@ public class AddrType
 	    return anonymousAddrType;
 
 	if ( s.equals("*") || s.equals("*@*") )
-	    return anyAddrType;
+
+	if ( s.equals("*!") )
+	    return allOtherAddrType;
 
 	if ( s.equals("@") )
 	    return serverAddrType;
