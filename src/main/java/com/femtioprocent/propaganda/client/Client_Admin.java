@@ -130,7 +130,7 @@ public class Client_Admin extends PropagandaClient {
         }
         if (s.startsWith("@")) {
             String nId = server.createDefaultId(connector);
-            return "" + nId + s;
+            return "cb-" + SecureUtil.getSecureId(nId + s, "connectorBound");
         } else {
             return s;
         }
