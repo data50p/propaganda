@@ -33,11 +33,10 @@ import java.util.logging.Logger;
 public class BroadcastDiscoverServer {
 
     public static final String MCA = "224.0.0.1";
-    public static final int default_port = 8833;
     int port;
 
     public BroadcastDiscoverServer() {
-        this(default_port);
+        this(PropagandaServer.DEFAULT_DISCOVER_PORT);
     }
 
     public BroadcastDiscoverServer(int port) {

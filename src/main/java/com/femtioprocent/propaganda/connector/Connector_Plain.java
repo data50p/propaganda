@@ -32,7 +32,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class Connector_Plain extends PropagandaConnector {
-
+    int listenPort = 0;
     Socket so;
 
     public Connector_Plain(String name) {
@@ -68,7 +68,6 @@ public class Connector_Plain extends PropagandaConnector {
         if (sso != null) {
             return;
         }
-
         sso = new ServerSocket(port);
         getLogger().finest("started: " + sso.toString() + ' ' + port);
     }
@@ -77,17 +76,9 @@ public class Connector_Plain extends PropagandaConnector {
      * Connect a client with Socket to server.
      */
     public boolean connect() {
-        try {
-            int port = 8899;
+            int port = sso.getLocalPort();
             String host = "localhost";
-
-            so = new Socket(host, port);
-            getLogger().fine("connected : " + so);
-            return true;
-        } catch (IOException ex) {
-            getLogger().severe("no-connection: ");
-        }
-        return false;
+            return connect(host, port);
     }
 
     /**

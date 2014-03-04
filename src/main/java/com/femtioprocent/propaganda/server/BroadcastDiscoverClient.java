@@ -4,7 +4,6 @@
  */
 package com.femtioprocent.propaganda.server;
 
-import static com.femtioprocent.propaganda.server.BroadcastDiscoverServer.default_port;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -25,7 +24,7 @@ public class BroadcastDiscoverClient {
     int port;
 
     public BroadcastDiscoverClient() {
-        this(BroadcastDiscoverServer.default_port);
+        this(PropagandaServer.DEFAULT_DISCOVER_PORT);
     }
 
     public BroadcastDiscoverClient(int port) {

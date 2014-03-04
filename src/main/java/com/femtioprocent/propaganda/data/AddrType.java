@@ -77,6 +77,7 @@ public class AddrType
 	    return anonymousAddrType;
 
 	if ( s.equals("*") || s.equals("*@*") )
+	    return allAddrType;
 
 	if ( s.equals("*!") )
 	    return allOtherAddrType;

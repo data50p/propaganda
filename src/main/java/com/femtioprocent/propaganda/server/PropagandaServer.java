@@ -28,6 +28,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class PropagandaServer {
 
     public static final int DEFAULT_SERVER_PORT = 8899;
+    public static int DEFAULT_HTTP_PORT = 8888;
+    public static int DEFAULT_WS_PORT = 8877;
+    public static int DEFAULT_DISCOVER_PORT = 8833;
 
     private static PropagandaServer default_server;
     public int serverPort;
@@ -77,8 +80,8 @@ public class PropagandaServer {
 
             if (true) {
                 getLogger().finest("--------- monitor --------");
-                client_monitor = (Client_Monitor) PropagandaClientFactory.create("Monitor", "monitor-logger");
-                client_monitor.createConnector("Local", "monitor-logger", this);
+                client_monitor = (Client_Monitor) PropagandaClientFactory.create("Monitor", "propaganda-monitor");
+                client_monitor.createConnector("Local", "propaganda-monitor", this);
                 client_monitor.register("MONITOR");
             }
 
@@ -96,7 +99,7 @@ public class PropagandaServer {
 
         PlainConnectorSupport plain_connector_support = new PlainConnectorSupport(serverPort);
         HttpConnectorSupport http_connector_support = new HttpConnectorSupport();
-        WsConnectorSupport ws_connector_support = new WsConnectorSupport(8877);
+        WsConnectorSupport ws_connector_support = new WsConnectorSupport(PropagandaServer.DEFAULT_WS_PORT);
         MqttConnectorSupport mqtt_connector_support = new MqttConnectorSupport();
 
 // 	if ( server_appl != null && server_appl.flags.get("demo") != null ) {
@@ -152,7 +155,7 @@ public class PropagandaServer {
     class HttpConnectorSupport {
 
         HttpServer http_server;
-        int httpPort = 8888;
+        int httpPort = PropagandaServer.DEFAULT_HTTP_PORT;
 
         HttpConnectorSupport() {
             init();
@@ -244,8 +247,8 @@ public class PropagandaServer {
     public ClientGhost getRegisteredClientGhost(String client_name) {
         client_name = client_name.toLowerCase();
 
-        getLogger().finest(": " + client_name + ' ' + clientghost_hm.keySet() + ' ' + clientghost_hm.get(client_name.toLowerCase()));
-        return clientghost_hm.get(client_name.toLowerCase());
+        getLogger().finest(": " + client_name + ' ' + clientghost_hm.keySet() + ' ' + clientghost_hm.get(client_name));
+        return clientghost_hm.get(client_name);
     }
 
     /**
