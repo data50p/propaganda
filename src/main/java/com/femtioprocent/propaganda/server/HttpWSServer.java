@@ -53,8 +53,9 @@ public class HttpWSServer {
             Datagram datagram = new Datagram(dg_s);
             int n = server.dispatcher.dispatchMsg(connector, datagram);
         }
-        if ( to == 0 )
+        if (to == 0) {
             to = 1000;
+        }
         for (;;) {
             String r = retrieveDatagram(to);
             list.add(r);
@@ -64,7 +65,7 @@ public class HttpWSServer {
                 return list.toArray(new String[list.size()]);
             }
         }
-        
+
     }
 
     private String retrieveDatagram(int to) {
@@ -76,9 +77,9 @@ public class HttpWSServer {
         HttpWSServer.server = server;
         e = Endpoint.publish("http://0.0.0.0:8877/propaganda", new HttpWSServer());
     }
-    
+
     AtomicInteger i_cnt = new AtomicInteger();
-    
+
     private String autoRegister(PropagandaConnector connector, List<String> l) {
 //        String myId = "" + connector.so.getLocalAddress().getHostAddress() + '-' + connector.so.getPort()+ '-' + this.hashCode() + '@' + "AUTOREGISTRED";
         String myId = "" + "WS" + '-' + connector.name + '-' + i_cnt.incrementAndGet() + '@' + "AUTOREGISTRED" + '-' + this.hashCode();

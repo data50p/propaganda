@@ -1,6 +1,6 @@
 package com.femtioprocent.propaganda.data;
 
-public enum MessageType 
-{
+public enum MessageType {
+
     plain, single, RM, ping, pong, register, unregister, monitor, status, control, bad;
 }

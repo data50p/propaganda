@@ -18,6 +18,7 @@ import com.femtioprocent.propaganda.server.HttpWSServive;
  * @author lars
  */
 public class WSDemo extends Appl {
+
     @Override
     public void main() {
         HttpWSService s = new HttpWSService();
@@ -29,7 +30,7 @@ public class WSDemo extends Appl {
     }
 
     public static void main(String[] args) {
-	decodeArgs(args);
-	main(new WSDemo());
+        decodeArgs(args);
+        main(new WSDemo());
     }
 }

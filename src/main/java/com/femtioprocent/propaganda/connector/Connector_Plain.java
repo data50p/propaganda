@@ -32,6 +32,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class Connector_Plain extends PropagandaConnector {
+
     int listenPort = 0;
     Socket so;
 
@@ -76,9 +77,9 @@ public class Connector_Plain extends PropagandaConnector {
      * Connect a client with Socket to server.
      */
     public boolean connect() {
-            int port = sso.getLocalPort();
-            String host = "localhost";
-            return connect(host, port);
+        int port = sso.getLocalPort();
+        String host = "localhost";
+        return connect(host, port);
     }
 
     /**
@@ -172,7 +173,7 @@ public class Connector_Plain extends PropagandaConnector {
         pool.purge();
         pool.execute(new MyServerThread(so));
         String state = pool.toString();
-        
+
         getLogger().log(Level.INFO, "plain thread pool state: " + state);
     }
 

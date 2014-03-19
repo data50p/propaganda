@@ -32,8 +32,8 @@ public class Client_Admin extends PropagandaClient {
 
     PropagandaServer server;
 
-    static AtomicInteger ordinal = new AtomicInteger((int)System.currentTimeMillis());
-    
+    static AtomicInteger ordinal = new AtomicInteger((int) System.currentTimeMillis());
+
     public Client_Admin(String name) {
         super(name);
         init();
@@ -57,7 +57,7 @@ public class Client_Admin extends PropagandaClient {
                                 sendMsg(new Datagram(serverAddrType,
                                         datagram.getSender(),
                                         new Message("list-id-is",
-                                        "" + set.toString().replace(" ", ""))));
+                                                "" + set.toString().replace(" ", ""))));
                             } catch (PropagandaException ex) {
                                 S.pL("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
                             }
@@ -72,8 +72,9 @@ public class Client_Admin extends PropagandaClient {
                                 for (Map.Entry<String, ClientGhost> ent : map.entrySet()) {
                                     String id = ent.getKey();
                                     ClientGhost cg = ent.getValue();
-                                    if ( sb.length() > 0 )
+                                    if (sb.length() > 0) {
                                         sb.append(";");
+                                    }
                                     sb.append(cg.getDefaultSecureAddrType().getUnsecureId());
                                     final Set<String> atgSet = cg.getAddrTypeGroupSet();
                                     sb.append("@" + atgSet.toString().replace(" ", ""));
@@ -81,7 +82,7 @@ public class Client_Admin extends PropagandaClient {
                                 sendMsg(new Datagram(serverAddrType,
                                         datagram.getSender(),
                                         new Message("list-is",
-                                        "" + sb.toString())));
+                                                "" + sb.toString())));
                             } catch (PropagandaException ex) {
                                 S.pL("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
                             }
@@ -95,7 +96,7 @@ public class Client_Admin extends PropagandaClient {
                                 sendMsg(new Datagram(serverAddrType,
                                         datagram.getSender(),
                                         new Message("list-group-is",
-                                        "" + set.toString().replace(" ", ""))));
+                                                "" + set.toString().replace(" ", ""))));
                             } catch (PropagandaException ex) {
                                 S.pL("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
                             }
@@ -105,7 +106,7 @@ public class Client_Admin extends PropagandaClient {
                                 sendMsg(new Datagram(serverAddrType,
                                         datagram.getSender(),
                                         new Message("version",
-                                        "" + com.femtioprocent.propaganda.Version.projectVersion + ' ' + com.femtioprocent.propaganda.Version.mavenBuildTimestamp)));
+                                                "" + com.femtioprocent.propaganda.Version.projectVersion + ' ' + com.femtioprocent.propaganda.Version.mavenBuildTimestamp)));
                             } catch (PropagandaException ex) {
                                 S.pL("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
                             }
@@ -155,7 +156,7 @@ public class Client_Admin extends PropagandaClient {
             String at = datagram.getMessage().getAddendum();
             String salt = "";
             int ix = at.indexOf(' ');
-            if ( ix > 0 ) {
+            if (ix > 0) {
                 salt = at.substring(ix).trim();
                 at = at.substring(0, ix).trim();
             }
@@ -168,7 +169,7 @@ public class Client_Admin extends PropagandaClient {
                 client_ghost.sendToClient(new Datagram(serverAddrType,
                         client_addr,
                         new Message("unsecure-id-is",
-                        SecureUtil.lookupUnsecureId(client_ghost.getId()) + "@" + client_addr.getAddrTypeGroup())));
+                                SecureUtil.lookupUnsecureId(client_ghost.getId()) + "@" + client_addr.getAddrTypeGroup())));
             } catch (PropagandaException ex) {
                 Logger.getLogger(Client_Admin.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -196,7 +197,7 @@ public class Client_Admin extends PropagandaClient {
                             client_ghost.sendToClient(new Datagram(serverAddrType,
                                     client_addr,
                                     new Message("registered",
-                                    client_addr.getAddrTypeString() + " @" + client_ghost.getAddrTypeGroupSet())));
+                                            client_addr.getAddrTypeString() + " @" + client_ghost.getAddrTypeGroupSet())));
                         } catch (PropagandaException ex) {
                             S.pL("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
                         }
@@ -216,7 +217,7 @@ public class Client_Admin extends PropagandaClient {
                                 client_ghost.sendToClient(new Datagram(serverAddrType,
                                         client_addr,
                                         new Message("hostile-takeover",
-                                        "")));
+                                                "")));
                             } catch (PropagandaException ex) {
                                 S.pL("ClientGhost.registerMsg: Can't send 'registered' (2) " + ex);
                             }
@@ -227,7 +228,7 @@ public class Client_Admin extends PropagandaClient {
                                 client_ghost.sendToClient(new Datagram(serverAddrType,
                                         client_addr,
                                         new Message("registered",
-                                        client_addr.getAddrTypeString() + " @" + client_ghost.getAddrTypeGroupSet() + status)));
+                                                client_addr.getAddrTypeString() + " @" + client_ghost.getAddrTypeGroupSet() + status)));
                             } catch (PropagandaException ex) {
                                 S.pL("ClientGhost.registerMsg: Can't send 'registered' (2) " + ex);
                             }
@@ -238,7 +239,7 @@ public class Client_Admin extends PropagandaClient {
                                 client_ghost.sendToClient(new Datagram(serverAddrType,
                                         client_addr,
                                         new Message("already-registered",
-                                        client_addr.getAddrTypeString() + " @" + client_ghost.getAddrTypeGroupSet())));
+                                                client_addr.getAddrTypeString() + " @" + client_ghost.getAddrTypeGroupSet())));
                             } catch (PropagandaException ex) {
                                 S.pL("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
                             }
@@ -248,7 +249,7 @@ public class Client_Admin extends PropagandaClient {
                                 client_ghost.sendToClient(new Datagram(serverAddrType,
                                         client_addr,
                                         new Message("registered",
-                                        client_addr.getAddrTypeString() + " @" + client_ghost.getAddrTypeGroupSet() + status)));
+                                                client_addr.getAddrTypeString() + " @" + client_ghost.getAddrTypeGroupSet() + status)));
                             } catch (PropagandaException ex) {
                                 S.pL("ClientGhost.registerMsg: Can't send 'registered' (2) " + ex);
                             }

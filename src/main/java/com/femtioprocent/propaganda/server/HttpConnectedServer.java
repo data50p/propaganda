@@ -172,12 +172,12 @@ public class HttpConnectedServer {
         }
     }
     static String[][] mimeT = {{"text/html", ".html"},
-        {"audio/x-wav", ".wav"},
-        {"audio/x-au", ".au"},
-        {"image/gif", ".gif"},
-        {"image/png", ".png"},
-        {"image/jpeg", ".jpg"},
-        {"image/jpeg", ".jpeg"}
+    {"audio/x-wav", ".wav"},
+    {"audio/x-au", ".au"},
+    {"image/gif", ".gif"},
+    {"image/png", ".png"},
+    {"image/jpeg", ".jpg"},
+    {"image/jpeg", ".jpeg"}
     };
 
     String getMime(String fn) {
@@ -225,8 +225,7 @@ public class HttpConnectedServer {
     }
 
     /**
-     * Return eiter a query string encoded reponse or a simple string. When user
-     * request the server with datagram only then use the latter.
+     * Return eiter a query string encoded reponse or a simple string. When user request the server with datagram only then use the latter.
      */
     private String qsencode(Datagram datagram) {
         String addendum = datagram.getMessage().getAddendum();
@@ -290,8 +289,9 @@ public class HttpConnectedServer {
                 dos.flush();
             }
         } else {
-            if ( fn.equals(prefix + '/') )
-                fn += "index.html"; 
+            if (fn.equals(prefix + '/')) {
+                fn += "index.html";
+            }
             dos.writeBytes("HTTP/1.0 200 OK\r\n");
             dos.writeBytes("Server: Http Propaganda Server" + "\r\n");
             dos.writeBytes("MIME-Version: 1.0\r\n");

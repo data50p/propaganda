@@ -18,6 +18,7 @@ public class Datagram {
     Status status;
 
     public enum Status {
+
         OK, BAD, IGNORE
     };
 
@@ -97,8 +98,8 @@ public class Datagram {
         String[] envelop_arr = envelop.split(" ");
 
         if (envelop_arr.length < 2) {
-           status = Status.IGNORE;
-           return;
+            status = Status.IGNORE;
+            return;
         }
 
         this.sender = createAddrType(envelop_arr[0]);

@@ -11,9 +11,7 @@ import com.femtioprocent.propaganda.data.AddrType;
 import com.femtioprocent.propaganda.connector.PropagandaConnector;
 import java.util.*;
 
-
 import java.util.regex.*;
-
 
 import static com.femtioprocent.propaganda.data.AddrType.*;
 import static com.femtioprocent.propaganda.context.Config.*;
@@ -101,10 +99,11 @@ public class Dispatcher {
             getLogger().warning("sending from @ to @, ignored: " + this);
             return false;
         }
-        
-        if ( receiver.getId().equals("*!") ) {
-            if ( datagram.getSender().getId().equals(client_ghost.getDefaultAddrType().getId()))
+
+        if (receiver.getId().equals("*!")) {
+            if (datagram.getSender().getId().equals(client_ghost.getDefaultAddrType().getId())) {
                 return false;
+            }
         }
         return receiver.equals(allAddrType) || client_ghost.matchAddrType(receiver);
     }
@@ -224,9 +223,9 @@ public class Dispatcher {
             if (datagram.getReceiver() == serverAddrType) {
                 int dmCnt = dispatchMsg(orig_connector,
                         new Datagram(serverAddrType,
-                        datagram.getSender(),
-                        MessageType.pong,
-                        datagram.getMessage()));
+                                datagram.getSender(),
+                                MessageType.pong,
+                                datagram.getMessage()));
                 return dmCnt;
             }
         } else if (datagram.getMessageType() == MessageType.pong) {                     // pong
@@ -277,7 +276,6 @@ public class Dispatcher {
 
         SEND:
         for (ClientGhost client_ghost : copy) {
-
 
             if (matching(client_ghost, datagram)) {
                 getLogger().fine("msg: ->  " + client_ghost + "  <- " + datagram);

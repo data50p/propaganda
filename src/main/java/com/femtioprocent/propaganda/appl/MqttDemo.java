@@ -46,13 +46,13 @@ public class MqttDemo extends Appl {
             //msg = "" + myUniqId + " @; list";
             //connection.publish("propaganda", msg.getBytes("utf-8"), QoS.AT_MOST_ONCE, true);
             //System.out.println("" + "published: " + msg);
-            
             int cnt = 0;
-            for(int i = 0; i < 5; i++) {
+            for (int i = 0; i < 5; i++) {
                 cnt++;
                 final Message receive = connection.receive(1000, TimeUnit.MILLISECONDS);
-                if ( receive != null )
+                if (receive != null) {
                     System.out.println("MqttDemo: GOT " + cnt + ": " + new String(receive.getPayload(), "utf-8"));
+                }
             }
         } catch (URISyntaxException ex) {
             Logger.getLogger(MqttDemo.class.getName()).log(Level.SEVERE, null, ex);

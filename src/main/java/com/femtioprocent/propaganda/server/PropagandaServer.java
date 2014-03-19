@@ -307,13 +307,12 @@ public class PropagandaServer {
     }
 
     // - - - - - - constructor methods - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
     public static PropagandaServer getDefaultServer() {
         return getDefaultServer("DefaultPropagandaServer");
     }
 
     public static synchronized PropagandaServer getDefaultServer(String name) {
-            return getDefaultServer(name, DEFAULT_SERVER_PORT);
+        return getDefaultServer(name, DEFAULT_SERVER_PORT);
     }
 
     public static synchronized PropagandaServer getDefaultServer(String name, int port) {
@@ -323,13 +322,13 @@ public class PropagandaServer {
         }
         return default_server;
     }
-    
+
     public String getName() {
         return serverName;
     }
 
     public String toString() {
-        return "PropagandaServer{name=" + serverName +
-                ",port=" + serverPort + "}";
+        return "PropagandaServer{name=" + serverName
+                + ",port=" + serverPort + "}";
     }
 }

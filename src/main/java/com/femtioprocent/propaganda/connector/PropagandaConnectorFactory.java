@@ -10,6 +10,7 @@ import com.femtioprocent.propaganda.server.PropagandaServer;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PropagandaConnectorFactory {
+
     static AtomicInteger connectionCnt = new AtomicInteger();
 
     private static PropagandaConnector create(String class_id, String namePrefix) {
@@ -39,7 +40,7 @@ public class PropagandaConnectorFactory {
     public static int getNextSequence() {
         return connectionCnt.addAndGet(1);
     }
-    
+
     public static PropagandaConnector create(String class_id, String namePrefix, PropagandaServer server, PropagandaClient client) {
         PropagandaConnector connector = create(class_id, namePrefix);
         if (connector != null) {

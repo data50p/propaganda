@@ -17,74 +17,65 @@ import com.femtioprocent.propaganda.server.PropagandaServer;
 import com.femtioprocent.fpd.sundry.S;
 import java.util.Random;
 
+public class Client_Demo extends PropagandaClient {
 
-public class Client_Demo extends PropagandaClient
-{
-    public Client_Demo(String name)
-    {
-	super(name);
-	init();
+    public Client_Demo(String name) {
+        super(name);
+        init();
     }
 
     @Override
-    protected void init()
-    {
-	final PropagandaConnector connector;
+    protected void init() {
+        final PropagandaConnector connector;
 
-	connector = PropagandaConnectorFactory.create("Queue", name, PropagandaServer.getDefaultServer(), this);
-	try {
-	    register("DEMO");
-	}
-	catch (PropagandaException ex) {
-	    getLogger().log(Level.SEVERE, "register: ", ex);
-	    exit(0);
-	}
+        connector = PropagandaConnectorFactory.create("Queue", name, PropagandaServer.getDefaultServer(), this);
+        try {
+            register("DEMO");
+        } catch (PropagandaException ex) {
+            getLogger().log(Level.SEVERE, "register: ", ex);
+            exit(0);
+        }
 
-	Thread th = new Thread(new Runnable() {
-		public void run() {
-		    try {
-			AddrType receiver_at = createAddrType("*@DEMO");
+        Thread th = new Thread(new Runnable() {
+            public void run() {
+                try {
+                    AddrType receiver_at = createAddrType("*@DEMO");
 
-			int cnt = 0;
-                        Random rand = new Random();
-			for(;;) {
-			    S.m_sleep(rand.nextInt(cnt == 0 ? 2000 : 20000));
-			    sendMsg(new Datagram(getDefaultAddrType(), receiver_at, new Message("hello-" + name + '-' + cnt++)));
-			}
-		    }
-		    catch (PropagandaException ex) {
-			S.pL("Demo: " + ex);
-		    }
-		}
-	    });
-	th.start();
+                    int cnt = 0;
+                    Random rand = new Random();
+                    for (;;) {
+                        S.m_sleep(rand.nextInt(cnt == 0 ? 2000 : 20000));
+                        sendMsg(new Datagram(getDefaultAddrType(), receiver_at, new Message("hello-" + name + '-' + cnt++)));
+                    }
+                } catch (PropagandaException ex) {
+                    S.pL("Demo: " + ex);
+                }
+            }
+        });
+        th.start();
 
-	Thread th2 = new Thread(new Runnable() {
-		public void run()
-		{
-		    try {
-			for(;;) {
-			    Datagram datagram = connector.recvMsg();
-			    if ( datagram.getMessageType() == MessageType.ping ) {
-				sendMsg(new Datagram(getDefaultAddrType(), datagram.getSender(), MessageType.pong, datagram.getMessage()));
-				getLogger().finest("datagram: " + S.ct() + ' ' + name + " =----> PING " + datagram);
-			    }
-			    else if ( datagram.getMessageType() == MessageType.pong ) {
-				getLogger().finest("datagram: " + S.ct() + ' ' + name + " =----> PONG " + datagram);
-			    }
-			    else
-				getLogger().finest("datagram: " + S.ct() + ' ' + name + " =----> " + datagram);
-			}
-		    }
-		    catch (PropagandaException ex) {
-			S.pL("Demo " + ex);
-		    }
-		}
-	    });
-	th2.start();
+        Thread th2 = new Thread(new Runnable() {
+            public void run() {
+                try {
+                    for (;;) {
+                        Datagram datagram = connector.recvMsg();
+                        if (datagram.getMessageType() == MessageType.ping) {
+                            sendMsg(new Datagram(getDefaultAddrType(), datagram.getSender(), MessageType.pong, datagram.getMessage()));
+                            getLogger().finest("datagram: " + S.ct() + ' ' + name + " =----> PING " + datagram);
+                        } else if (datagram.getMessageType() == MessageType.pong) {
+                            getLogger().finest("datagram: " + S.ct() + ' ' + name + " =----> PONG " + datagram);
+                        } else {
+                            getLogger().finest("datagram: " + S.ct() + ' ' + name + " =----> " + datagram);
+                        }
+                    }
+                } catch (PropagandaException ex) {
+                    S.pL("Demo " + ex);
+                }
+            }
+        });
+        th2.start();
     }
 
-    public void run()
-    {
+    public void run() {
     }
 }
