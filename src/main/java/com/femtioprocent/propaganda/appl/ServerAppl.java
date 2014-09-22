@@ -13,11 +13,13 @@ public class ServerAppl extends Appl {
     @Override
     public void main() {
         if ((flags.get("?")) != null || (flags.get("h")) != null) {
-            S.pL("-MB              start Moquette Broker (MQTT)");
-            S.pL("-port=<port>     set the port of propaganda server (=8899)");
-            S.pL("-http=<port>     set the port of propaganda http server (=8888)");
-            S.pL("-ws=<port>       set the port of propaganda WS server (=8877)");
-            S.pL("-discover=<port> set the port of propaganda discover server (=8833)");
+            S.pL("-MB                   start Moquette Broker (MQTT)");
+            S.pL("-port=<port>          set the port of propaganda server (=8899)");
+            S.pL("-http=<port>          set the port of propaganda http server (=8888)");
+            S.pL("-ws=<port>            set the port of propaganda WS server (=8877)");
+            S.pL("-discover=<port>      set the port of propaganda discover server (=8833)");
+            S.pL("-fed.port=<port>      set the port of propaganda federation listener (=0) - EXPERIMENTAL");
+            S.pL("-fed.join=<host:port> set the host:port for joining federation (='') - EXPERIMENTAL");
             return;
         }
 
@@ -38,6 +40,14 @@ public class ServerAppl extends Appl {
 
         if ((fl = flags.get("discover")) != null) {
             PropagandaServer.DEFAULT_DISCOVER_PORT = Integer.parseInt(fl);
+        }
+
+        if ((fl = flags.get("fed.port")) != null) {
+            PropagandaServer.DEFAULT_FEDERATION_PORT = Integer.parseInt(fl);
+        }
+
+        if ((fl = flags.get("fed.join")) != null) {
+            PropagandaServer.DEFAULT_FEDERATION_JOINHOST = fl;
         }
 
         server = PropagandaServer.getDefaultServer("CCF-PropagandaServer", Integer.parseInt(port_s));

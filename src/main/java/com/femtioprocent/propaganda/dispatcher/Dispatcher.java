@@ -1,25 +1,28 @@
 package com.femtioprocent.propaganda.dispatcher;
 
 import com.femtioprocent.fpd.sundry.S;
-import com.femtioprocent.propaganda.server.clientsupport.ClientGhost;
-import com.femtioprocent.propaganda.server.PropagandaServer;
-import com.femtioprocent.propaganda.exception.PropagandaException;
+import com.femtioprocent.propaganda.connector.PropagandaConnector;
+import static com.femtioprocent.propaganda.context.Config.*;
+import com.femtioprocent.propaganda.data.AddrType;
+import static com.femtioprocent.propaganda.data.AddrType.*;
 import com.femtioprocent.propaganda.data.Datagram;
 import com.femtioprocent.propaganda.data.Message;
 import com.femtioprocent.propaganda.data.MessageType;
-import com.femtioprocent.propaganda.data.AddrType;
-import com.femtioprocent.propaganda.connector.PropagandaConnector;
+import com.femtioprocent.propaganda.exception.PropagandaException;
+import com.femtioprocent.propaganda.server.PropagandaServer;
+import com.femtioprocent.propaganda.server.clientsupport.ClientGhost;
+import com.femtioprocent.propaganda.server.clientsupport.FederationServer;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import java.util.regex.*;
-
-import static com.femtioprocent.propaganda.data.AddrType.*;
-import static com.femtioprocent.propaganda.context.Config.*;
 
 public class Dispatcher {
 
     private PropagandaServer server;
     private HashMap<String, ClientGhost> clientghost_hm;
+    public HashMap<String, FederationServer> federatedghost_hm = new HashMap<String, FederationServer>();
     private int cnt_register, cnt_unregister, cnt_ping, cnt_pong, cnt_plain, cnt_RM, cnt_sendClient;
 
     /**
@@ -137,6 +140,11 @@ public class Dispatcher {
     }
 
     public synchronized int dispatchMsg(PropagandaConnector orig_connector, Datagram datagram) {
+        
+        if ( orig_connector == null ) { // FederationServer
+            return dispatchMsg1(datagram);
+        }
+        
         if (datagram.getStatus() == Datagram.Status.IGNORE) {
             return 0;
         }
@@ -149,6 +157,28 @@ public class Dispatcher {
 
         if (datagram.getMessageType() == MessageType.single)
             ;
+
+        if (datagram.getMessageType() == MessageType.fedjoin) {
+
+            getLogger().finer("fedjoin: " + datagram + ' ' + orig_connector);
+            if (datagram.getReceiver() != serverAddrType) {
+                getLogger().severe("fedjoin-bad: " + datagram + ' ' + orig_connector);
+                return 0;
+            }
+            String pfId = datagram.getMessage().getMessage();
+            federatedghost_hm.put(pfId, new FederationServer(pfId));
+            Datagram sdatagram = new Datagram(serverAddrType,
+                    datagram.getSender(),
+                    MessageType.plain,
+                    new Message("joined fed " + pfId + ' ' + federatedghost_hm.size()));
+            try {
+                orig_connector.sendMsg(sdatagram);
+            } catch (PropagandaException ex) {
+                Logger.getLogger(Dispatcher.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            //int dmCnt = dispatchMsg(orig_connector, sdatagram);
+            return 0;
+        }
 
         if (datagram.getMessageType() == MessageType.register) {                      // register
             getLogger().finer("register: " + datagram + ' ' + orig_connector);
@@ -299,6 +329,14 @@ public class Dispatcher {
         if (com.femtioprocent.fpd.sundry.Appl.flags.get("nomonitor") == null) {
             if (datagram.getMessageType() != MessageType.monitor) {
                 sendToMonitor(null, datagram, "message");
+            }
+        }
+
+        for (FederationServer fg : federatedghost_hm.values()) {
+            try {
+                fg.sendToFederatedPropaganda(datagram);
+            } catch (PropagandaException ex) {
+                Logger.getLogger(Dispatcher.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 

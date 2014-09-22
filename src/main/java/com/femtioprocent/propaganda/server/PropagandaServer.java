@@ -22,8 +22,11 @@ import com.femtioprocent.propaganda.dispatcher.Dispatcher;
 import com.femtioprocent.propaganda.exception.PropagandaException;
 import com.femtioprocent.propaganda.server.clientsupport.ClientGhost;
 import com.femtioprocent.fpd.sundry.S;
+import com.femtioprocent.propaganda.client.Client_PropagandaFederation;
+import com.femtioprocent.propaganda.server.clientsupport.FederationServer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
 
 public class PropagandaServer {
 
@@ -31,21 +34,29 @@ public class PropagandaServer {
     public static int DEFAULT_HTTP_PORT = 8888;
     public static int DEFAULT_WS_PORT = 8877;
     public static int DEFAULT_DISCOVER_PORT = 8833;
+    public static int DEFAULT_FEDERATION_PORT;
+    public static String DEFAULT_FEDERATION_JOINHOST;
 
     private static PropagandaServer default_server;
     public int serverPort;
     private String serverName;
+    public String federation_join;
+    public int federation_port;
 
     public HashMap<String, ClientGhost> clientghost_hm;
     public Client_Monitor client_monitor;
     public Client_Admin client_admin;
+    public Client_PropagandaFederation client_propagandaFederation;
     public Client_Status client_status;
     public Dispatcher dispatcher;
     private Date started = new Date();
+    private FederationServer federationServer;
 
-    private PropagandaServer(String name, int port) {
+    private PropagandaServer(String name, int port, String federation_join, int federation_port) {
         serverName = name;
         serverPort = port;
+        this.federation_join = federation_join;
+        this.federation_port = federation_port;
         if (default_server == null) {
             default_server = this;
         }
@@ -54,11 +65,28 @@ public class PropagandaServer {
         initServer();
         initPropagandaClients();
         initBroadcastDiscoverServer();
+        initFedaration();
     }
 
     private void initServer() {
         clientghost_hm = new HashMap<String, ClientGhost>();
         dispatcher = new Dispatcher(this, clientghost_hm);
+    }
+
+    private void initFedaration() {
+        getLogger().finest("init federation: " + federation_join + ' ' + federation_port);
+        
+        if ( federation_port != 0 ) {
+            try {
+                federationServer = new FederationServer(federation_port);
+            } catch (IOException ex) {
+                Logger.getLogger(PropagandaServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        if ( federation_join != null ) {
+            
+        }
     }
 
     private void initPropagandaClients() {
@@ -91,7 +119,6 @@ public class PropagandaServer {
                 client_status.createConnector("Local", "propaganda-status", this);
                 client_status.register("$STATUS");
             }
-
         } catch (PropagandaException ex) {
             getLogger().log(Level.SEVERE, "Fatal! ", ex);
             System.exit(1);
@@ -311,13 +338,17 @@ public class PropagandaServer {
         return getDefaultServer("DefaultPropagandaServer");
     }
 
-    public static synchronized PropagandaServer getDefaultServer(String name) {
+    public static PropagandaServer getDefaultServer(String name) {
         return getDefaultServer(name, DEFAULT_SERVER_PORT);
     }
 
-    public static synchronized PropagandaServer getDefaultServer(String name, int port) {
+    public static PropagandaServer getDefaultServer(String name, int port) {
+        return getDefaultServer(name, port, DEFAULT_FEDERATION_JOINHOST, DEFAULT_FEDERATION_PORT);
+    }
+
+    public static synchronized PropagandaServer getDefaultServer(String name, int port, String federation_join, int federation_port) {
         if (default_server == null) {
-            default_server = new PropagandaServer(name, port);
+            default_server = new PropagandaServer(name, port, federation_join, federation_port);
             default_server.serverName = name;
         }
         return default_server;
