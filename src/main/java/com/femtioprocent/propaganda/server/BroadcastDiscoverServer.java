@@ -103,7 +103,7 @@ public class BroadcastDiscoverServer {
                             String rpl = "{\"name\":\""
                                     + PropagandaServer.getDefaultServer().getName() + "\", \"version\":\""
                                     + Version.projectVersion + "\", \"buildtime\":\""
-                                    + Version.mavenBuildTimestamp + "\", \"host\":"
+                                    + Version.mavenBuildTimestamp + "\", \"host\":\""
                                     + hostname + "\", \"hosts\":"
                                     + hostList.toString().replace(" ", "") + ", \"port\":\""
                                     + PropagandaServer.getDefaultServer().serverPort
