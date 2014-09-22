@@ -2,8 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.femtioprocent.propaganda.server;
+package com.femtioprocent.propaganda.appl;
 
+import com.femtioprocent.propaganda.server.BroadcastDiscoverServer;
+import com.femtioprocent.propaganda.server.PropagandaServer;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
