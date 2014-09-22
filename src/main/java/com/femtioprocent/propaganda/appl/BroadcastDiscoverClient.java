@@ -51,7 +51,7 @@ public class BroadcastDiscoverClient {
             System.err.println("BroadcastDiscoverClient: recv...");
             for (;;) {
                 s.receive(recv);
-                final String rpl = new String(recv.getData(), "utf-8");
+                final String rpl = new String(recv.getData(), recv.getOffset(), recv.getLength(), "utf-8");
                 System.err.println("BroadcastDiscoverClient: got " + rpl);
                 if (rpl.startsWith("{\"name\":")) {
                     arr.add(rpl);

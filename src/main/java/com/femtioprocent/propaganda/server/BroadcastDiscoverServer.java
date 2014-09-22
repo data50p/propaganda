@@ -4,6 +4,7 @@
  */
 package com.femtioprocent.propaganda.server;
 
+import com.femtioprocent.fpd.sundry.Appl;
 import com.femtioprocent.fpd.sundry.S;
 import com.femtioprocent.propaganda.Version;
 import java.io.BufferedReader;
@@ -107,7 +108,8 @@ public class BroadcastDiscoverServer {
                                     + hostname + "\", \"hosts\":"
                                     + hostList.toString().replace(" ", "") + ", \"port\":\""
                                     + PropagandaServer.getDefaultServer().serverPort
-                                    + "\"}";
+				    + "\", \"flags\":\"" + Appl.flags.toString()  + "\""
+                                    + "}";
 
                             byte[] sbuf = rpl.getBytes("utf-8");
                             p = new DatagramPacket(sbuf, sbuf.length, a, po);
