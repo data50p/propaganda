@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.femtioprocent</groupId>
     <artifactId>propaganda</artifactId>
@@ -8,48 +8,48 @@
     <name>Propaganda</name>
 
     <licenses>
-        <license>
-            <name>GNU AFFERO GENERAL PUBLIC LICENSE Version 3</name>
-            <url>http://www.gnu.org/licenses/agpl-3.0.html</url>
-        </license>
+	<license>
+	    <name>GNU AFFERO GENERAL PUBLIC LICENSE Version 3</name>
+	    <url>http://www.gnu.org/licenses/agpl-3.0.html</url>
+	</license>
     </licenses>
     
     <build>
 
-        <plugins>
+	<plugins>
 
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>demo.DemoClient</mainClass>
-                        </manifest>
-                        <manifestEntries>
-                            <SplashScreen-Image>splash.png</SplashScreen-Image>
-                        </manifestEntries>
-                    </archive>
-                    <descriptors>
-                        <descriptor>src/assemble/jexec.xml</descriptor>
-                    </descriptors>
-                </configuration>
-            </plugin>
+	    <plugin>
+		<artifactId>maven-assembly-plugin</artifactId>
+		<configuration>
+		    <archive>
+			<manifest>
+			    <mainClass>demo.DemoClient</mainClass>
+			</manifest>
+			<manifestEntries>
+			    <SplashScreen-Image>splash.png</SplashScreen-Image>
+			</manifestEntries>
+		    </archive>
+		    <descriptors>
+			<descriptor>src/assemble/jexec.xml</descriptor>
+		    </descriptors>
+		</configuration>
+	    </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.4</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <tasks>
-                        <echo file="src/main/java/com/femtioprocent/propaganda/Version.java" append="false"><![CDATA[
+	    <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-antrun-plugin</artifactId>
+		<version>1.4</version>
+		<executions>
+		    <execution>
+			<phase>generate-sources</phase>
+			<goals>
+			    <goal>run</goal>
+			</goals>
+		    </execution>
+		</executions>
+		<configuration>
+		    <tasks>
+			<echo file="src/main/java/com/femtioprocent/propaganda/Version.java" append="false"><![CDATA[
 	    package com.femtioprocent.propaganda;
 	    public class Version {
 	    public static final String projectGroup = "${project.groupId}";
@@ -58,127 +58,132 @@
 	    public static final String mavenBuildTimestamp = "${maven.build.timestamp}";
 	    }
 	    ]]></echo>
-                    </tasks>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0.2</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
+		    </tasks>
+		</configuration>
+	    </plugin>
+	    <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-compiler-plugin</artifactId>
+		<version>2.0.2</version>
+		<configuration>
+		    <source>1.8</source>
+		    <target>1.8</target>
+		    <encoding>${project.build.sourceEncoding}</encoding>
+		</configuration>
+	    </plugin>
+	    <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-resources-plugin</artifactId>
+		<version>2.2</version>
+		<configuration>
+		    <encoding>${project.build.sourceEncoding}</encoding>
+		</configuration>
+	    </plugin>
 
-            <!-- - ->
-                 <plugin>
-                 <groupId>org.apache.maven.plugins</groupId>
-                 <artifactId>maven-assembly-plugin</artifactId>
-                 <version>2.2.1</version>
-                 <configuration>
-            -->
-            <!-- - ->
-            <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-            </descriptorRefs>
-            <!- - -->
-            <!--
-                <archive>
-                <manifest>
-                <mainClass>ccfserver.appl.CcfServerAppl</mainClass>
-                </manifest>
-                <manifestEntries>
-                <SplashScreen-Image>splash.png</SplashScreen-Image>
-                </manifestEntries>
-                </archive>
-                <descriptors>
-                <descriptor>src/assemble/jexec.xml</descriptor>
-                </descriptors>
-                </configuration>
-                </plugin>
-            -->
+	    <!-- - ->
+		 <plugin>
+		 <groupId>org.apache.maven.plugins</groupId>
+		 <artifactId>maven-assembly-plugin</artifactId>
+		 <version>2.2.1</version>
+		 <configuration>
+	    -->
+	    <!-- - ->
+	    <descriptorRefs>
+	    <descriptorRef>jar-with-dependencies</descriptorRef>
+	    </descriptorRefs>
+	    <!- - -->
+	    <!--
+		<archive>
+		<manifest>
+		<mainClass>ccfserver.appl.CcfServerAppl</mainClass>
+		</manifest>
+		<manifestEntries>
+		<SplashScreen-Image>splash.png</SplashScreen-Image>
+		</manifestEntries>
+		</archive>
+		<descriptors>
+		<descriptor>src/assemble/jexec.xml</descriptor>
+		</descriptors>
+		</configuration>
+		</plugin>
+	    -->
 
 
-        </plugins>
+	</plugins>
     </build>
     <dependencies>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.6</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.swinglabs</groupId>
-            <artifactId>swing-layout</artifactId>
-            <version>1.0.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.fusesource.mqtt-client</groupId>
-            <artifactId>mqtt-client</artifactId>
-            <version>1.5</version>
-        </dependency>
-        <!-- - ->
-                <dependency>
-                        <groupId>org.dna.mqtt</groupId>
-                        <artifactId>moquette-broker</artifactId>
-                        <version>0.1</version>
-                </dependency>
-        <!- - -->
+	<dependency>
+	    <groupId>com.femtioprocent</groupId>
+	    <artifactId>fpd</artifactId>
+	    <version>0.1.0.0-SNAPSHOT</version>
+	</dependency>
+	<dependency>
+	    <groupId>commons-codec</groupId>
+	    <artifactId>commons-codec</artifactId>
+	    <version>1.6</version>
+	    <type>jar</type>
+	</dependency>
+	<dependency>
+	    <groupId>org.swinglabs</groupId>
+	    <artifactId>swing-layout</artifactId>
+	    <version>1.0.3</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.fusesource.mqtt-client</groupId>
+	    <artifactId>mqtt-client</artifactId>
+	    <version>1.5</version>
+	</dependency>
+	<!-- - ->
+		<dependency>
+			<groupId>org.dna.mqtt</groupId>
+			<artifactId>moquette-broker</artifactId>
+			<version>0.1</version>
+		</dependency>
+	<!- - -->
     </dependencies>
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <profiles>
-        <profile>
-            <id>ingot2</id>
-            <properties>
-                <artifactory.host>http://repo.got2.androtech.se:8081</artifactory.host>
-            </properties>
-        </profile>
-        <profile>
-            <id>togot2</id>
-            <properties>
-                <artifactory.host>http://195-198-69-249.customer.telia.com</artifactory.host>
-            </properties>
-        </profile>
+	<profile>
+	    <id>ingot2</id>
+	    <properties>
+		<artifactory.host>http://repo.got2.androtech.se:8081</artifactory.host>
+	    </properties>
+	</profile>
+	<profile>
+	    <id>togot2</id>
+	    <properties>
+		<artifactory.host>http://195-198-69-249.customer.telia.com</artifactory.host>
+	    </properties>
+	</profile>
     </profiles>
     <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
+	<plugins>
+	    <plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-checkstyle-plugin</artifactId>
 		<version>2.12.1</version>
-                <configuration>
-                    <configLocation>config/sun_checks.xml</configLocation>
-                </configuration>
-            </plugin>
-        </plugins>
+		<configuration>
+		    <configLocation>config/sun_checks.xml</configLocation>
+		</configuration>
+	    </plugin>
+	</plugins>
     </reporting>
     <distributionManagement>
 
-        <repository>
-            <id>repo.got2.androtech.se</id>
-            <name>repo.got2.androtech.se-releases</name>
-            <url>${artifactory.host}/artifactory/ext-release-local</url>
-        </repository>
+	<repository>
+	    <id>repo.got2.androtech.se</id>
+	    <name>repo.got2.androtech.se-releases</name>
+	    <url>${artifactory.host}/artifactory/ext-release-local</url>
+	</repository>
 
-        <snapshotRepository>
-            <id>repo.got2.androtech.se</id>
-            <name>repo.got2.androtech.se-snapshots</name>
-            <url>${artifactory.host}/artifactory/ext-snapshot-local</url>
-        </snapshotRepository>
+	<snapshotRepository>
+	    <id>repo.got2.androtech.se</id>
+	    <name>repo.got2.androtech.se-snapshots</name>
+	    <url>${artifactory.host}/artifactory/ext-snapshot-local</url>
+	</snapshotRepository>
 
     </distributionManagement>
 
