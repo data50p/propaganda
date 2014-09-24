@@ -23,7 +23,7 @@
 		<configuration>
 		    <archive>
 			<manifest>
-			    <mainClass>demo.DemoClient</mainClass>
+			    <mainClass>com.femtioprocent.demo.DemoClient</mainClass>
 			</manifest>
 			<manifestEntries>
 			    <SplashScreen-Image>splash.png</SplashScreen-Image>
