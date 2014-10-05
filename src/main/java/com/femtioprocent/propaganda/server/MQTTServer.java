@@ -1,6 +1,6 @@
 package com.femtioprocent.propaganda.server;
 
-import com.femtioprocent.fpd.sundry.Appl;
+import com.femtioprocent.fpd.appl.Appl;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;

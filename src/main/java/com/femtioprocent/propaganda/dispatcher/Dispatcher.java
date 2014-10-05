@@ -149,7 +149,7 @@ public class Dispatcher {
             return 0;
         }
         if (datagram.getStatus() == Datagram.Status.BAD) {
-            if (com.femtioprocent.fpd.sundry.Appl.flags.get("nomonitor") == null) {
+            if (com.femtioprocent.fpd.appl.Appl.flags.get("nomonitor") == null) {
                 sendToMonitor(orig_connector, datagram, "datagram-bad");
             }
             return 0;
@@ -218,7 +218,7 @@ public class Dispatcher {
                 }
             }
 
-            if (com.femtioprocent.fpd.sundry.Appl.flags.get("nomonitor") == null) {
+            if (com.femtioprocent.fpd.appl.Appl.flags.get("nomonitor") == null) {
                 sendToMonitor(null, datagram, "special");
             }
             return 0;
@@ -237,7 +237,7 @@ public class Dispatcher {
             server.client_admin.unregisterMsg(datagram, orig_connector);
             cnt_unregister++;
 
-            if (com.femtioprocent.fpd.sundry.Appl.flags.get("nomonitor") == null) {
+            if (com.femtioprocent.fpd.appl.Appl.flags.get("nomonitor") == null) {
                 sendToMonitor(null, datagram, "special");
             }
             return 0;
@@ -281,7 +281,7 @@ public class Dispatcher {
             cnt_RM++;
 
             // dont send if timeout == -1
-            if (com.femtioprocent.fpd.sundry.Appl.flags.get("nomonitor") == null) {
+            if (com.femtioprocent.fpd.appl.Appl.flags.get("nomonitor") == null) {
                 if (valid_upto == 0) {
                     sendToMonitor(null, datagram, "message");
                     return 0;
@@ -326,7 +326,7 @@ public class Dispatcher {
                 getLogger().fine("msg: ->| " + client_ghost + " |<- " + datagram);
             }
         }
-        if (com.femtioprocent.fpd.sundry.Appl.flags.get("nomonitor") == null) {
+        if (com.femtioprocent.fpd.appl.Appl.flags.get("nomonitor") == null) {
             if (datagram.getMessageType() != MessageType.monitor) {
                 sendToMonitor(null, datagram, "message");
             }

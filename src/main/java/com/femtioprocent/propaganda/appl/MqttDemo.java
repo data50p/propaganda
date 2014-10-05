@@ -4,9 +4,9 @@
  */
 package com.femtioprocent.propaganda.appl;
 
-import com.femtioprocent.fpd.sundry.Appl;
-import static com.femtioprocent.fpd.sundry.Appl.decodeArgs;
-import static com.femtioprocent.fpd.sundry.Appl.main;
+import com.femtioprocent.fpd.appl.Appl;
+import static com.femtioprocent.fpd.appl.Appl.decodeArgs;
+import static com.femtioprocent.fpd.appl.Appl.main;
 import java.net.URISyntaxException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;

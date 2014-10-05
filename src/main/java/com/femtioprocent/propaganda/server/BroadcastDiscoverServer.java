@@ -4,7 +4,7 @@
  */
 package com.femtioprocent.propaganda.server;
 
-import com.femtioprocent.fpd.sundry.Appl;
+import com.femtioprocent.fpd.appl.Appl;
 import com.femtioprocent.fpd.sundry.S;
 import com.femtioprocent.propaganda.Version;
 import java.io.BufferedReader;

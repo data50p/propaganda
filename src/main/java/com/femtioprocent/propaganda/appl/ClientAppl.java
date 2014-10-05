@@ -1,6 +1,6 @@
 package com.femtioprocent.propaganda.appl;
 
-import com.femtioprocent.fpd.sundry.Appl;
+import com.femtioprocent.fpd.appl.Appl;
 import com.femtioprocent.fpd.sundry.S;
 
 public class ClientAppl extends Appl {

@@ -22,7 +22,7 @@ import com.femtioprocent.propaganda.data.Message;
 import com.femtioprocent.propaganda.exception.PropagandaException;
 import com.femtioprocent.propaganda.server.PropagandaServer;
 import com.femtioprocent.propaganda.server.clientsupport.ClientGhost;
-import com.femtioprocent.fpd.sundry.Appl;
+import com.femtioprocent.fpd.appl.Appl;
 import com.femtioprocent.fpd.sundry.S;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;

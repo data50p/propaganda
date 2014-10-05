@@ -1,9 +1,9 @@
 package com.femtioprocent.propaganda.appl;
 
-import com.femtioprocent.fpd.sundry.Appl;
+import com.femtioprocent.fpd.appl.Appl;
 import com.femtioprocent.fpd.sundry.S;
 import com.femtioprocent.propaganda.server.PropagandaServer;
-import static com.femtioprocent.fpd.sundry.Appl.flags;
+import static com.femtioprocent.fpd.appl.Appl.flags;
 
 //import propaganda.util.*;
 public class ServerAppl extends Appl {

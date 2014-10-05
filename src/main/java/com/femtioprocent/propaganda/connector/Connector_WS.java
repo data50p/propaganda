@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 import com.femtioprocent.propaganda.data.Datagram;
 import com.femtioprocent.propaganda.data.Message;
 import com.femtioprocent.propaganda.exception.PropagandaException;
-import com.femtioprocent.fpd.sundry.Appl;
+import com.femtioprocent.fpd.appl.Appl;
 import com.femtioprocent.fpd.sundry.S;
 
 @Deprecated
