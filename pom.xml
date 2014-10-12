@@ -171,8 +171,22 @@
 	    </plugin>
 	</plugins>
     </reporting>
+
+
     <distributionManagement>
 
+	<repository>
+	    <id>data50p</id>
+	    <name>data50p-releases</name>
+	    <url>http://server.femtioprocent.com:8041/artifactory/ext-release-local</url>
+	</repository>
+	<snapshotRepository>
+	    <id>data50p</id>
+	    <name>data50p-snapshots</name>
+	    <url>http://server.femtioprocent.com:8041/artifactory/ext-snapshot-local</url>
+	</snapshotRepository>
+
+<!-- - ->
 	<repository>
 	    <id>repo.got2.androtech.se</id>
 	    <name>repo.got2.androtech.se-releases</name>
@@ -184,6 +198,7 @@
 	    <name>repo.got2.androtech.se-snapshots</name>
 	    <url>${artifactory.host}/artifactory/ext-snapshot-local</url>
 	</snapshotRepository>
+<!- - -->
 
     </distributionManagement>
 
