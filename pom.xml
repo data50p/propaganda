@@ -17,6 +17,30 @@
     <build>
 
 	<plugins>
+	    <plugin>
+		<groupId>org.codehaus.mojo</groupId>
+		<artifactId>build-helper-maven-plugin</artifactId>
+		<version>1.9.1</version>
+		<executions>           
+		    <execution>             
+			<id>attach-distribution-artifact</id>             
+			<phase>package</phase>             
+			<goals>               
+			    <goal>attach-artifact</goal>             
+			</goals>            
+			<configuration>
+			    <artifacts>
+				<artifact>
+				    <file>${project.build.directory}/${project.artifactId}-${project.version}-jexec.jar</file>
+				    <type>jar</type>
+				    <classifier>jexec</classifier>
+				</artifact>
+			    </artifacts>
+			</configuration>          
+		    </execution>         
+		</executions>             
+	    </plugin>
+
 
 	    <plugin>
 		<artifactId>maven-assembly-plugin</artifactId>
@@ -31,8 +55,17 @@
 		    </archive>
 		    <descriptors>
 			<descriptor>src/assemble/jexec.xml</descriptor>
-		    </descriptors>
+    		    </descriptors>
 		</configuration>
+		<executions> 
+		    <execution> 
+			<id>attach-jexec</id>
+			<phase>package</phase>
+			<goals>
+			    <goal>assembly</goal>
+			</goals> 
+		    </execution> 
+		</executions> 
 	    </plugin>
 
 	    <plugin>
@@ -80,35 +113,6 @@
 		</configuration>
 	    </plugin>
 
-	    <!-- - ->
-		 <plugin>
-		 <groupId>org.apache.maven.plugins</groupId>
-		 <artifactId>maven-assembly-plugin</artifactId>
-		 <version>2.2.1</version>
-		 <configuration>
-	    -->
-	    <!-- - ->
-	    <descriptorRefs>
-	    <descriptorRef>jar-with-dependencies</descriptorRef>
-	    </descriptorRefs>
-	    <!- - -->
-	    <!--
-		<archive>
-		<manifest>
-		<mainClass>ccfserver.appl.CcfServerAppl</mainClass>
-		</manifest>
-		<manifestEntries>
-		<SplashScreen-Image>splash.png</SplashScreen-Image>
-		</manifestEntries>
-		</archive>
-		<descriptors>
-		<descriptor>src/assemble/jexec.xml</descriptor>
-		</descriptors>
-		</configuration>
-		</plugin>
-	    -->
-
-
 	</plugins>
     </build>
     <dependencies>
@@ -145,20 +149,6 @@
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <profiles>
-	<profile>
-	    <id>ingot2</id>
-	    <properties>
-		<artifactory.host>http://repo.got2.androtech.se:8081</artifactory.host>
-	    </properties>
-	</profile>
-	<profile>
-	    <id>togot2</id>
-	    <properties>
-		<artifactory.host>http://195-198-69-249.customer.telia.com</artifactory.host>
-	    </properties>
-	</profile>
-    </profiles>
     <reporting>
 	<plugins>
 	    <plugin>
@@ -193,12 +183,12 @@
 	    <url>${artifactory.host}/artifactory/ext-release-local</url>
 	</repository>
 
-	<snapshotRepository>
-	    <id>repo.got2.androtech.se</id>
-	    <name>repo.got2.androtech.se-snapshots</name>
-	    <url>${artifactory.host}/artifactory/ext-snapshot-local</url>
-	</snapshotRepository>
-<!- - -->
+		<snapshotRepository>
+		    <id>repo.got2.androtech.se</id>
+		    <name>repo.got2.androtech.se-snapshots</name>
+		    <url>${artifactory.host}/artifactory/ext-snapshot-local</url>
+		</snapshotRepository>
+	<!- - -->
 
     </distributionManagement>
 
