@@ -10,5 +10,5 @@ package com.femtioprocent.propaganda;
  * @author lars
  */
 public class Constants {
-    public static final String CONNECTOR_INDICATOR = "➝ ";
+    public static final String CONNECTOR_INDICATOR = "⇌ ";
 }
