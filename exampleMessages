@@ -3,6 +3,7 @@ echo
 echo nc localhost 8899
 echo
 echo '. @ register; request-id aa@TESTING'
+echo '. @ register; request-id aa@TESTING2'
 echo '. @ register; request-id bb@TESTING'
 echo '. @ register; request-id @TESTING'
 echo '. @ register'
@@ -17,6 +18,7 @@ echo '. @ register'
 echo '_ @;list'
 echo '_ @;list-id'
 echo '_ @;list-group'
+echo '_ @;list-connector'
 echo '_ @ unregister;'
 
 echo "http://ccf.femtioprocent.com:8888/?to=500&d1=.+@+register;request-id+a@AA&d2=_+@;list}"

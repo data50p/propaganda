@@ -1,6 +1,7 @@
 package com.femtioprocent.propaganda.client;
 
 import com.femtioprocent.fpd.sundry.S;
+import com.femtioprocent.propaganda.Constants;
 import com.femtioprocent.propaganda.server.clientsupport.ClientGhost;
 import com.femtioprocent.propaganda.server.PropagandaServer;
 import com.femtioprocent.propaganda.exception.PropagandaException;
@@ -97,6 +98,30 @@ public class Client_Admin extends PropagandaClient {
                                         datagram.getSender(),
                                         new Message("list-group-is",
                                                 "" + set.toString().replace(" ", ""))));
+                            } catch (PropagandaException ex) {
+                                S.pL("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
+                            }
+
+                        } else if ("list-connector".equals(datagram.getMessage().getMessage())) {
+                            try {
+                                HashMap<String, ClientGhost> map = new HashMap<String, ClientGhost>();
+                                for (final ClientGhost cg : server.clientghost_hm.values()) {
+                                    map.put(cg.getDefaultAddrType().getId(), cg);
+                                }
+                                StringBuilder sb = new StringBuilder();
+                                for (Map.Entry<String, ClientGhost> ent : map.entrySet()) {
+                                    String id = ent.getKey();
+                                    ClientGhost cg = ent.getValue();
+                                    if (sb.length() > 0) {
+                                        sb.append(";");
+                                    }
+                                    sb.append(cg.getDefaultSecureAddrType().getUnsecureId());
+                                    sb.append(Constants.CONNECTOR_INDICATOR + cg.getConnector().name);
+                                }
+                                sendMsg(new Datagram(serverAddrType,
+                                        datagram.getSender(),
+                                        new Message("list-connector-is",
+                                                "" + sb.toString())));
                             } catch (PropagandaException ex) {
                                 S.pL("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
                             }
@@ -217,21 +242,22 @@ public class Client_Admin extends PropagandaClient {
                                 client_ghost.sendToClient(new Datagram(serverAddrType,
                                         client_addr,
                                         new Message("hostile-takeover",
-                                                "")));
+                                                ">" + orig_connector.name)));
                             } catch (PropagandaException ex) {
                                 S.pL("ClientGhost.registerMsg: Can't send 'registered' (2) " + ex);
                             }
                             client_ghost.setConnector(orig_connector);
                             orig_connector.attachClientGhost(client_ghost);
-                            status = " hostile-takeover";
+                            status = " hostile-takeover-from";
                             try {
                                 client_ghost.sendToClient(new Datagram(serverAddrType,
                                         client_addr,
                                         new Message("registered",
-                                                client_addr.getAddrTypeString() + " @" + client_ghost.getAddrTypeGroupSet() + status)));
+                                                client_addr.getAddrTypeString() + status + " @" + client_ghost.getAddrTypeGroupSet() + Constants.CONNECTOR_INDICATOR + current_connector.name)));
                             } catch (PropagandaException ex) {
                                 S.pL("ClientGhost.registerMsg: Can't send 'registered' (2) " + ex);
                             }
+                            client_ghost.addAddrTypeGroup(client_addr.getAddrTypeGroup());
                         }
                     } else {
                         if (request_status) {
