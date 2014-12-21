@@ -1,6 +1,7 @@
 R=$RANDOM
 echo
 echo nc localhost 8899
+echo nc fpd-cl01 8990
 echo
 echo '. @ register; request-id aa@TESTING'
 echo '. @ register; request-id aa@TESTING2'

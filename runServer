@@ -1,1 +1,10 @@
-java -cp target/propaganda-0.1.*.*-jexec.jar com.femtioprocent.propaganda.appl.ServerAppl "$@"
+java -cp target/propaganda-0.1.*.*-jexec.jar com.femtioprocent.propaganda.appl.ServerAppl -port=8990 -http=8980 -ws=8970 -discover=8930"$@"
+
+# -MB                   start Moquette Broker (MQTT)
+# -port=<port>          set the port of propaganda server (=8899)
+# -http=<port>          set the port of propaganda http server (=8888)
+# -ws=<port>            set the port of propaganda WS server (=8877)
+# -discover=<port>      set the port of propaganda discover server (=8833)
+# -fed.port=<port>      set the port of propaganda federation listener (=0) - EXPERIMENTAL
+# -fed.join=<host:port> set the host:port for joining federation (='') - EXPERIMENTAL
+# 
