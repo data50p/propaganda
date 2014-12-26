@@ -163,33 +163,19 @@
     </reporting>
 
 
-    <distributionManagement>
+<distributionManagement>
+  <snapshotRepository>
+    <id>femtioprocent.se</id>
+    <name>femtioprocent-snapshots</name>
+    <url>http://femtioprocent.se:8080/artifactory/libs-snapshot-local</url>
+  </snapshotRepository>
+  <repository>
+    <id>femtioprocent.se</id>
+    <name>femtioprocent.se-releases</name>
+    <url>http://femtioprocent.se:8080/artifactory/libs-release-local</url>
+  </repository>
 
-	<repository>
-	    <id>data50p</id>
-	    <name>data50p-releases</name>
-	    <url>http://server.femtioprocent.com:8041/artifactory/ext-release-local</url>
-	</repository>
-	<snapshotRepository>
-	    <id>data50p</id>
-	    <name>data50p-snapshots</name>
-	    <url>http://server.femtioprocent.com:8041/artifactory/ext-snapshot-local</url>
-	</snapshotRepository>
+</distributionManagement>
 
-<!-- - ->
-	<repository>
-	    <id>repo.got2.androtech.se</id>
-	    <name>repo.got2.androtech.se-releases</name>
-	    <url>${artifactory.host}/artifactory/ext-release-local</url>
-	</repository>
-
-		<snapshotRepository>
-		    <id>repo.got2.androtech.se</id>
-		    <name>repo.got2.androtech.se-snapshots</name>
-		    <url>${artifactory.host}/artifactory/ext-snapshot-local</url>
-		</snapshotRepository>
-	<!- - -->
-
-    </distributionManagement>
 
 </project>
