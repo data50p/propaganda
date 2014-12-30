@@ -167,12 +167,12 @@
   <snapshotRepository>
     <id>femtioprocent.se</id>
     <name>femtioprocent-snapshots</name>
-    <url>http://femtioprocent.se:8080/artifactory/libs-snapshot-local</url>
+    <url>http://femtioprocent.se:8081/artifactory/libs-snapshot-local</url>
   </snapshotRepository>
   <repository>
     <id>femtioprocent.se</id>
     <name>femtioprocent.se-releases</name>
-    <url>http://femtioprocent.se:8080/artifactory/libs-release-local</url>
+    <url>http://femtioprocent.se:8081/artifactory/libs-release-local</url>
   </repository>
 
 </distributionManagement>
