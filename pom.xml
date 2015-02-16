@@ -4,7 +4,7 @@
     <groupId>com.femtioprocent</groupId>
     <artifactId>propaganda</artifactId>
     <packaging>jar</packaging>
-    <version>0.1.5.2-SNAPSHOT</version>
+    <version>0.1.5.3-SNAPSHOT</version>
     <name>Propaganda</name>
 
     <licenses>
@@ -144,6 +144,12 @@
 			<version>0.1</version>
 		</dependency>
 	<!- - -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20140107</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <properties>
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

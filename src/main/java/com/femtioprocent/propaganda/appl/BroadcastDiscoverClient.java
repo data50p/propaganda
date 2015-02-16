@@ -16,6 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jdk.nashorn.internal.parser.JSONParser;
+import jdk.nashorn.internal.runtime.Source;
+import netscape.javascript.JSObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 /**
  *
@@ -33,18 +39,18 @@ public class BroadcastDiscoverClient {
         this.port = port;
     }
 
-    public List<String> discover() {
-        List<String> arr = new ArrayList<String>();
+    public JSONArray discover() {
+        JSONArray jsonArr = new JSONArray();
         try {
             final InetAddress mca = InetAddress.getByName(BroadcastDiscoverServer.MCA);
             String msg = "discover";
             DatagramPacket hi = new DatagramPacket(msg.getBytes(), msg.length(),
                     mca, port);
             DatagramSocket s = new DatagramSocket();
-            s.setSoTimeout(3000);
+            s.setSoTimeout(5000);
             System.err.println("BroadcastDiscoverClient: send... " + hi);
             s.send(hi);
-
+	    
             // get their responses!
             byte[] buf = new byte[1000];
             DatagramPacket recv = new DatagramPacket(buf, buf.length);
@@ -54,7 +60,9 @@ public class BroadcastDiscoverClient {
                 final String rpl = new String(recv.getData(), recv.getOffset(), recv.getLength(), "utf-8");
                 System.err.println("BroadcastDiscoverClient: got " + rpl);
                 if (rpl.startsWith("{\"name\":")) {
-                    arr.add(rpl);
+		    JSONTokener t = new JSONTokener(rpl);
+		    JSONObject root = new JSONObject(t);
+		    jsonArr.put(root);
                 }
             }
         } catch (UnknownHostException ex) {
@@ -62,12 +70,14 @@ public class BroadcastDiscoverClient {
         } catch (IOException ex) {
             System.err.println("BroadcastDiscoverClient: " + ex);
         }
-        return arr;
+        return jsonArr;
     }
 
     public static void main(String[] args) {
         BroadcastDiscoverClient bdc = new BroadcastDiscoverClient();
-        final List<String> l = bdc.discover();
-        System.out.println("discovered: " + l);
+        final JSONArray jarr = bdc.discover();
+	JSONObject obj = new JSONObject();
+	obj.put("discovered", jarr);
+        System.out.println("" + obj.toString());
     }
 }
