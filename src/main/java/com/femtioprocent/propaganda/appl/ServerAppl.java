@@ -55,7 +55,7 @@ public class ServerAppl extends Appl {
             PropagandaServer.DEFAULT_FEDERATION_JOINHOST = fl;
         }
 
-        server = PropagandaServer.getDefaultServer("", Integer.parseInt(port_s));
+        server = PropagandaServer.getDefaultServer(Integer.parseInt(port_s));
 
         String s = "ALL";
         if ((s = flags.get("log")) != null) {
