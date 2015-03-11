@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 
 public class PropagandaServer {
 
+    public static String DEFAULT_NAME = "DefaultPropagandaServer";
     public static final int DEFAULT_SERVER_PORT = 8899;
     public static int DEFAULT_HTTP_PORT = 8888;
     public static int DEFAULT_WS_PORT = 8877;
@@ -335,11 +336,15 @@ public class PropagandaServer {
 
     // - - - - - - constructor methods - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     public static PropagandaServer getDefaultServer() {
-        return getDefaultServer("DefaultPropagandaServer");
+        return getDefaultServer(DEFAULT_NAME);
     }
 
     public static PropagandaServer getDefaultServer(String name) {
         return getDefaultServer(name, DEFAULT_SERVER_PORT);
+    }
+
+    public static PropagandaServer getDefaultServer(int port) {
+        return getDefaultServer(DEFAULT_NAME, port, DEFAULT_FEDERATION_JOINHOST, DEFAULT_FEDERATION_PORT);
     }
 
     public static PropagandaServer getDefaultServer(String name, int port) {

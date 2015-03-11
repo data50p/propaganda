@@ -4,7 +4,7 @@
     <groupId>com.femtioprocent</groupId>
     <artifactId>propaganda</artifactId>
     <packaging>jar</packaging>
-    <version>0.1.5.3-SNAPSHOT</version>
+    <version>0.1.5.4-SNAPSHOT</version>
     <name>Propaganda</name>
 
     <licenses>

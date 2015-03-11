@@ -13,6 +13,7 @@ public class ServerAppl extends Appl {
     @Override
     public void main() {
         if ((flags.get("?")) != null || (flags.get("h")) != null) {
+            S.pL("-name                 propaganda server name");
             S.pL("-MB                   start Moquette Broker (MQTT)");
             S.pL("-port=<port>          set the port of propaganda server (=8899)");
             S.pL("-http=<port>          set the port of propaganda http server (=8888)");
@@ -28,6 +29,10 @@ public class ServerAppl extends Appl {
 
         if ((fl = flags.get("port")) != null) {
             port_s = fl;
+        }
+
+        if ((fl = flags.get("name")) != null) {
+            PropagandaServer.DEFAULT_NAME = fl;
         }
 
         if ((fl = flags.get("http")) != null) {
@@ -50,7 +55,7 @@ public class ServerAppl extends Appl {
             PropagandaServer.DEFAULT_FEDERATION_JOINHOST = fl;
         }
 
-        server = PropagandaServer.getDefaultServer("CCF-PropagandaServer", Integer.parseInt(port_s));
+        server = PropagandaServer.getDefaultServer("", Integer.parseInt(port_s));
 
         String s = "ALL";
         if ((s = flags.get("log")) != null) {
