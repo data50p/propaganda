@@ -4,6 +4,11 @@
  */
 package com.femtioprocent.propaganda.appl;
 
+import com.femtioprocent.fpd.appl.Appl;
+import static com.femtioprocent.fpd.appl.Appl.decodeArgs;
+import static com.femtioprocent.fpd.appl.Appl.flags;
+import static com.femtioprocent.fpd.appl.Appl.main;
+import com.femtioprocent.fpd.sundry.S;
 import com.femtioprocent.propaganda.server.BroadcastDiscoverServer;
 import com.femtioprocent.propaganda.server.PropagandaServer;
 import java.io.IOException;
@@ -27,7 +32,7 @@ import org.json.JSONTokener;
  *
  * @author lars
  */
-public class BroadcastDiscoverClient {
+public class BroadcastDiscoverClient extends Appl {
 
     int port;
 
@@ -38,7 +43,26 @@ public class BroadcastDiscoverClient {
     public BroadcastDiscoverClient(int port) {
         this.port = port;
     }
+    
+    @Override
+    public void main() {
+        if ((flags.get("?")) != null || (flags.get("h")) != null) {
+            S.pL("-discover=<port>      set the port of propaganda discover server (=8833)");
+            return;
+        }
 
+        String fl;
+        if ((fl = flags.get("discover")) != null) {
+            PropagandaServer.DEFAULT_DISCOVER_PORT = Integer.parseInt(fl);
+        }
+
+        BroadcastDiscoverClient bdc = new BroadcastDiscoverClient();
+        final JSONArray jarr = bdc.discover();
+	JSONObject obj = new JSONObject();
+	obj.put("discovered", jarr);
+        System.out.println("" + obj.toString());
+    }
+    
     public JSONArray discover() {
         JSONArray jsonArr = new JSONArray();
         try {
@@ -74,10 +98,7 @@ public class BroadcastDiscoverClient {
     }
 
     public static void main(String[] args) {
-        BroadcastDiscoverClient bdc = new BroadcastDiscoverClient();
-        final JSONArray jarr = bdc.discover();
-	JSONObject obj = new JSONObject();
-	obj.put("discovered", jarr);
-        System.out.println("" + obj.toString());
+        decodeArgs(args);
+        main(new BroadcastDiscoverClient());
     }
 }
