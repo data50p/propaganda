@@ -23,8 +23,9 @@ echo '_ @;list'
 echo '_ @;list-id'
 echo '_ @;list-group'
 echo '_ @;list-connector'
+echo '_ @;list-ports'
 echo '_ @ unregister;'
 
-echo "http://ccf.femtioprocent.com:8888/?to=500&d1=.+@+register;request-id+a@AA&d2=_+@;list}"
+echo "http://ccf.femtioprocent.com:8889/?to=500&d1=.+@+register;request-id+a@AA&d2=_+@;list}"
 
 
