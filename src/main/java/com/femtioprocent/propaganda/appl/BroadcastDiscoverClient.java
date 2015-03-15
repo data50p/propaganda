@@ -68,8 +68,7 @@ public class BroadcastDiscoverClient extends Appl {
         try {
             final InetAddress mca = InetAddress.getByName(BroadcastDiscoverServer.MCA);
             String msg = "discover";
-            DatagramPacket hi = new DatagramPacket(msg.getBytes(), msg.length(),
-                    mca, port);
+            DatagramPacket hi = new DatagramPacket(msg.getBytes(), msg.length(), mca, port);
             DatagramSocket s = new DatagramSocket();
             s.setSoTimeout(5000);
             System.err.println("BroadcastDiscoverClient: send... " + hi);

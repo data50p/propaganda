@@ -75,7 +75,7 @@ public class HttpWSServer {
 
     public static void start(PropagandaServer server) {
         HttpWSServer.server = server;
-        e = Endpoint.publish("http://0.0.0.0:8877/propaganda", new HttpWSServer());
+        e = Endpoint.publish("http://0.0.0.0:" + PropagandaServer.DEFAULT_WS_PORT + "/propaganda", new HttpWSServer());
     }
 
     AtomicInteger i_cnt = new AtomicInteger();
