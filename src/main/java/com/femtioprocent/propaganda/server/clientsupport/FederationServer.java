@@ -22,7 +22,8 @@ public class FederationServer {
 
     int port;
     private ServerSocket sso;
-
+    PrintWriter pw;
+	
     public FederationServer(String id) {
         this.id = id;
     }
@@ -38,6 +39,7 @@ public class FederationServer {
 
     public void sendToFederatedPropaganda(Datagram datagram) throws PropagandaException {
         System.out.println(">F> Send to federation: " + id + ' ' + datagram);
+	pw.println(datagram.toString());
     }
 
     @Override
@@ -57,7 +59,7 @@ public class FederationServer {
                             InputStream is = so.getInputStream();
                             OutputStream os = so.getOutputStream();
                             BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                            PrintWriter pw = new PrintWriter(os, true);
+                            pw = new PrintWriter(os, true);
                             NEXT_LINE:
                             for (;;) {
                                 String s = br.readLine();
