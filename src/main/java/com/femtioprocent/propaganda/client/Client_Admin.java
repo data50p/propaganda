@@ -126,6 +126,26 @@ public class Client_Admin extends PropagandaClient {
                                 S.pL("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
                             }
 
+                        } else if ("list-ports".equals(datagram.getMessage().getMessage())) {
+                            try {
+                                HashMap<String, ClientGhost> map = new HashMap<String, ClientGhost>();
+                                for (final ClientGhost cg : server.clientghost_hm.values()) {
+                                    map.put(cg.getDefaultAddrType().getId(), cg);
+                                }
+                                StringBuilder sb = new StringBuilder();
+                                sb.append("" + "port=" + PropagandaServer.DEFAULT_SERVER_PORT);
+                                sb.append(" " + "http=" + PropagandaServer.DEFAULT_HTTP_PORT);
+                                sb.append(" " + "ws=" + PropagandaServer.DEFAULT_WS_PORT);
+                                sb.append(" " + "discover=" + PropagandaServer.DEFAULT_DISCOVER_PORT);
+                                sb.append(" " + "fed=" + PropagandaServer.DEFAULT_FEDERATION_PORT);
+                                sendMsg(new Datagram(serverAddrType,
+                                        datagram.getSender(),
+                                        new Message("list-ports-is",
+                                                "" + sb.toString())));
+                            } catch (PropagandaException ex) {
+                                S.pL("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
+                            }
+
                         } else if ("version".equals(datagram.getMessage().getMessage())) {
                             try {
                                 sendMsg(new Datagram(serverAddrType,

@@ -8,6 +8,7 @@ import com.femtioprocent.fpd.appl.Appl;
 import com.femtioprocent.fpd.sundry.S;
 import com.femtioprocent.propaganda.Version;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -16,6 +17,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 import java.net.NetworkInterface;
+import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -52,9 +54,15 @@ public class BroadcastDiscoverServer {
                 for (;;) {
                     try {
                         S.pL("Running BroadcastDiscoverServer: " + port);
-                        MulticastSocket s = new MulticastSocket(port);
-                        InetAddress ma = InetAddress.getByName(MCA);
-                        s.joinGroup(ma);
+
+//                        MulticastSocket s = new MulticastSocket(port);
+//                        InetAddress ma = InetAddress.getByName(MCA);
+//                        s.joinGroup(ma);
+
+                        //Keep a socket open to listen to all the UDP trafic that is destined for this port
+                        DatagramSocket s = new DatagramSocket(port, InetAddress.getByName("0.0.0.0"));
+                        s.setBroadcast(true);
+
                         byte[] buf = new byte[256];
                         DatagramPacket p = new DatagramPacket(buf, buf.length);
                         for (;;) {
@@ -108,7 +116,7 @@ public class BroadcastDiscoverServer {
                                     + hostname + "\", \"hosts\":"
                                     + hostList.toString().replace(" ", "") + ", \"port\":\""
                                     + PropagandaServer.getDefaultServer().serverPort
-				    + "\", \"flags\":\"" + Appl.flags.toString()  + "\""
+                                    + "\", \"flags\":\"" + Appl.flags.toString() + "\""
                                     + "}";
 
                             byte[] sbuf = rpl.getBytes("utf-8");
@@ -116,6 +124,7 @@ public class BroadcastDiscoverServer {
                             s.send(p);
                             S.pL("BroadcastDiscoverServer: sent " + rpl);
                         }
+//                        s.leaveGroup(ma);
                     } catch (Exception ex) {
                         System.err.println("BroadcastDiscoverServer: " + ex);
                     }

@@ -13,4 +13,12 @@ public class Util {
         }
         return sb.toString();
     }
+    
+    public static boolean empty(String s) {
+        return s == null || s.length() == 0;
+    }
+
+    public static boolean emptyIgnoreSpace(String s) {
+        return s == null || s.trim().length() == 0;
+    }
 }

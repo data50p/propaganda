@@ -31,12 +31,13 @@ import java.util.logging.Logger;
 public class PropagandaServer {
 
     public static String DEFAULT_NAME = "DefaultPropagandaServer";
-    public static final int DEFAULT_SERVER_PORT = 8899;
-    public static int DEFAULT_HTTP_PORT = 8888;
-    public static int DEFAULT_WS_PORT = 8877;
-    public static int DEFAULT_DISCOVER_PORT = 8833;
-    public static int DEFAULT_FEDERATION_PORT;
+    public static int DEFAULT_SERVER_PORT = 8899;
+    public static int DEFAULT_HTTP_PORT = 8889;
+    public static int DEFAULT_WS_PORT = 8879;
+    public static int DEFAULT_DISCOVER_PORT = 8839;
+    public static int DEFAULT_FEDERATION_PORT = 8859;
     public static String DEFAULT_FEDERATION_JOINHOST;
+    public static int PORT_PREFIX = 0;
 
     private static PropagandaServer default_server;
     public int serverPort;
