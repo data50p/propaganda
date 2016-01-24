@@ -180,6 +180,27 @@ abstract public class PropagandaClient {
         return datagram;
     }
 
+    public static enum MessageTypeFilter {
+        NOT_PROCESSED, PROCESSED, FILTERED
+    }
+    
+    public MessageTypeFilter standardProcessMessage(Datagram datagram, MessageType... filter) throws PropagandaException {
+        if (datagram.getMessageType() == MessageType.ping) {
+            sendMsg(new Datagram(getDefaultAddrType(), datagram.getSender(), MessageType.pong, datagram.getMessage()));
+            System.err.println(name + "got datagram: " + name + " =----> PING " + datagram);
+            return MessageTypeFilter.PROCESSED;
+        } else if (datagram.getMessageType() == MessageType.pong) {
+            System.err.println("got datagram: " + name + " =----> PONG " + datagram);
+            return MessageTypeFilter.PROCESSED;
+        }
+        if ( filter.length == 0 )
+            return MessageTypeFilter.NOT_PROCESSED;
+        for(MessageType mt : filter)
+            if ( mt == datagram.getMessageType() )
+                return MessageTypeFilter.FILTERED;
+        return MessageTypeFilter.NOT_PROCESSED;
+    }
+    
     @Override
     public String toString() {
         return name + '@' + addrtypeGroup_list + ' ' + connector;
