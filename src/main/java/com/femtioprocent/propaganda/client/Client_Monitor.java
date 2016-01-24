@@ -23,12 +23,7 @@ public class Client_Monitor extends PropagandaClient {
                     try {
                         if (connector != null) {
                             Datagram datagram = connector.recvMsg();
-                            if (datagram.getMessageType() == MessageType.ping) {
-                                sendMsg(new Datagram(getDefaultAddrType(), datagram.getSender(), MessageType.pong, datagram.getMessage()));
-                                getLogger("monitor").finest("dgr: " + S.ct() + ' ' + name + " → " + datagram);
-                            } else if (datagram.getMessageType() == MessageType.pong) {
-                                getLogger("monitor").finest("dgr: " + S.ct() + ' ' + name + " → " + datagram);
-                            } else {
+                            if (standardProcessMessage(datagram, MessageType.plain) == MessageTypeFilter.FILTERED) {
                                 getLogger("monitor").fine("got: " + S.ct() + ' ' + name + " → " + datagram);
                             }
                         } else {

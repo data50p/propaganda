@@ -58,13 +58,7 @@ public class DemoClient extends javax.swing.JFrame {
                     try {
                         for (;;) {
                             Datagram datagram = connector.recvMsg();
-                            if (datagram.getMessageType() == MessageType.ping) {
-                                sendMsg(new Datagram(getDefaultAddrType(), datagram.getSender(), MessageType.pong, datagram.getMessage()));
-                                System.err.println("got datagram: " + name + " =----> PING " + datagram);
-                            } else if (datagram.getMessageType() == MessageType.pong) {
-                                System.err.println("got datagram: " + name + " =----> PONG " + datagram);
-                                receivedMsgs.append("received PONG from " + datagram.getSender().getUnsecureAddrTypeString() + "\n");
-                            } else if (datagram.getMessageType() == MessageType.plain) {
+                            if (standardProcessMessage(datagram, MessageType.plain) == MessageTypeFilter.FILTERED) {
                                 System.err.println("got datagram: " + name + " =----> " + datagram);
                                 if (eval != null) {
                                     eval.eval(connector, datagram);

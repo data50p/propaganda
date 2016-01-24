@@ -33,10 +33,7 @@ public class Client_Status extends PropagandaClient {
                         Datagram datagram = connector.recvMsg();
                         getLogger().finest("msg: " + S.ct() + ' ' + name + " → " + datagram);
 
-                        if (datagram.getMessageType() == MessageType.ping) {
-                            sendMsg(new Datagram(getDefaultAddrType(), datagram.getSender(), MessageType.pong, datagram.getMessage()));
-                        } else if (datagram.getMessageType() == MessageType.pong) {
-                        } else {
+                        if (standardProcessMessage(datagram) == MessageTypeFilter.NOT_PROCESSED) {
                             if (false) {
                                 status_cnt[0]++;
                                 PropagandaServer server = PropagandaServer.getDefaultServer();

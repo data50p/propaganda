@@ -59,12 +59,7 @@ public class Client_Demo extends PropagandaClient {
                 try {
                     for (;;) {
                         Datagram datagram = connector.recvMsg();
-                        if (datagram.getMessageType() == MessageType.ping) {
-                            sendMsg(new Datagram(getDefaultAddrType(), datagram.getSender(), MessageType.pong, datagram.getMessage()));
-                            getLogger().finest("datagram: " + S.ct() + ' ' + name + " =----> PING " + datagram);
-                        } else if (datagram.getMessageType() == MessageType.pong) {
-                            getLogger().finest("datagram: " + S.ct() + ' ' + name + " =----> PONG " + datagram);
-                        } else {
+                        if (standardProcessMessage(datagram, MessageType.plain) == MessageTypeFilter.FILTERED) {
                             getLogger().finest("datagram: " + S.ct() + ' ' + name + " =----> " + datagram);
                         }
                     }
