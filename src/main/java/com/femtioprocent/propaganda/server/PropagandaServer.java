@@ -299,19 +299,21 @@ public class PropagandaServer {
         return null;
     }
 
-    public void deleteRegisteredClientGhost(String client_name, String addr_type_id, PropagandaConnector orig_connector) {
+    public int deleteRegisteredClientGhost(String client_name, String addr_type_id, PropagandaConnector orig_connector) {
         client_name = client_name.toLowerCase();
 
         ClientGhost cg = clientghost_hm.get(client_name);
         if (cg == null) {
-            return;
+            return 0;
         }
         //	if ( cg.
-        S.pL("removing " + cg);
+        S.pL("removing " + AddrType.addrType(client_name, addr_type_id) + " from " + cg);
         if (cg.removeAddrTypeId(addr_type_id)) {
             clientghost_hm.remove(client_name);
+            return 0;
         }
-        S.pL("removed: " + client_name + ' ' + addr_type_id + ' ' + clientghost_hm);
+        S.pL("removed: " + AddrType.addrType(client_name, addr_type_id) + ' ' + clientghost_hm);
+        return 1;
     }
 
     /**

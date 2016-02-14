@@ -125,6 +125,10 @@ public class AddrType {
             return "AddrType{" + getAddrTypeString() + "}";
         }
     }
+    
+    public static String addrType(String id, String addr_type) {
+        return id + "@" + addr_type;
+    }
 
     @Override
     public boolean equals(Object at) {

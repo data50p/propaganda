@@ -318,8 +318,9 @@ public class Client_Admin extends PropagandaClient {
         ClientGhost client_ghost = server.getRegisteredClientGhostSecured(client_addr.getId());
         if (client_ghost != null) {
             PropagandaConnector current_connector = client_ghost.getConnector();
-            current_connector.dettachClientGhost(client_ghost);
-            server.deleteRegisteredClientGhost(client_addr.getId(), client_addr.getAddrTypeGroup(), orig_connector); // remove client ghost if it has no more addr_type_id left
+            int howMany = server.deleteRegisteredClientGhost(client_addr.getId(), client_addr.getAddrTypeGroup(), orig_connector); // remove client ghost if it has no more addr_type_id left
+            if ( howMany == 0 )    
+                current_connector.dettachClientGhost(client_ghost);
         }
     }
 }
