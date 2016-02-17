@@ -44,8 +44,8 @@ public class ProcessDatagram {
      * Gets the value of the arg0 property.
      *
      * <p>
-     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present
-     * inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the arg0 property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the arg0 property.
      *
      * <p>
      * For example, to add a new item, do as follows:
@@ -60,10 +60,10 @@ public class ProcessDatagram {
      *
      */
     public List<String> getArg0() {
-        if (arg0 == null) {
-            arg0 = new ArrayList<String>();
-        }
-        return this.arg0;
+	if (arg0 == null) {
+	    arg0 = new ArrayList<String>();
+	}
+	return this.arg0;
     }
 
     /**
@@ -71,7 +71,7 @@ public class ProcessDatagram {
      *
      */
     public int getArg1() {
-        return arg1;
+	return arg1;
     }
 
     /**
@@ -79,7 +79,7 @@ public class ProcessDatagram {
      *
      */
     public void setArg1(int value) {
-        this.arg1 = value;
+	this.arg1 = value;
     }
 
 }

@@ -30,6 +30,9 @@ import java.io.PrintWriter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+import static com.femtioprocent.propaganda.context.Config.getLogger;
+import static com.femtioprocent.propaganda.context.Config.getLogger;
+import static com.femtioprocent.propaganda.context.Config.getLogger;
 
 public class Connector_Plain extends PropagandaConnector {
 
@@ -37,74 +40,74 @@ public class Connector_Plain extends PropagandaConnector {
     Socket so;
 
     public Connector_Plain(String name) {
-        this(name, false);
+	this(name, false);
     }
 
     public Connector_Plain(String name, boolean do_connect) {
-        super(name);
-        init();
-        if (do_connect) {
-            connect();
-        }
+	super(name);
+	init();
+	if (do_connect) {
+	    connect();
+	}
     }
 
     public Connector_Plain(String name, PropagandaClient client) {
-        super(name);
-        init();
-        connect();
-        client.setConnectorAndAttach(this);
+	super(name);
+	init();
+	connect();
+	client.setConnectorAndAttach(this);
     }
 
     static ServerSocket sso;
 
     public static void initListen() throws IOException {
-        initListen("localhost", 8899);
+	initListen("localhost", 8899);
     }
 
     public static void initListen(int port) throws IOException {
-        initListen("localhost", port);
+	initListen("localhost", port);
     }
 
     public static void initListen(String host, int port) throws IOException {
-        if (sso != null) {
-            return;
-        }
-        sso = new ServerSocket(port);
-        getLogger().finest("started: " + sso.toString() + ' ' + port);
+	if (sso != null) {
+	    return;
+	}
+	sso = new ServerSocket(port);
+	getLogger().finest("started: " + sso.toString() + ' ' + port);
     }
 
     /**
      * Connect a client with Socket to server.
      */
     public boolean connect() {
-        int port = sso.getLocalPort();
-        String host = "localhost";
-        return connect(host, port);
+	int port = sso.getLocalPort();
+	String host = "localhost";
+	return connect(host, port);
     }
 
     /**
      * Connect a client with Socket to server.
      */
     public boolean connect(String host, int port) {
-        try {
-            so = new Socket(host, port);
-            getLogger().fine("connected : " + so);
-            return true;
+	try {
+	    so = new Socket(host, port);
+	    getLogger().fine("connected : " + so);
+	    return true;
 
-        } catch (IOException ex) {
-            getLogger().severe("no-connection: ");
-        }
-        return false;
+	} catch (IOException ex) {
+	    getLogger().severe("no-connection: ");
+	}
+	return false;
     }
 
     public void close() {
-        try {
-            so.getInputStream().close();
-            so.getOutputStream().close();
-            so.close();
-        } catch (IOException ex) {
-            getLogger().info("" + ex);
-        }
+	try {
+	    so.getInputStream().close();
+	    so.getOutputStream().close();
+	    so.close();
+	} catch (IOException ex) {
+	    getLogger().info("" + ex);
+	}
     }
 
 //     public void setDataOutputStream(DataOutputStream dos)
@@ -116,79 +119,79 @@ public class Connector_Plain extends PropagandaConnector {
      */
     class MyServerThread implements Runnable {
 
-        Socket so;
+	Socket so;
 
-        MyServerThread(Socket so) {
-            this.so = so;
-        }
+	MyServerThread(Socket so) {
+	    this.so = so;
+	}
 
-        @Override
-        public void run() {
-            S.pL("ServerThread running " + so);
-            try {
-                BufferedReader rd = new BufferedReader(new InputStreamReader(so.getInputStream(), "utf-8"));
+	@Override
+	public void run() {
+	    S.pL("ServerThread running " + so);
+	    try {
+		BufferedReader rd = new BufferedReader(new InputStreamReader(so.getInputStream(), "utf-8"));
 
-                for (;;) {
-                    String sin = rd.readLine();
+		for (;;) {
+		    String sin = rd.readLine();
 
-                    if (sin == null) {
-                        break;
-                    }
-                    try {
-                        Datagram datagram = new Datagram(sin);
+		    if (sin == null) {
+			break;
+		    }
+		    try {
+			Datagram datagram = new Datagram(sin);
 
-                        if (datagram.getSender() == defaultAddrType) {
-                            ClientGhost gc = getDefaultClientGhost();
-                            if (gc != null) {
-                                datagram.setSender(gc.getDefaultAddrType());
-                            }
-                        }
-                        if (datagram.getReceiver() == defaultAddrType) {
-                            ClientGhost gc = getDefaultClientGhost();
-                            if (gc != null) {
-                                datagram.setReceiver(gc.getDefaultAddrType());
-                            }
-                        }
+			if (datagram.getSender() == defaultAddrType) {
+			    ClientGhost gc = getDefaultClientGhost();
+			    if (gc != null) {
+				datagram.setSender(gc.getDefaultAddrType());
+			    }
+			}
+			if (datagram.getReceiver() == defaultAddrType) {
+			    ClientGhost gc = getDefaultClientGhost();
+			    if (gc != null) {
+				datagram.setReceiver(gc.getDefaultAddrType());
+			    }
+			}
 
-                        int dmCnt = server.dispatcher.dispatchMsg(Connector_Plain.this, datagram);
+			int dmCnt = server.dispatcher.dispatchMsg(Connector_Plain.this, datagram);
 
-                        String receipt = datagram.getReceipt();
-                        if (receipt != null) {
-                            transmitReceipt(receipt + ',' + dmCnt);
-                        }
-                    } catch (Exception ex) {
-                        getLogger().log(Level.SEVERE, "exception: [" + sin + "];", ex);
-                    }
-                }
-            } catch (IOException ex) {
-            }
-        }
+			String receipt = datagram.getReceipt();
+			if (receipt != null) {
+			    transmitReceipt(receipt + ',' + dmCnt);
+			}
+		    } catch (Exception ex) {
+			getLogger().log(Level.SEVERE, "exception: [" + sin + "];", ex);
+		    }
+		}
+	    } catch (IOException ex) {
+	    }
+	}
     }
 
     private static final ThreadPoolExecutor pool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 
     public void serve(final Socket so) {
-        init_clientSocket(so);
+	init_clientSocket(so);
 
-        pool.purge();
-        pool.execute(new MyServerThread(so));
-        String state = pool.toString();
+	pool.purge();
+	pool.execute(new MyServerThread(so));
+	String state = pool.toString();
 
-        getLogger().log(Level.INFO, "plain thread pool state: " + state);
+	getLogger().log(Level.INFO, "plain thread pool state: " + state);
     }
 
     public static Socket acceptClient() throws IOException {
-        Socket so = sso.accept();
-        getLogger().finest("accept: " + sso.toString());
+	Socket so = sso.accept();
+	getLogger().finest("accept: " + sso.toString());
 
-        return so;
+	return so;
     }
 
     /**
      */
     @Override
     public void attachServer(PropagandaServer server) {
-        this.server = server;
+	this.server = server;
     }
 
     void init() {
@@ -202,68 +205,68 @@ public class Connector_Plain extends PropagandaConnector {
 
     @Override
     public Datagram recvMsg(long timeout_ms) {
-        try {
-            try {
-                if (rd == null) {
-                    rd = new BufferedReader(new InputStreamReader(so.getInputStream(), "utf-8"));
-                }
+	try {
+	    try {
+		if (rd == null) {
+		    rd = new BufferedReader(new InputStreamReader(so.getInputStream(), "utf-8"));
+		}
 
-                for (;;) {
-                    String sin = rd.readLine();
-                    if (sin == null) {
-                        break;
-                    }
-                    Datagram datagram = new Datagram(sin);
-                    return datagram;
-                }
-            } catch (IOException ex) {
-            } catch (NullPointerException ex) {
-            }
-        } finally {
-        }
-        return null;
+		for (;;) {
+		    String sin = rd.readLine();
+		    if (sin == null) {
+			break;
+		    }
+		    Datagram datagram = new Datagram(sin);
+		    return datagram;
+		}
+	    } catch (IOException ex) {
+	    } catch (NullPointerException ex) {
+	    }
+	} finally {
+	}
+	return null;
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     BufferedWriter cl_dos = null;
 
     public void init_clientSocket(Socket so) {
-        try {
-            cl_dos = new BufferedWriter(new OutputStreamWriter(so.getOutputStream(), "utf-8"));
-        } catch (IOException ex) {
-            getLogger().severe("no-socket: " + so.toString());
-        }
+	try {
+	    cl_dos = new BufferedWriter(new OutputStreamWriter(so.getOutputStream(), "utf-8"));
+	} catch (IOException ex) {
+	    getLogger().severe("no-socket: " + so.toString());
+	}
     }
 
     protected void transmitReceipt(String receipt) {
-        if (cl_dos != null) {
-            try {
-                synchronized (cl_dos) {
-                    String s = "[" + receipt + "]\n";
-                    cl_dos.write(s);
-                    cl_dos.flush();
-                }
-            } catch (IOException ex) {
-            }
-        }
+	if (cl_dos != null) {
+	    try {
+		synchronized (cl_dos) {
+		    String s = "[" + receipt + "]\n";
+		    cl_dos.write(s);
+		    cl_dos.flush();
+		}
+	    } catch (IOException ex) {
+	    }
+	}
     }
 
     @Override
     protected void transmitMsgToClient(Datagram datagram) throws PropagandaException {
-        if (cl_dos != null) {
-            try {
-                synchronized (cl_dos) {
-                    String s = datagram.getDatagramString();
-                    cl_dos.write(s);
-                    cl_dos.newLine();
-                    cl_dos.flush();
-                    getLogger().finest("transm2client: " + ' ' + this + ' ' + datagram);
+	if (cl_dos != null) {
+	    try {
+		synchronized (cl_dos) {
+		    String s = datagram.getDatagramString();
+		    cl_dos.write(s);
+		    cl_dos.newLine();
+		    cl_dos.flush();
+		    getLogger().finest("transm2client: " + ' ' + this + ' ' + datagram);
 
-                }
-            } catch (IOException ex) {
-                throw new PropagandaException("transmit error 1: " + datagram);
-            }
-        }
+		}
+	    } catch (IOException ex) {
+		throw new PropagandaException("transmit error 1: " + datagram);
+	    }
+	}
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -271,79 +274,79 @@ public class Connector_Plain extends PropagandaConnector {
 
     @Override
     protected void transmitMsgToClientGhost(Datagram datagram) throws PropagandaException {
-        try {
-            if (cg_dos == null) {
-                cg_dos = new BufferedWriter(new OutputStreamWriter(so.getOutputStream(), "utf-8"));
-            }
+	try {
+	    if (cg_dos == null) {
+		cg_dos = new BufferedWriter(new OutputStreamWriter(so.getOutputStream(), "utf-8"));
+	    }
 
-            synchronized (cg_dos) {
-                String data = datagram.getDatagramString();
-                cg_dos.write(data);
-                cg_dos.newLine();
-                cg_dos.flush();
-                getLogger().finest("transmitted: " + so.toString() + ' ' + data);
-            }
+	    synchronized (cg_dos) {
+		String data = datagram.getDatagramString();
+		cg_dos.write(data);
+		cg_dos.newLine();
+		cg_dos.flush();
+		getLogger().finest("transmitted: " + so.toString() + ' ' + data);
+	    }
 
-            return;
-        } catch (IOException ex) {
-            getLogger().finest("ex: " + so.toString() + ' ' + ex);
-            throw new PropagandaException("transmit error 2: " + datagram);
-        } catch (NullPointerException ex) {
-            getLogger().finest("ex: " + ex);
-            throw new PropagandaException("transmit error 3: " + datagram);
-        } finally {//catch (InterruptedException ex) {
-        }
+	    return;
+	} catch (IOException ex) {
+	    getLogger().finest("ex: " + so.toString() + ' ' + ex);
+	    throw new PropagandaException("transmit error 2: " + datagram);
+	} catch (NullPointerException ex) {
+	    getLogger().finest("ex: " + ex);
+	    throw new PropagandaException("transmit error 3: " + datagram);
+	} finally {//catch (InterruptedException ex) {
+	}
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     @Override
     public String toString() {
-        return "Connector_Plain{" + name + ',' + so + "}";
+	return "Connector_Plain{" + name + ',' + so + "}";
     }
 
     static class Main extends Appl {
 
-        class MainClient extends com.femtioprocent.propaganda.client.PropagandaClient {
+	class MainClient extends com.femtioprocent.propaganda.client.PropagandaClient {
 
-            MainClient() {
-                super("MainPlain");
-            }
+	    MainClient() {
+		super("MainPlain");
+	    }
 
-            void start() {
-                try {
-                    sendMsg(new Datagram(anonymousAddrType,
-                            serverAddrType,
-                            register,
-                            new Message("mainplain.test@DEMO")));
-                    for (;;) {
-                        Datagram datagram = getConnector().recvMsg();
-                        S.pL("Connector_Plain.Main got: " + datagram);
-                        if (datagram == null) {
-                            break;
-                        }
-                    }
-                } catch (PropagandaException ex) {
-                    S.pL("MainClient: " + ex);
-                }
-            }
-        }
+	    void start() {
+		try {
+		    sendMsg(new Datagram(anonymousAddrType,
+			    serverAddrType,
+			    register,
+			    new Message("mainplain.test@DEMO")));
+		    for (;;) {
+			Datagram datagram = getConnector().recvMsg();
+			S.pL("Connector_Plain.Main got: " + datagram);
+			if (datagram == null) {
+			    break;
+			}
+		    }
+		} catch (PropagandaException ex) {
+		    S.pL("MainClient: " + ex);
+		}
+	    }
+	}
 
-        @Override
-        public void main() {
-            Connector_Plain conn = new Connector_Plain("MainPlain");
-            MainClient client = new MainClient();
-            conn.connect();
+	@Override
+	public void main() {
+	    Connector_Plain conn = new Connector_Plain("MainPlain");
+	    MainClient client = new MainClient();
+	    conn.connect();
 
-            client.setConnector(conn);
-            conn.attachClient(client);
-            S.pL("conn " + conn);
+	    client.setConnector(conn);
+	    conn.attachClient(client);
+	    S.pL("conn " + conn);
 
-            client.start();
-        }
+	    client.start();
+	}
 
-        public static void main(String[] args) {
-            decodeArgs(args);
-            main(new Connector_Plain.Main());
-        }
+	public static void main(String[] args) {
+	    decodeArgs(args);
+	    main(new Connector_Plain.Main());
+	}
     }
 }

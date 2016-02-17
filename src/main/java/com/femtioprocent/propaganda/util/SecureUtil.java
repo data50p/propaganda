@@ -18,18 +18,18 @@ public class SecureUtil {
     private static String salt = "" + System.getProperty("os.name") + System.nanoTime() + System.getProperty("user.name");
 
     public static String getSecureId(String s, String seasalt) {
-        String us = s + (seasalt == null || seasalt.length() == 0 ? "" : ":" + seasalt) + ":" + salt;
-        String shaX = DigestUtils.shaHex(us);
+	String us = s + (seasalt == null || seasalt.length() == 0 ? "" : ":" + seasalt) + ":" + salt;
+	String shaX = DigestUtils.shaHex(us);
 //        MessageDigest md = null;
 //            md = MessageDigest.getInstance("SHA-1");
 //            byte[] d = md.digest(us.getBytes("utf-8"));
 //            String ss = Util.toAscii(d);
 //            System.err.println("SHA1: 2 " + ss.length() + ' ' + ss + ' ' + shaX);
-        m.put(shaX, s);
-        return shaX;
+	m.put(shaX, s);
+	return shaX;
     }
 
     public static String lookupUnsecureId(String id) {
-        return m.get(id);
+	return m.get(id);
     }
 }
