@@ -1,15 +1,12 @@
 package com.femtioprocent.propaganda.connector;
 
-import java.util.logging.Logger;
 import static com.femtioprocent.propaganda.context.Config.getLogger;
 import static com.femtioprocent.propaganda.data.AddrType.anonymousAddrType;
 import static com.femtioprocent.propaganda.data.AddrType.serverAddrType;
 import static com.femtioprocent.propaganda.data.AddrType.defaultAddrType;
 import static com.femtioprocent.propaganda.data.MessageType.register;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
@@ -21,13 +18,11 @@ import com.femtioprocent.propaganda.data.Datagram;
 import com.femtioprocent.propaganda.data.Message;
 import com.femtioprocent.propaganda.exception.PropagandaException;
 import com.femtioprocent.propaganda.server.PropagandaServer;
-import com.femtioprocent.propaganda.server.clientsupport.ClientGhost;
+import com.femtioprocent.propaganda.server.federation.ClientGhost;
 import com.femtioprocent.fpd.appl.Appl;
 import com.femtioprocent.fpd.sundry.S;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import static com.femtioprocent.propaganda.context.Config.getLogger;
@@ -153,7 +148,7 @@ public class Connector_Plain extends PropagandaConnector {
 			    }
 			}
 
-			int dmCnt = server.dispatcher.dispatchMsg(Connector_Plain.this, datagram);
+			int dmCnt = server.dispatcher.dispatchMsg(Connector_Plain.this, datagram, null);
 
 			String receipt = datagram.getReceipt();
 			if (receipt != null) {

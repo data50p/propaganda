@@ -43,7 +43,7 @@ public class HttpWSServer {
 	String myId = autoRegister(connector, list2);
 	for (String dg_s : list2) {
 	    Datagram datagram = new Datagram(dg_s);
-	    int n = server.dispatcher.dispatchMsg(connector, datagram);
+	    int n = server.dispatcher.dispatchMsg(connector, datagram, null);
 	}
 	for (String dg_s : datagramString) {
 	    if (connector.getDefaultClientGhost() != null) {
@@ -51,7 +51,7 @@ public class HttpWSServer {
 		dg_s = dg_s.replaceFirst("^[ ]*_ ", defaultAddrType.getAddrTypeString() + " ");
 	    }
 	    Datagram datagram = new Datagram(dg_s);
-	    int n = server.dispatcher.dispatchMsg(connector, datagram);
+	    int n = server.dispatcher.dispatchMsg(connector, datagram, null);
 	}
 	if (to == 0) {
 	    to = 1000;
@@ -61,7 +61,7 @@ public class HttpWSServer {
 	    list.add(r);
 	    if (r == null) {
 		Datagram ur = new Datagram(autoUnRegister(myId));
-		int n = server.dispatcher.dispatchMsg(connector, ur);
+		int n = server.dispatcher.dispatchMsg(connector, ur, null);
 		return list.toArray(new String[list.size()]);
 	    }
 	}

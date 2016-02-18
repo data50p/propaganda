@@ -1,26 +1,16 @@
 package com.femtioprocent.propaganda.client;
 
 import com.femtioprocent.fpd.sundry.S;
-import com.femtioprocent.propaganda.server.clientsupport.ClientGhost;
 import com.femtioprocent.propaganda.server.PropagandaServer;
 import com.femtioprocent.propaganda.exception.PropagandaException;
 import com.femtioprocent.propaganda.data.Datagram;
 import com.femtioprocent.propaganda.data.Message;
-import com.femtioprocent.propaganda.data.AddrType;
-import com.femtioprocent.propaganda.connector.PropagandaConnector;
-
-import java.util.Set;
 
 import static com.femtioprocent.propaganda.data.AddrType.*;
 import static com.femtioprocent.propaganda.context.Config.*;
-import com.femtioprocent.propaganda.server.clientsupport.FederationServer;
-import com.femtioprocent.propaganda.util.SecureUtil;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import com.femtioprocent.propaganda.server.federation.FederationServer;
+
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The Admin of the server itself. Address '

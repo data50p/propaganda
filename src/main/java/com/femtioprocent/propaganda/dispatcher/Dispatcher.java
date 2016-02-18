@@ -10,8 +10,8 @@ import com.femtioprocent.propaganda.data.Message;
 import com.femtioprocent.propaganda.data.MessageType;
 import com.femtioprocent.propaganda.exception.PropagandaException;
 import com.femtioprocent.propaganda.server.PropagandaServer;
-import com.femtioprocent.propaganda.server.clientsupport.ClientGhost;
-import com.femtioprocent.propaganda.server.clientsupport.FederationServer;
+import com.femtioprocent.propaganda.server.federation.ClientGhost;
+import com.femtioprocent.propaganda.server.federation.FederationServer;
 import java.io.PrintWriter;
 import java.util.*;
 import java.util.logging.Level;
@@ -142,10 +142,6 @@ public class Dispatcher {
 	return now;
     }
 
-    public synchronized int dispatchMsg(PropagandaConnector orig_connector, Datagram datagram) {
-	return dispatchMsg(orig_connector, datagram, null);
-    }
-
     public synchronized int dispatchMsg(PropagandaConnector orig_connector, Datagram datagram, PrintWriter avoid) {
 
 	if (orig_connector == null) { // FederationServer
@@ -262,7 +258,7 @@ public class Dispatcher {
 			new Datagram(serverAddrType,
 				datagram.getSender(),
 				MessageType.pong,
-				datagram.getMessage()));
+				datagram.getMessage()), null);
 		return dmCnt;
 	    }
 	} else if (datagram.getMessageType() == MessageType.pong) {                     // pong

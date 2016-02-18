@@ -1,4 +1,4 @@
-package com.femtioprocent.propaganda.server.clientsupport;
+package com.femtioprocent.propaganda.server.federation;
 
 import static com.femtioprocent.propaganda.context.Config.getLogger;
 import static com.femtioprocent.propaganda.data.AddrType.defaultAddrType;
@@ -24,7 +24,7 @@ public class FederationServer {
     private String id;
 
     int port;
-    private ServerSocket sso;
+    private ServerSocket serverSocket;
 
     class FederationClientData {
 	PrintWriter pw;
@@ -66,13 +66,13 @@ public class FederationServer {
     }
 
     private void startFederationServer() throws IOException {
-	sso = new ServerSocket(port);
+	serverSocket = new ServerSocket(port);
 	System.err.println("Fed Server: " + port);
 	Thread th;
 	th = new Thread(() -> {
 	    try {
 		for (;;) {
-		    Socket so = sso.accept();
+		    Socket so = serverSocket.accept();
 		    System.err.println("Fed Server: accept " + so);
 		    FederationClientData fcd = new FederationClientData();
 		    Thread sth = new Thread(() -> {

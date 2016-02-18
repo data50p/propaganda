@@ -6,7 +6,7 @@ import com.femtioprocent.propaganda.client.PropagandaClient;
 import com.femtioprocent.propaganda.data.Datagram;
 import com.femtioprocent.propaganda.exception.PropagandaException;
 import com.femtioprocent.propaganda.server.PropagandaServer;
-import com.femtioprocent.propaganda.server.clientsupport.ClientGhost;
+import com.femtioprocent.propaganda.server.federation.ClientGhost;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -84,7 +84,7 @@ abstract public class PropagandaConnector implements ServerConnector, ClientConn
     public int dispatchMsg(Datagram datagram) {
 	int dmCnt = 0;
 	if (server != null) {
-	    dmCnt = server.dispatcher.dispatchMsg(this, datagram);
+	    dmCnt = server.dispatcher.dispatchMsg(this, datagram, null);
 	}
 	return dmCnt;
     }

@@ -8,6 +8,7 @@
 /src/main/java/com/femtioprocent/propaganda/Version.java
 dist
 build
+.idea
 *~
 logs
 derby.log

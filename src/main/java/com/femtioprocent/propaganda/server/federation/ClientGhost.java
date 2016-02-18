@@ -1,4 +1,4 @@
-package com.femtioprocent.propaganda.server.clientsupport;
+package com.femtioprocent.propaganda.server.federation;
 
 import java.util.HashMap;
 import static com.femtioprocent.propaganda.data.AddrType.createAddrType;

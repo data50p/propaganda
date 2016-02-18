@@ -20,22 +20,20 @@ import com.femtioprocent.propaganda.connector.Connector_Plain;
 import com.femtioprocent.propaganda.data.AddrType;
 import com.femtioprocent.propaganda.dispatcher.Dispatcher;
 import com.femtioprocent.propaganda.exception.PropagandaException;
-import com.femtioprocent.propaganda.server.clientsupport.ClientGhost;
+import com.femtioprocent.propaganda.server.federation.ClientGhost;
 import com.femtioprocent.fpd.sundry.S;
 import com.femtioprocent.propaganda.client.Client_PropagandaFederation;
 import static com.femtioprocent.propaganda.context.Config.getLogger;
 import com.femtioprocent.propaganda.data.Datagram;
-import com.femtioprocent.propaganda.server.clientsupport.FederationServer;
+import com.femtioprocent.propaganda.server.federation.FederationClient;
+import com.femtioprocent.propaganda.server.federation.FederationServer;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import static com.femtioprocent.propaganda.context.Config.getLogger;
 import static com.femtioprocent.propaganda.context.Config.getLogger;
-import java.io.Writer;
 import static com.femtioprocent.propaganda.context.Config.getLogger;
 import static com.femtioprocent.propaganda.context.Config.getLogger;
 import static com.femtioprocent.propaganda.context.Config.getLogger;
@@ -66,7 +64,9 @@ public class PropagandaServer {
     public Client_Status client_status;
     public Dispatcher dispatcher;
     private Date started = new Date();
+
     private FederationServer federationServer;
+    private FederationClient federationClient;
 
     private PropagandaServer(String name, int port, String federation_join, int federation_port) {
 	System.err.println("PropagandaServer: " + name + ' ' + port + ' ' + federation_join + ' ' + federation_port);
@@ -89,22 +89,6 @@ public class PropagandaServer {
     private void initServer() {
 	clientghost_hm = new HashMap<String, ClientGhost>();
 	dispatcher = new Dispatcher(this, clientghost_hm);
-    }
-
-    private void initFedaration() {
-	getLogger().finest("init federation: " + federation_join + ' ' + federation_port);
-
-	if (federation_port != 0) {
-	    try {
-		if (federation_join == null) {
-		    federationServer = new FederationServer(federation_port);
-		} else {
-		    startFederationClient();
-		}
-	    } catch (IOException ex) {
-		Logger.getLogger(PropagandaServer.class.getName()).log(Level.SEVERE, null, ex);
-	    }
-	}
     }
 
     private void initPropagandaClients() {
@@ -167,69 +151,6 @@ public class PropagandaServer {
 	bds.start();
     }
 
-    Socket fso = null;
-    PrintWriter fedWr = null;
-
-    private void startFederationClient() {
-	System.err.println("Start FedClient");
-	Thread sth = new Thread(() -> {
-	    try {
-		fso = new Socket(federation_join, federation_port);
-		System.err.println("FedClient connected: " + fso);
-		fso.getInputStream();
-		BufferedReader rd = new BufferedReader(new InputStreamReader(fso.getInputStream(), "utf-8"));
-		try {
-		    if (fedWr == null) {
-			fedWr = new PrintWriter(new OutputStreamWriter(fso.getOutputStream(), "utf-8"), true);
-		    }
-		    System.err.println("sendToFed fedWr: " + fedWr);
-		} catch (IOException ex) {
-		    getLogger().severe("no-socket: " + fso.toString());
-		}
-
-		for (;;) {
-		    String sin = rd.readLine();
-		    System.err.println("FedClient got: " + sin);
-		    if (sin == null) {
-			break;
-		    }
-		    Datagram datagram = new Datagram(sin);
-		    System.err.println("FedClient dispatch: " + datagram);
-		    dispatcher.dispatchMsg(null, datagram, fedWr);
-		}
-	    } catch (Exception ex) {
-
-	    }
-	});
-	sth.start();
-    }
-
-    public void sendToFed(String s, PrintWriter avoid) {
-
-	if (federationServer != null) {
-	    federationServer.sendToFederatedPropaganda(s, avoid);
-	    return;
-	}
-
-	System.err.println("sendToFed fso: " + fso);
-	if (fso == null) {
-	    return;
-	}
-
-	if (fedWr != avoid) {
-	    if (fedWr != null) {
-		try {
-		    synchronized (fedWr) {
-			fedWr.println(s);
-			fedWr.flush();
-			System.err.println("sendToFed send: " + s);
-		    }
-		} catch (Exception ex) {
-		    System.err.println("sendToFed send: " + ex);
-		}
-	    }
-	}
-    }
 
     public class PlainConnectorSupport {
 
@@ -347,6 +268,37 @@ public class PropagandaServer {
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    private void initFedaration() {
+        getLogger().finest("init federation: " + federation_join + ' ' + federation_port);
+
+        if (federation_port != 0) {
+            try {
+                if (federation_join == null) {
+                    federationServer = new FederationServer(federation_port);
+                } else {
+                    federationClient = new FederationClient(this, federation_join, federation_port);
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(PropagandaServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public void sendToFed(String s, PrintWriter avoid) {
+
+        if (federationServer != null) {
+            federationServer.sendToFederatedPropaganda(s, avoid);
+            return;
+        }
+        if (federationClient != null) {
+            federationClient.sendToFed(s, avoid);
+            return;
+        }
+    }
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
     /**
      * using the secured address (not SHA1)
      *

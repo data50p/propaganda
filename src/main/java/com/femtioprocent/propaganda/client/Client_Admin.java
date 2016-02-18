@@ -2,7 +2,7 @@ package com.femtioprocent.propaganda.client;
 
 import com.femtioprocent.fpd.sundry.S;
 import com.femtioprocent.propaganda.Constants;
-import com.femtioprocent.propaganda.server.clientsupport.ClientGhost;
+import com.femtioprocent.propaganda.server.federation.ClientGhost;
 import com.femtioprocent.propaganda.server.PropagandaServer;
 import com.femtioprocent.propaganda.exception.PropagandaException;
 import com.femtioprocent.propaganda.data.Datagram;

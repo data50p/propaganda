@@ -61,7 +61,7 @@ public class MQTTServer {
 		    List<Datagram> dgrList = createDatagrams(receive);
 		    System.out.println("MQTTServer: got(mqtt) " + dgrList);
 		    for (Datagram dgr : dgrList) {
-			server.dispatcher.dispatchMsg(connector, dgr);
+			server.dispatcher.dispatchMsg(connector, dgr, null);
 		    }
 		    receive.ack();
 		}
