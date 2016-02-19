@@ -33,45 +33,50 @@ public class FederationClient {
 
     private void startFederationClient() {
 	System.err.println("Start FedClient");
-	for(;;) {
-	    Thread sth = new Thread(() -> {
+	Thread th = new Thread(() -> {
+	    for (;;) {
 		try {
-		    socket = new Socket(host, port);
-		    System.err.println("FedClient connected: " + socket);
-		    socket.getInputStream();
-		    BufferedReader rd = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
-		    try {
-			if (printWriter == null) {
-			    printWriter = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf-8"), true);
-			}
-			System.err.println("sendToFed: " + printWriter);
-		    } catch (IOException ex) {
-			getLogger().severe("no-socket: " + socket.toString());
-		    }
+		    Thread sth = new Thread(() -> {
+			try {
+			    socket = new Socket(host, port);
+			    System.err.println("FedClient connected: " + socket);
+			    socket.getInputStream();
+			    BufferedReader rd = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
+			    try {
+				if (printWriter == null) {
+				    printWriter = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf-8"), true);
+				}
+				System.err.println("sendToFed: " + printWriter);
+			    } catch (IOException ex) {
+				getLogger().severe("no-socket: " + socket.toString());
+			    }
 
-		    for (;;) {
-			String sin = rd.readLine();
-			System.err.println("FedClient got: " + sin);
-			if (sin == null) {
-			    break;
+			    for (;;) {
+				String sin = rd.readLine();
+				System.err.println("FedClient got: " + sin);
+				if (sin == null) {
+				    break;
+				}
+				Datagram datagram = new Datagram(sin);
+				System.err.println("FedClient dispatch: " + datagram);
+				server.dispatcher.dispatchMsg(null, datagram, printWriter);
+			    }
+			} catch (Exception ex) {
+			    System.err.println("FedClient ex: " + ex);
 			}
-			Datagram datagram = new Datagram(sin);
-			System.err.println("FedClient dispatch: " + datagram);
-			server.dispatcher.dispatchMsg(null, datagram, printWriter);
+		    });
+		    sth.start();
+		    try {
+			sth.join();
+			Thread.sleep(3000);
+		    } catch (Exception ex) {
+			System.err.println("FedClient ex2: " + ex);
 		    }
-		} catch (Exception ex) {
-		    System.err.println("FedClient ex: " + ex);
+		} finally {
 		}
-	    });
-	    sth.start();
-	    
-	    try {
-		sth.join();
-		Thread.sleep(3000);
-	    } catch (Exception ex) {
-		    System.err.println("FedClient ex2: " + ex);		
 	    }
-	}
+	});
+	th.start();
     }
 
     public void sendToFed(String s, PrintWriter avoid) {
@@ -80,17 +85,14 @@ public class FederationClient {
 	    return;
 	}
 
-	if (printWriter != avoid) {
-	    if (printWriter != null) {
-		try {
-		    synchronized (printWriter) {
-			printWriter.println(s);
-			printWriter.flush();
-			System.err.println("sendToFed send: " + s);
-		    }
-		} catch (Exception ex) {
-		    System.err.println("sendToFed send: " + ex);
+	if (printWriter != null && printWriter != avoid) {
+	    try {
+		synchronized (printWriter) {
+		    printWriter.println(s);
+		    System.err.println("sendToFed send: " + s);
 		}
+	    } catch (Exception ex) {
+		System.err.println("sendToFed send ex: " + ex);
 	    }
 	}
     }

@@ -1,6 +1,5 @@
 package com.femtioprocent.propaganda.server;
 
-import static com.femtioprocent.propaganda.context.Config.getLogger;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -22,21 +21,10 @@ import com.femtioprocent.propaganda.dispatcher.Dispatcher;
 import com.femtioprocent.propaganda.exception.PropagandaException;
 import com.femtioprocent.propaganda.server.federation.ClientGhost;
 import com.femtioprocent.fpd.sundry.S;
-import com.femtioprocent.propaganda.client.Client_PropagandaFederation;
-import static com.femtioprocent.propaganda.context.Config.getLogger;
-import com.femtioprocent.propaganda.data.Datagram;
 import com.femtioprocent.propaganda.server.federation.FederationClient;
 import com.femtioprocent.propaganda.server.federation.FederationServer;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
-import static com.femtioprocent.propaganda.context.Config.getLogger;
-import static com.femtioprocent.propaganda.context.Config.getLogger;
-import static com.femtioprocent.propaganda.context.Config.getLogger;
-import static com.femtioprocent.propaganda.context.Config.getLogger;
-import static com.femtioprocent.propaganda.context.Config.getLogger;
 import static com.femtioprocent.propaganda.context.Config.getLogger;
 import java.io.PrintWriter;
 
@@ -60,7 +48,6 @@ public class PropagandaServer {
     public HashMap<String, ClientGhost> clientghost_hm;
     public Client_Monitor client_monitor;
     public Client_Admin client_admin;
-    public Client_PropagandaFederation client_propagandaFederation;
     public Client_Status client_status;
     public Dispatcher dispatcher;
     private Date started = new Date();

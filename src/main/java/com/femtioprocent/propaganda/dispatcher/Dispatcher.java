@@ -23,7 +23,6 @@ public class Dispatcher {
 
     private PropagandaServer server;
     private HashMap<String, ClientGhost> clientghost_hm;
-    public HashMap<String, FederationServer> federatedghost_hm = new HashMap<String, FederationServer>();
     private int cnt_register, cnt_unregister, cnt_ping, cnt_pong, cnt_plain, cnt_RM, cnt_sendClient;
 
     /**
@@ -160,28 +159,6 @@ public class Dispatcher {
 
 	if (datagram.getMessageType() == MessageType.single)
             ;
-
-	if (datagram.getMessageType() == MessageType.fedjoin) {
-
-	    getLogger().finer("fedjoin: " + datagram + ' ' + orig_connector);
-	    if (datagram.getReceiver() != serverAddrType) {
-		getLogger().severe("fedjoin-bad: " + datagram + ' ' + orig_connector);
-		return 0;
-	    }
-	    String pfId = datagram.getMessage().getMessage();
-	    federatedghost_hm.put(pfId, new FederationServer(pfId));
-	    Datagram sdatagram = new Datagram(serverAddrType,
-		    datagram.getSender(),
-		    MessageType.plain,
-		    new Message("joined fed " + pfId + ' ' + federatedghost_hm.size()));
-	    try {
-		orig_connector.sendMsg(sdatagram);
-	    } catch (PropagandaException ex) {
-		Logger.getLogger(Dispatcher.class.getName()).log(Level.SEVERE, null, ex);
-	    }
-	    //int dmCnt = dispatchMsg(orig_connector, sdatagram);
-	    return 0;
-	}
 
 	if (datagram.getMessageType() == MessageType.register) {                      // register
 	    getLogger().finer("register: " + datagram + ' ' + orig_connector);
@@ -332,16 +309,6 @@ public class Dispatcher {
 	if (com.femtioprocent.fpd.appl.Appl.flags.get("nomonitor") == null) {
 	    if (datagram.getMessageType() != MessageType.monitor) {
 		sendToMonitor(null, datagram, "message");
-	    }
-	}
-
-	if (false) {
-	    for (FederationServer fg : federatedghost_hm.values()) {
-		try {
-		    fg.sendToFederatedPropaganda(datagram.toString(), null);
-		} catch (Exception ex) {
-		    Logger.getLogger(Dispatcher.class.getName()).log(Level.SEVERE, null, ex);
-		}
 	    }
 	}
 
