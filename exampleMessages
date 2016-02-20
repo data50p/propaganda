@@ -17,6 +17,10 @@ echo '. @ register; request-secure-id a4@CCFCLIENT'
 echo '_ @ register; unsecure-id'
 echo '_ @ register; request-status aa@TESTING'
 
+echo '_ *; hello'
+echo '_ *; hello2'
+echo '_ *; hello3'
+
 echo '. @ register'
 
 echo '_ @;list'
