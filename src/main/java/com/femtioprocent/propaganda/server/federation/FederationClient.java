@@ -1,5 +1,6 @@
 package com.femtioprocent.propaganda.server.federation;
 
+import com.femtioprocent.propaganda.connector.Connector_Plain;
 import com.femtioprocent.propaganda.data.Datagram;
 import com.femtioprocent.propaganda.server.PropagandaServer;
 
@@ -8,6 +9,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import static com.femtioprocent.propaganda.context.Config.getLogger;
+import com.femtioprocent.propaganda.util.Util;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FederationClient {
 
@@ -15,16 +23,17 @@ public class FederationClient {
 
     int port;
     String host;
-    private ServerSocket serverSocket;
+
     private Socket socket = null;
-    private PrintWriter printWriter = null;
+    private PrintWriter pw = null;
+    private static final ThreadPoolExecutor pool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 
     public FederationClient(PropagandaServer server, String federation_join, int federation_port) throws IOException {
 	port = federation_port;
 	host = federation_join;
 	this.server = server;
 	startFederationClient();
-	System.err.println("new com.femtioprocent.propaganda.server.federation.FederationClient: " + federation_port);
+	System.err.println("FederationClient: new " + federation_join + ' ' + federation_port);
     }
 
     public String getId() {
@@ -33,23 +42,15 @@ public class FederationClient {
 
     private void startFederationClient() {
 	System.err.println("Start FedClient");
-	Thread th = new Thread(() -> {
+	pool.execute(() -> {
 	    for (;;) {
 		try {
-		    Thread sth = new Thread(() -> {
+		    Future future = pool.submit(() -> {
 			try {
 			    socket = new Socket(host, port);
 			    System.err.println("FedClient connected: " + socket);
-			    socket.getInputStream();
 			    BufferedReader rd = new BufferedReader(new InputStreamReader(socket.getInputStream(), "utf-8"));
-			    try {
-				if (printWriter == null) {
-				    printWriter = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf-8"), true);
-				}
-				System.err.println("sendToFed: " + printWriter);
-			    } catch (IOException ex) {
-				getLogger().severe("no-socket: " + socket.toString());
-			    }
+			    pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), "utf-8"), true);
 
 			    for (;;) {
 				String sin = rd.readLine();
@@ -59,24 +60,28 @@ public class FederationClient {
 				}
 				Datagram datagram = new Datagram(sin);
 				System.err.println("FedClient dispatch: " + datagram);
-				server.dispatcher.dispatchMsg(null, datagram, printWriter);
+				server.dispatcher.dispatchMsg(null, datagram, pw);
 			    }
 			} catch (Exception ex) {
 			    System.err.println("FedClient ex: " + ex);
+			    Util.msleep(3000);
+			} finally {
+			    if (pw != null) {
+				pw.close();
+			    }
+			    pw = null;
 			}
 		    });
-		    sth.start();
-		    try {
-			sth.join();
-			Thread.sleep(3000);
-		    } catch (Exception ex) {
-			System.err.println("FedClient ex2: " + ex);
-		    }
+		    future.get();
+		} catch (InterruptedException ex) {
+    		    System.err.println("FedClient ex: " + ex);
+		} catch (ExecutionException ex) {
+    		    System.err.println("FedClient ex: " + ex);
+//		    Logger.getLogger(FederationClient.class.getName()).log(Level.SEVERE, null, ex);
 		} finally {
 		}
 	    }
 	});
-	th.start();
     }
 
     public void sendToFed(String s, PrintWriter avoid) {
@@ -85,15 +90,9 @@ public class FederationClient {
 	    return;
 	}
 
-	if (printWriter != null && printWriter != avoid) {
-	    try {
-		synchronized (printWriter) {
-		    printWriter.println(s);
-		    System.err.println("sendToFed send: " + s);
-		}
-	    } catch (Exception ex) {
-		System.err.println("sendToFed send ex: " + ex);
-	    }
+	if (pw != null && pw != avoid) {
+	    pw.println(s);
+	    System.err.println("sendToFed send: " + s);
 	}
     }
 }

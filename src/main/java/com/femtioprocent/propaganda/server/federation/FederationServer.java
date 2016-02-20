@@ -1,5 +1,6 @@
 package com.femtioprocent.propaganda.server.federation;
 
+import com.femtioprocent.propaganda.connector.Connector_Plain;
 import static com.femtioprocent.propaganda.context.Config.getLogger;
 import static com.femtioprocent.propaganda.data.AddrType.defaultAddrType;
 import com.femtioprocent.propaganda.data.Datagram;
@@ -18,47 +19,77 @@ import static com.femtioprocent.propaganda.context.Config.getLogger;
 import static com.femtioprocent.propaganda.context.Config.getLogger;
 import static com.femtioprocent.propaganda.context.Config.getLogger;
 import java.io.OutputStreamWriter;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FederationServer {
 
+    private PropagandaServer server;
     private int port;
     private ServerSocket serverSocket;
-    HashMap<Integer, FederationClientData> fcMap = new HashMap<Integer, FederationClientData>();
-    AtomicInteger fcIndex = new AtomicInteger(0);
+    private Set<FederationClientData> fcSet = new HashSet<FederationClientData>();
+    private static final ThreadPoolExecutor pool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 
-    private int putFcMap(FederationClientData fcd) {
-	int ix = fcIndex.incrementAndGet();
-	synchronized (fcMap) {
-	    fcMap.put(ix, fcd);
+    private FederationClientData add(FederationClientData fcd) {
+	synchronized (fcSet) {
+	    fcSet.add(fcd);
+	System.err.println("Fed Server add: " + fcd + ' ' + fcSet);
+	    return fcd;
 	}
-	System.err.println("Fed Server add: " + ix + ' ' + fcMap);
-	return ix;
     }
 
-    private void remFcMap(int ix) {
-	synchronized (fcMap) {
-	    fcMap.remove(ix);
+    private void rem(FederationClientData fcd) {
+	synchronized (fcSet) {
+	    fcSet.remove(fcd);
+	    if (fcd.pw != null) {
+		fcd.pw.close();
+		System.err.println("Fed Server: pw closed");
+	    }
 	}
-	System.err.println("Fed Server rem: " + ix + ' ' + fcMap);
+	System.err.println("Fed Server rem: " + fcd + ' ' + fcSet);
     }
 
     class FederationClientData {
 
 	PrintWriter pw;
+
+	boolean isOk(PrintWriter avoid) {
+	    return pw != avoid;
+	}
+
+	void close() {
+	    if (pw != null) {
+		pw.close();
+	    }
+	}
+
+	public String toString() {
+	    return "@" + hashCode();
+	}
+	@Override
+	public boolean equals(Object o) {
+	    if (o instanceof FederationClientData) {
+		return pw == ((FederationClientData) o).pw;
+	    }
+	    return false;
+	}
     }
 
-    public FederationServer(int federation_port) throws IOException {
+    public FederationServer(PropagandaServer server, int federation_port) throws IOException {
+	this.server = server;
 	port = federation_port;
 	startFederationServer();
 	System.err.println("new FederationServer: " + federation_port);
     }
 
     public void sendToFederatedPropaganda(String s, PrintWriter avoid) {
-	synchronized (fcMap) {
-	    System.out.println("FederationServer to federation clients: " + fcMap.size() + ' ' + s);
-	    for (FederationClientData fcd : fcMap.values()) {
-		if (avoid != fcd.pw) {
+	synchronized (fcSet) {
+	    System.out.println("FederationServer to federation clients: " + fcSet.size() + ' ' + s);
+	    for (FederationClientData fcd : fcSet) {
+		if (fcd.isOk(avoid)) {
 		    fcd.pw.println(s);
 		    System.err.println(">> " + fcd.pw);
 		}
@@ -68,21 +99,21 @@ public class FederationServer {
 
     @Override
     public String toString() {
-	return "FederationServer{" + fcMap.size() + "}";
+	return "FederationServer{" + fcSet.size() + "}";
     }
 
     private void startFederationServer() throws IOException {
 	serverSocket = new ServerSocket(port);
 	System.err.println("FederationServer: " + port);
-	Thread th;
-	th = new Thread(() -> {
+	pool.execute(() -> {
 	    try {
 		for (;;) {
 		    Socket so = serverSocket.accept();
 		    System.err.println("Fed Server: accept " + so);
-		    FederationClientData fcd = new FederationClientData();
-		    int fc_index = putFcMap(fcd);
-		    Thread sth = new Thread(() -> {
+
+		    FederationClientData fcd = add(new FederationClientData());
+
+		    pool.execute(() -> {
 			try {
 			    InputStream is = so.getInputStream();
 			    OutputStream os = so.getOutputStream();
@@ -110,7 +141,7 @@ public class FederationServer {
 					continue NEXT_LINE;
 				    }
 
-				    int dmCnt = PropagandaServer.getDefaultServer().dispatcher.dispatchMsg(null, datagram, fcd.pw);
+				    int dmCnt = server.dispatcher.dispatchMsg(null, datagram, fcd.pw);
 
 				    String receipt = datagram.getReceipt();
 				    if (receipt != null) {
@@ -123,19 +154,13 @@ public class FederationServer {
 			} catch (IOException ex) {
 			    System.err.println("Fed Server: Can't io " + ex);
 			} finally {
-			    remFcMap(fc_index);
-			    if (fcd.pw != null) {
-				fcd.pw.close();
-			    }
-			    System.err.println("Fed Server: pw closed");
+			    rem(fcd);
 			}
 		    });
-		    sth.start();
 		}
 	    } catch (IOException ex) {
 		System.err.println("Fed Server: Can't run " + ex);
 	    }
 	});
-	th.start();
     }
 }

@@ -21,4 +21,11 @@ public class Util {
     public static boolean emptyIgnoreSpace(String s) {
 	return s == null || s.trim().length() == 0;
     }
+    
+    public static void msleep(int ms) {
+	try {
+	    Thread.sleep(ms);
+	} catch (InterruptedException ex) {
+	}
+    }
 }

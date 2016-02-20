@@ -262,7 +262,7 @@ public class PropagandaServer {
         if (federation_port != 0) {
             try {
                 if (federation_join == null) {
-                    federationServer = new FederationServer(federation_port);
+                    federationServer = new FederationServer(this, federation_port);
                 } else {
                     federationClient = new FederationClient(this, federation_join, federation_port);
                 }
