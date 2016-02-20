@@ -103,8 +103,8 @@ public class FederationServer {
     }
 
     private void startFederationServer() throws IOException {
-	serverSocket = new ServerSocket(port);
 	System.err.println("FederationServer: " + port);
+	serverSocket = new ServerSocket(port);
 	pool.execute(() -> {
 	    try {
 		for (;;) {

@@ -1,4 +1,4 @@
-java -cp target/propaganda-0.1.*.*-jexec.jar com.femtioprocent.propaganda.appl.ServerAppl -fed.port=8866 -port=8885 "$@"
+java -cp target/propaganda-0.1.*.*-jexec.jar com.femtioprocent.propaganda.appl.ServerAppl -fed.port=8883 -port=8885 -http=8866 "$@"
 
 # -MB                   start Moquette Broker (MQTT)
 # -port=<port>          set the port of propaganda server (=8899)
