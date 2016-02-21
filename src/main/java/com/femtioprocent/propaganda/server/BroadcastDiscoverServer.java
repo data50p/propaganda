@@ -5,29 +5,21 @@
 package com.femtioprocent.propaganda.server;
 
 import com.femtioprocent.fpd.appl.Appl;
-import com.femtioprocent.fpd.sundry.S;
 import com.femtioprocent.propaganda.Version;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.Inet4Address;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.MulticastSocket;
 import java.net.NetworkInterface;
-import java.net.Socket;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -53,7 +45,7 @@ public class BroadcastDiscoverServer {
 	    public void run() {
 		for (;;) {
 		    try {
-			S.pL("Running BroadcastDiscoverServer: " + port);
+			System.err.println("Running BroadcastDiscoverServer: " + port);
 
 //                        MulticastSocket s = new MulticastSocket(port);
 //                        InetAddress ma = InetAddress.getByName(MCA);
@@ -65,12 +57,11 @@ public class BroadcastDiscoverServer {
 			byte[] buf = new byte[256];
 			DatagramPacket p = new DatagramPacket(buf, buf.length);
 			for (;;) {
-			    S.pL("BroadcastDiscoverServer: revc...");
 			    s.receive(p);
-			    S.pL("BroadcastDiscoverServer: got " + new String(p.getData(), 0, p.getLength()));
+			    System.err.println("BroadcastDiscoverServer: got " + new String(p.getData(), 0, p.getLength()));
 			    InetAddress a = p.getAddress();
 			    int po = p.getPort();
-			    S.pL("BroadcastDiscoverServer: from " + a + ' ' + po);
+			    System.err.println("BroadcastDiscoverServer: from " + a + ' ' + po);
 
 			    List<String> hostList = new ArrayList<String>();
 			    String ip;
@@ -121,7 +112,7 @@ public class BroadcastDiscoverServer {
 			    byte[] sbuf = rpl.getBytes("utf-8");
 			    p = new DatagramPacket(sbuf, sbuf.length, a, po);
 			    s.send(p);
-			    S.pL("BroadcastDiscoverServer: sent " + rpl);
+			    System.err.println("BroadcastDiscoverServer: sent " + rpl);
 			}
 //                        s.leaveGroup(ma);
 		    } catch (Exception ex) {

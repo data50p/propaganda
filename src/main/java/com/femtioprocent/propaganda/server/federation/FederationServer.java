@@ -1,7 +1,5 @@
 package com.femtioprocent.propaganda.server.federation;
 
-import com.femtioprocent.propaganda.connector.Connector_Plain;
-import static com.femtioprocent.propaganda.context.Config.getLogger;
 import static com.femtioprocent.propaganda.data.AddrType.defaultAddrType;
 import com.femtioprocent.propaganda.data.Datagram;
 import com.femtioprocent.propaganda.server.PropagandaServer;
@@ -13,17 +11,13 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.logging.Level;
-import static com.femtioprocent.propaganda.context.Config.getLogger;
-import static com.femtioprocent.propaganda.context.Config.getLogger;
-import static com.femtioprocent.propaganda.context.Config.getLogger;
 import java.io.OutputStreamWriter;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.atomic.AtomicInteger;
+import static com.femtioprocent.propaganda.context.Config.getLogger;
 
 public class FederationServer {
 
@@ -82,7 +76,6 @@ public class FederationServer {
 	this.server = server;
 	port = federation_port;
 	startFederationServer();
-	System.err.println("new FederationServer: " + federation_port);
     }
 
     public void sendToFederatedPropaganda(String s, PrintWriter avoid) {
@@ -103,7 +96,6 @@ public class FederationServer {
     }
 
     private void startFederationServer() throws IOException {
-	System.err.println("FederationServer: " + port);
 	serverSocket = new ServerSocket(port);
 	pool.execute(() -> {
 	    try {

@@ -25,7 +25,7 @@ public class Client_Status extends PropagandaClient {
 	    public void run() {
 		while (connector == null) {
 		    S.m_sleep(1000);
-		    System.err.print(".");
+//		    System.err.print(".");
 		}
 
 		for (;;) {
@@ -54,7 +54,7 @@ public class Client_Status extends PropagandaClient {
 			    }
 			}
 		    } catch (PropagandaException ex) {
-			S.pL("Status: " + ex);
+			System.err.println("Status: " + ex);
 		    }
 		}
 	    }

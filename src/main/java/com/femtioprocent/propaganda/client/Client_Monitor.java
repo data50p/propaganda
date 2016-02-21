@@ -30,7 +30,7 @@ public class Client_Monitor extends PropagandaClient {
 			    S.m_sleep(200);
 			}
 		    } catch (PropagandaException ex) {
-			S.pL("Monitor: " + ex);
+			System.err.println("Monitor: " + ex);
 		    }
 		}
 	    }

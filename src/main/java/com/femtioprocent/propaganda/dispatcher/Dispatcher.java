@@ -56,7 +56,7 @@ public class Dispatcher {
 			new Message(what, datagram.getDatagramString())));
 	    }
 	} catch (PropagandaException ex) {
-	    S.pL("Can't send '" + what + "' to MONITOR: " + datagram.getDatagramString() + ' ' + ex);
+	    System.err.println("Can't send '" + what + "' to MONITOR: " + datagram.getDatagramString() + ' ' + ex);
 	}
     }
 
@@ -189,7 +189,7 @@ public class Dispatcher {
 				//			    dispatchMsg1(rent_datagram);
 			    }
 			} catch (PropagandaException ex) {
-			    S.pL("Can't resend message " + rent + ' ' + ex);
+			    System.err.println("Can't resend message " + rent + ' ' + ex);
 			}
 		    }
 		}
@@ -299,7 +299,7 @@ public class Dispatcher {
 			break SEND;
 		    }
 		} catch (PropagandaException ex) {
-		    S.pL("" + ex);
+		    System.err.println("" + ex);
 		    clientghost_hm.remove(client_ghost.getId());
 		}
 	    } else {
@@ -330,6 +330,6 @@ public class Dispatcher {
 
     static public void main(String[] args) {
 	Dispatcher d = new Dispatcher(null, null);
-	S.pL("" + d.calculateValidUpTo(args[0]));
+	System.err.println("" + d.calculateValidUpTo(args[0]));
     }
 }

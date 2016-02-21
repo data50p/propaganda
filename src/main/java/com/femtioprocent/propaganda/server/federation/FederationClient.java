@@ -1,6 +1,6 @@
 package com.femtioprocent.propaganda.server.federation;
 
-import com.femtioprocent.propaganda.connector.Connector_Plain;
+import com.femtioprocent.propaganda.connector.Connector_Tcp;
 import com.femtioprocent.propaganda.data.Datagram;
 import com.femtioprocent.propaganda.server.PropagandaServer;
 
@@ -16,6 +16,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static com.femtioprocent.propaganda.context.Config.getLogger;
 
 public class FederationClient {
 
@@ -33,7 +34,6 @@ public class FederationClient {
 	host = federation_join;
 	this.server = server;
 	startFederationClient();
-	System.err.println("FederationClient: new " + federation_join + ' ' + federation_port);
     }
 
     public String getId() {
@@ -41,7 +41,6 @@ public class FederationClient {
     }
 
     private void startFederationClient() {
-	System.err.println("Start FedClient");
 	pool.execute(() -> {
 	    for (;;) {
 		try {

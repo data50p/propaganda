@@ -48,7 +48,7 @@ public class Client_Demo extends PropagandaClient {
 			sendMsg(new Datagram(getDefaultAddrType(), receiver_at, new Message("hello-" + name + '-' + cnt++)));
 		    }
 		} catch (PropagandaException ex) {
-		    S.pL("Demo: " + ex);
+		    System.err.println("Demo: " + ex);
 		}
 	    }
 	});
@@ -64,7 +64,7 @@ public class Client_Demo extends PropagandaClient {
 			}
 		    }
 		} catch (PropagandaException ex) {
-		    S.pL("Demo " + ex);
+		    System.err.println("Demo " + ex);
 		}
 	    }
 	});

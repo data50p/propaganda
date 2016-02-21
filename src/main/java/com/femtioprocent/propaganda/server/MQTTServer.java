@@ -1,18 +1,14 @@
 package com.femtioprocent.propaganda.server;
 
 import com.femtioprocent.fpd.appl.Appl;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.jws.WebMethod;
-import javax.jws.WebService;
 import javax.xml.ws.Endpoint;
 import org.fusesource.hawtbuf.UTF8Buffer;
 import org.fusesource.mqtt.client.BlockingConnection;
@@ -26,7 +22,6 @@ import com.femtioprocent.propaganda.connector.PropagandaConnector;
 import com.femtioprocent.propaganda.connector.PropagandaConnectorFactory;
 import com.femtioprocent.propaganda.data.AddrType;
 import com.femtioprocent.propaganda.data.Datagram;
-import static com.femtioprocent.propaganda.server.HttpWSServer.server;
 
 public class MQTTServer {
 
@@ -84,7 +79,7 @@ public class MQTTServer {
     public void start(PropagandaServer server) throws Exception {
 	try {
 	    String mqConnectUrl = "tcp://localhost:1883";
-	    System.out.println("MQTTServer: connecting to " + mqConnectUrl);
+	    System.err.println("MQTTServer: connecting to " + mqConnectUrl);
 	    mqtt.setHost(mqConnectUrl);
 	    mqtt.setClientId(new UTF8Buffer("propaganda"));
 	    connection = mqtt.blockingConnection();
@@ -141,7 +136,7 @@ public class MQTTServer {
 	    } finally {
 	    }
 	} else {
-	    System.out.println("MQTTServer: no moquette broker here");
+	    System.err.println("MQTTServer: moquette broker is not running here");
 	}
     }
 }

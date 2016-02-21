@@ -14,15 +14,15 @@ public class ServerAppl extends Appl {
     @Override
     public void main() {
 	if ((flags.get("?")) != null || (flags.get("h")) != null) {
-	    S.pL("-name                 propaganda server name");
-	    S.pL("-MB                   start Moquette Broker (MQTT)");
-	    S.pL("-port=<port>          set the port of propaganda server (=8899)");
-	    S.pL("-http=<port>          set the port of propaganda http server (=8889)");
-	    S.pL("-ws=<port>            set the port of propaganda WS server (=8879)");
-	    S.pL("-discover=<port>      set the port of propaganda discover server (=8839)");
-	    S.pL("-fed.port=<port>      set the port of propaganda federation listener (=8859) - EXPERIMENTAL");
-	    S.pL("-fed.join=<host:port> set the host:port for joining federation (='') - EXPERIMENTAL");
-	    S.pL("-portprefix=<portprefix> set the port prefix (='') - EXPERIMENTAL");
+	    System.err.println("-name                 propaganda server name");
+	    System.err.println("-MB                   start Moquette Broker (MQTT)");
+	    System.err.println("-port=<port>          set the port of propaganda server (=8899)");
+	    System.err.println("-http=<port>          set the port of propaganda http server (=8889)");
+	    System.err.println("-ws=<port>            set the port of propaganda WS server (=8879)");
+	    System.err.println("-discover=<port>      set the port of propaganda discover server (=8839)");
+	    System.err.println("-fed.port=<port>      set the port of propaganda federation listener (=8859) - EXPERIMENTAL");
+	    System.err.println("-fed.join=<host:port> set the host:port for joining federation (='') - EXPERIMENTAL");
+	    System.err.println("-portprefix=<portprefix> set the port prefix (='') - EXPERIMENTAL");
 	    return;
 	}
 

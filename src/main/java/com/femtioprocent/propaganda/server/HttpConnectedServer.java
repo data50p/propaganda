@@ -220,7 +220,7 @@ public class HttpConnectedServer {
 	    String cmd = sa[0];
 	    doPostGet(cmd, fn, q, sL, rd, dos);
 	} catch (IOException ex) {
-	    S.pL("serve(): Exception " + ex);
+	    System.err.println("serve(): Exception " + ex);
 	}
     }
 
@@ -268,7 +268,7 @@ public class HttpConnectedServer {
 		for (;;) {
 		    Datagram recv_datagram = connector.recvMsg(timeOut);
 		    if (recv_datagram == null) {
-			S.pL("got null");
+			System.err.println("got null");
 			break;
 		    } else {
 			if (false) {

@@ -15,7 +15,7 @@ import com.femtioprocent.propaganda.client.Client_Status;
 import com.femtioprocent.propaganda.connector.PropagandaConnector;
 import com.femtioprocent.propaganda.connector.PropagandaConnectorFactory;
 import com.femtioprocent.propaganda.connector.Connector_Local;
-import com.femtioprocent.propaganda.connector.Connector_Plain;
+import com.femtioprocent.propaganda.connector.Connector_Tcp;
 import com.femtioprocent.propaganda.data.AddrType;
 import com.femtioprocent.propaganda.dispatcher.Dispatcher;
 import com.femtioprocent.propaganda.exception.PropagandaException;
@@ -27,6 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import static com.femtioprocent.propaganda.context.Config.getLogger;
 import java.io.PrintWriter;
+import static com.femtioprocent.propaganda.context.Config.getLogger;
 
 public class PropagandaServer {
 
@@ -113,7 +114,7 @@ public class PropagandaServer {
 	    System.exit(1);
 	}
 
-	PlainConnectorSupport plain_connector_support = new PlainConnectorSupport(serverPort);
+	TcpConnectorSupport tcp_connector_support = new TcpConnectorSupport(serverPort);
 	HttpConnectorSupport http_connector_support = new HttpConnectorSupport();
 	WsConnectorSupport ws_connector_support = new WsConnectorSupport(PropagandaServer.DEFAULT_WS_PORT);
 	MqttConnectorSupport mqtt_connector_support = new MqttConnectorSupport();
@@ -139,15 +140,15 @@ public class PropagandaServer {
     }
 
 
-    public class PlainConnectorSupport {
+    public class TcpConnectorSupport {
 
 	private AtomicInteger cnt = new AtomicInteger(1000);
 	int port;
 
-	public PlainConnectorSupport(int port) {
+	public TcpConnectorSupport(int port) {
 	    this.port = port;
 	    init();
-	    S.pL("Running PlainConnectorSupport: " + port);
+	    System.err.println("Running TcpConnectorSupport: " + port);
 	}
 
 	void init() {
@@ -155,13 +156,13 @@ public class PropagandaServer {
 		public void run() {
 		    try {
 			for (;;) {
-			    Connector_Plain.initListen(port);
-			    Socket so = Connector_Plain.acceptClient();
-			    Connector_Plain connector_plain = (Connector_Plain) PropagandaConnectorFactory.create("Plain", null, PropagandaServer.this, null);
-			    connector_plain.serve(so);
+			    Connector_Tcp.initListen(port);
+			    Socket so = Connector_Tcp.acceptClient();
+			    Connector_Tcp connector_tcp = (Connector_Tcp) PropagandaConnectorFactory.create("Tcp", null, PropagandaServer.this, null);
+			    connector_tcp.serve(so);
 			}
 		    } catch (IOException ex) {
-			S.pL("Can't run PlainConnectorSupport: " + ex);
+			System.err.println("Can't run TcpConnectorSupport: " + ex);
 		    }
 		}
 	    });
@@ -176,13 +177,13 @@ public class PropagandaServer {
 
 	HttpConnectorSupport() {
 	    init();
-	    S.pL("Running HttpConnectorSupport: " + httpPort);
+	    System.err.println("Running HttpConnectorSupport: " + httpPort);
 	}
 
 	HttpConnectorSupport(int httpPort) {
 	    this.httpPort = httpPort;
 	    init();
-	    S.pL("Running HttpConnectorSupport: " + httpPort);
+	    System.err.println("Running HttpConnectorSupport: " + httpPort);
 	}
 
 	void init() {
@@ -203,7 +204,7 @@ public class PropagandaServer {
 	public WsConnectorSupport(int port) {
 	    this.port = port;
 	    init();
-	    S.pL("Running WsConnectorSupport: " + port);
+	    System.err.println("Running WsConnectorSupport: " + port);
 	}
 
 	void init() {
@@ -215,7 +216,7 @@ public class PropagandaServer {
 			    break;
 			}
 		    } catch (Exception ex) {
-			S.pL("Can't run WsConnectorSupport: " + ex);
+			System.err.println("Can't run WsConnectorSupport: " + ex);
 		    }
 		}
 	    });
@@ -231,7 +232,7 @@ public class PropagandaServer {
 	public MqttConnectorSupport() {
 	    this.port = port;
 	    init();
-	    S.pL("Running MqttConnectorSupport: " + port);
+	    System.err.println("Running MqttConnectorSupport: " + port);
 	}
 
 	void init() {
@@ -246,7 +247,7 @@ public class PropagandaServer {
 			    }
 			}
 		    } catch (Exception ex) {
-			S.pL("Can't run MqttConnectorSupport: " + ex);
+			System.err.println("Can't run MqttConnectorSupport: " + ex);
 		    }
 		}
 	    });
@@ -263,8 +264,10 @@ public class PropagandaServer {
             try {
                 if (federation_join == null) {
                     federationServer = new FederationServer(this, federation_port);
+		    System.err.println("Running FederationServer: " + federation_port);
                 } else {
                     federationClient = new FederationClient(this, federation_join, federation_port);
+		    System.err.println("Running FederationClient: " + federation_join + ':' + federation_port);
                 }
             } catch (IOException ex) {
                 Logger.getLogger(PropagandaServer.class.getName()).log(Level.SEVERE, null, ex);
@@ -326,12 +329,12 @@ public class PropagandaServer {
 	    return 0;
 	}
 	//	if ( cg.
-	S.pL("removing " + AddrType.addrType(client_name, addr_type_id) + " from " + cg);
+	System.err.println("removing " + AddrType.addrType(client_name, addr_type_id) + " from " + cg);
 	if (cg.removeAddrTypeId(addr_type_id)) {
 	    clientghost_hm.remove(client_name);
 	    return 0;
 	}
-	S.pL("removed: " + AddrType.addrType(client_name, addr_type_id) + ' ' + clientghost_hm);
+	System.err.println("removed: " + AddrType.addrType(client_name, addr_type_id) + ' ' + clientghost_hm);
 	return 1;
     }
 

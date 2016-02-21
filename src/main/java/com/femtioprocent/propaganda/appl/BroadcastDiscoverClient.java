@@ -49,7 +49,7 @@ public class BroadcastDiscoverClient extends Appl {
     @Override
     public void main() {
 	if ((flags.get("?")) != null || (flags.get("h")) != null) {
-	    S.pL("-discover=<port>      set the port of propaganda discover server (=8839)");
+	    System.err.println("-discover=<port>      set the port of propaganda discover server (=8839)");
 	    return;
 	}
 

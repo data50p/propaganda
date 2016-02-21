@@ -7,7 +7,7 @@ public class ClientAppl extends Appl {
 
     @Override
     public void main() {
-	S.pL("main() in ClientAppl");
+	System.err.println("main() in ClientAppl");
     }
 
     public static void main(String[] args) {

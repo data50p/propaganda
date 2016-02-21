@@ -28,17 +28,21 @@ import java.util.concurrent.ThreadPoolExecutor;
 import static com.femtioprocent.propaganda.context.Config.getLogger;
 import static com.femtioprocent.propaganda.context.Config.getLogger;
 import static com.femtioprocent.propaganda.context.Config.getLogger;
+import static com.femtioprocent.propaganda.context.Config.getLogger;
+import static com.femtioprocent.propaganda.context.Config.getLogger;
+import static com.femtioprocent.propaganda.context.Config.getLogger;
+import static com.femtioprocent.propaganda.context.Config.getLogger;
 
-public class Connector_Plain extends PropagandaConnector {
+public class Connector_Tcp extends PropagandaConnector {
 
     int listenPort = 0;
     Socket so;
 
-    public Connector_Plain(String name) {
+    public Connector_Tcp(String name) {
 	this(name, false);
     }
 
-    public Connector_Plain(String name, boolean do_connect) {
+    public Connector_Tcp(String name, boolean do_connect) {
 	super(name);
 	init();
 	if (do_connect) {
@@ -46,7 +50,7 @@ public class Connector_Plain extends PropagandaConnector {
 	}
     }
 
-    public Connector_Plain(String name, PropagandaClient client) {
+    public Connector_Tcp(String name, PropagandaClient client) {
 	super(name);
 	init();
 	connect();
@@ -122,7 +126,7 @@ public class Connector_Plain extends PropagandaConnector {
 
 	@Override
 	public void run() {
-	    S.pL("ServerThread running " + so);
+	    System.err.println("ServerThread running " + so);
 	    try {
 		BufferedReader rd = new BufferedReader(new InputStreamReader(so.getInputStream(), "utf-8"));
 
@@ -148,7 +152,7 @@ public class Connector_Plain extends PropagandaConnector {
 			    }
 			}
 
-			int dmCnt = server.dispatcher.dispatchMsg(Connector_Plain.this, datagram, null);
+			int dmCnt = server.dispatcher.dispatchMsg(Connector_Tcp.this, datagram, null);
 
 			String receipt = datagram.getReceipt();
 			if (receipt != null) {
@@ -304,7 +308,7 @@ public class Connector_Plain extends PropagandaConnector {
 	class MainClient extends com.femtioprocent.propaganda.client.PropagandaClient {
 
 	    MainClient() {
-		super("MainPlain");
+		super("MainTcp");
 	    }
 
 	    void start() {
@@ -312,36 +316,36 @@ public class Connector_Plain extends PropagandaConnector {
 		    sendMsg(new Datagram(anonymousAddrType,
 			    serverAddrType,
 			    register,
-			    new Message("mainplain.test@DEMO")));
+			    new Message("maintcp.test@DEMO")));
 		    for (;;) {
 			Datagram datagram = getConnector().recvMsg();
-			S.pL("Connector_Plain.Main got: " + datagram);
+			System.err.println("Connector_Tcp.Main got: " + datagram);
 			if (datagram == null) {
 			    break;
 			}
 		    }
 		} catch (PropagandaException ex) {
-		    S.pL("MainClient: " + ex);
+		    System.err.println("MainClient: " + ex);
 		}
 	    }
 	}
 
 	@Override
 	public void main() {
-	    Connector_Plain conn = new Connector_Plain("MainPlain");
+	    Connector_Tcp conn = new Connector_Tcp("MainTcp");
 	    MainClient client = new MainClient();
 	    conn.connect();
 
 	    client.setConnector(conn);
 	    conn.attachClient(client);
-	    S.pL("conn " + conn);
+	    System.err.println("conn " + conn);
 
 	    client.start();
 	}
 
 	public static void main(String[] args) {
 	    decodeArgs(args);
-	    main(new Connector_Plain.Main());
+	    main(new Connector_Tcp.Main());
 	}
     }
 }

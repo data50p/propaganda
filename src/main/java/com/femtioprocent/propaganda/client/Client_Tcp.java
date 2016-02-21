@@ -2,22 +2,22 @@ package com.femtioprocent.propaganda.client;
 
 import java.util.ArrayList;
 
-import com.femtioprocent.propaganda.connector.Connector_Plain;
+import com.femtioprocent.propaganda.connector.Connector_Tcp;
 
-public class Client_Plain extends PropagandaClient {
+public class Client_Tcp extends PropagandaClient {
 
-    Connector_Plain conn;
+    Connector_Tcp conn;
 
-    Client_Plain(String name) {
+    Client_Tcp(String name) {
 	super(name);
 	this.name = name;
 	addrtypeGroup_list = new ArrayList<String>();
-	conn = new Connector_Plain("Conn-" + name, this);
+	conn = new Connector_Tcp("Conn-" + name, this);
 	setConnectorAndAttach(conn);
     }
 
     public static boolean sendMsg(String from, String addr_to, String msg) {
-	PropagandaClient client = new Client_Plain(from);
+	PropagandaClient client = new Client_Tcp(from);
 	return client.sendMsg(addr_to, msg);
     }
 }

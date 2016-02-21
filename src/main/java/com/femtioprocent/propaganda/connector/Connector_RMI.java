@@ -96,10 +96,10 @@ public class Connector_RMI extends PropagandaConnector {
 		    ));
 		    for (;;) {
 			Datagram datagram = getConnector().recvMsg();
-			S.pL("got: " + datagram);
+			System.err.println("got: " + datagram);
 		    }
 		} catch (PropagandaException ex) {
-		    S.pL("MainClient: " + ex);
+		    System.err.println("MainClient: " + ex);
 		}
 	    }
 	}
@@ -111,7 +111,7 @@ public class Connector_RMI extends PropagandaConnector {
 
 	    client.setConnector(conn);
 	    conn.attachClient(client);
-	    S.pL("conn " + conn);
+	    System.err.println("conn " + conn);
 
 	    client.start();
 	}

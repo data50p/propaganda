@@ -17,7 +17,7 @@ import com.femtioprocent.propaganda.data.MessageType;
 import com.femtioprocent.propaganda.data.AddrType;
 import com.femtioprocent.propaganda.connector.PropagandaConnector;
 import com.femtioprocent.propaganda.connector.PropagandaConnectorFactory;
-import com.femtioprocent.propaganda.connector.Connector_Plain;
+import com.femtioprocent.propaganda.connector.Connector_Tcp;
 import com.femtioprocent.propaganda.client.PropagandaClient;
 import java.util.Date;
 import com.femtioprocent.propaganda.exception.PropagandaException;
@@ -48,7 +48,7 @@ public class DemoClient extends javax.swing.JFrame {
 	@Override
 	protected void init() {
 
-	    final Connector_Plain connector = (Connector_Plain) PropagandaConnectorFactory.create("Plain", "DemoClient", server, this);
+	    final Connector_Tcp connector = (Connector_Tcp) PropagandaConnectorFactory.create("Tcp", "DemoClient", server, this);
 	    connector.connect();
 	    System.err.println("connector " + connector);
 
