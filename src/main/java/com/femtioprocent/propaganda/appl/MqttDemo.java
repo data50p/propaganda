@@ -27,7 +27,7 @@ public class MqttDemo extends Appl {
     @Override
     public void main() {
 	try {
-	    String myUniqId = "12345mqtt6789";
+	    String myUniqId = "12345mqtt6789@MQTT";
 
 	    MQTT mqtt = new MQTT();
 	    BlockingConnection connection;
@@ -43,12 +43,14 @@ public class MqttDemo extends Appl {
 	    connection.publish("propaganda", msg.getBytes("utf-8"), QoS.AT_MOST_ONCE, true);
 	    System.out.println("MqttDemo: " + "published propaganda: " + msg);
 
-	    //msg = "" + myUniqId + " @; list";
-	    //connection.publish("propaganda", msg.getBytes("utf-8"), QoS.AT_MOST_ONCE, true);
-	    //System.out.println("" + "published: " + msg);
+	    msg = "" + myUniqId + " @; list";
+	    connection.publish("propaganda", msg.getBytes("utf-8"), QoS.AT_MOST_ONCE, true);
+	    System.out.println("" + "published: " + msg);
+	    
 	    int cnt = 0;
 	    for (int i = 0; i < 5; i++) {
 		cnt++;
+		System.out.println("> " + i);
 		final Message receive = connection.receive(1000, TimeUnit.MILLISECONDS);
 		if (receive != null) {
 		    System.out.println("MqttDemo: GOT " + cnt + ": " + new String(receive.getPayload(), "utf-8"));

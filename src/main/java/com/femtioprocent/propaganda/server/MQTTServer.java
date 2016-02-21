@@ -84,9 +84,9 @@ public class MQTTServer {
 	    mqtt.setClientId(new UTF8Buffer("propaganda"));
 	    connection = mqtt.blockingConnection();
 	    connection.connect();
-	    //connection.publish("propaganda-io", ". @ register;request-id mqtt-1@MQTT".getBytes("utf-8"), QoS.AT_MOST_ONCE, true);
-	    //connection.publish("propaganda-register", "mqtt-1".getBytes("utf-8"), QoS.AT_MOST_ONCE, true);
-	    connection.subscribe(new Topic[]{new Topic("propaganda", QoS.AT_MOST_ONCE), new Topic("propaganda-i", QoS.AT_MOST_ONCE), new Topic("propaganda-i", QoS.AT_MOST_ONCE), new Topic("propaganda-io", QoS.AT_MOST_ONCE)});
+	    connection.publish("propaganda-io", ". @ register;request-id mqtt-1@MQTT".getBytes("utf-8"), QoS.AT_MOST_ONCE, true);
+	    connection.publish("propaganda-register", "mqtt-1".getBytes("utf-8"), QoS.AT_MOST_ONCE, true);
+	    connection.subscribe(new Topic[]{new Topic("propaganda", QoS.AT_MOST_ONCE), new Topic("propaganda-i", QoS.AT_MOST_ONCE), new Topic("propaganda-o", QoS.AT_MOST_ONCE), new Topic("propaganda-io", QoS.AT_MOST_ONCE)});
 	    System.out.println("MQTTServer, MQTT bridge: subscribe topic propaganda");
 	} catch (URISyntaxException ex) {
 	    Logger.getLogger(MQTTServer.class.getName()).log(Level.SEVERE, null, ex);
@@ -122,17 +122,17 @@ public class MQTTServer {
     }
 
     void startMqttBroker() {
-	if (false && Appl.flags.containsKey("MB")) {
+	if (Appl.flags.containsKey("MB")) {
 	    try {
 		String[] args = {};
-		// unsupported org.dna.mqtt.moquette.server.Server.main(args);
-		//System.out.println("MQTTServer: moquette started");
-		//Thread.sleep(2000);
+		io.moquette.server.Server.main(args);
+		System.out.println("MQTTServer: moquette started");
+		Thread.sleep(2000);
 
-//            } catch (IOException ex) {
-//                Logger.getLogger(MQTTServer.class.getId()).log(Level.SEVERE, null, ex);
-//            } catch (InterruptedException ex) {
-//                Logger.getLogger(MQTTServer.class.getId()).log(Level.SEVERE, null, ex);
+	    } catch (InterruptedException ex) {
+		Logger.getLogger(MQTTServer.class.getSimpleName()).log(Level.SEVERE, null, ex);
+	    } catch (Exception ex) {
+		Logger.getLogger(MQTTServer.class.getSimpleName()).log(Level.SEVERE, null, ex);
 	    } finally {
 	    }
 	} else {

@@ -68,6 +68,13 @@ public class ServerAppl extends Appl {
 
 	server = PropagandaServer.getDefaultServer("name", PropagandaServer.DEFAULT_SERVER_PORT, PropagandaServer.DEFAULT_FEDERATION_JOINHOST, PropagandaServer.DEFAULT_FEDERATION_PORT);
 
+	Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                server.stopServer();
+            }
+        });
+	
 	String s = "ALL";
 	if ((s = flags.get("log")) != null) {
 	    com.femtioprocent.propaganda.context.Config.setLogLevel(s.length() == 0 ? "ALL"

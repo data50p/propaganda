@@ -55,7 +55,7 @@
 		    </archive>
 		    <descriptors>
 			<descriptor>src/assemble/jexec.xml</descriptor>
-    		    </descriptors>
+		    </descriptors>
 		</configuration>
 		<executions> 
 		    <execution> 
@@ -137,19 +137,17 @@
 	    <artifactId>mqtt-client</artifactId>
 	    <version>1.5</version>
 	</dependency>
-	<!-- - ->
-		<dependency>
-			<groupId>org.dna.mqtt</groupId>
-			<artifactId>moquette-broker</artifactId>
-			<version>0.1</version>
-		</dependency>
-	<!- - -->
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20140107</version>
-            <type>jar</type>
-        </dependency>
+	<dependency>
+	    <groupId>io.moquette</groupId>
+	    <artifactId>moquette-broker</artifactId>
+	    <version>0.8</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.json</groupId>
+	    <artifactId>json</artifactId>
+	    <version>20140107</version>
+	    <type>jar</type>
+	</dependency>
     </dependencies>
     <properties>
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -169,19 +167,31 @@
     </reporting>
 
 
-<distributionManagement>
-  <snapshotRepository>
-    <id>femtioprocent.se</id>
-    <name>femtioprocent-snapshots</name>
-    <url>http://femtioprocent.se:8081/artifactory/libs-snapshot-local</url>
-  </snapshotRepository>
-  <repository>
-    <id>femtioprocent.se</id>
-    <name>femtioprocent.se-releases</name>
-    <url>http://femtioprocent.se:8081/artifactory/libs-release-local</url>
-  </repository>
+    <distributionManagement>
+	<snapshotRepository>
+	    <id>femtioprocent.se</id>
+	    <name>femtioprocent-snapshots</name>
+	    <url>http://femtioprocent.se:8081/artifactory/libs-snapshot-local</url>
+	</snapshotRepository>
+	<repository>
+	    <id>femtioprocent.se</id>
+	    <name>femtioprocent.se-releases</name>
+	    <url>http://femtioprocent.se:8081/artifactory/libs-release-local</url>
+	</repository>
 
-</distributionManagement>
+    </distributionManagement>
 
+    <repositories>
+	<repository>
+	    <id>bintray</id>
+	    <url>http://dl.bintray.com/andsel/maven/</url>
+	    <releases>
+		<enabled>true</enabled>
+	    </releases>
+	    <snapshots>
+		<enabled>false</enabled>
+	    </snapshots>
+	</repository>
+    </repositories>
 
 </project>

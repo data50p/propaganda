@@ -139,6 +139,10 @@ public class PropagandaServer {
 	bds.start();
     }
 
+    public void stopServer() {
+	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 
     public class TcpConnectorSupport {
 
