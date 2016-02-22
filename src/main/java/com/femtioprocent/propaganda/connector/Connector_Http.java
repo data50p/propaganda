@@ -11,7 +11,7 @@ import com.femtioprocent.propaganda.exception.PropagandaException;
 public class Connector_Http extends PropagandaConnector {
 
     Socket connectedSocket;
-    private BlockingQueue<Datagram> message_toclient_q = new LinkedBlockingQueue<Datagram>();
+    final private BlockingQueue<Datagram> message_toclient_q = new LinkedBlockingQueue<Datagram>();
 
     public Connector_Http(String name) {
 	super(name);

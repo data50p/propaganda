@@ -25,14 +25,12 @@ public class Connector_RMI extends PropagandaConnector {
     }
 
     void init() {
-	Thread th = new Thread(new Runnable() {
-	    public void run() {
-		for (;;) {
-		    try {
-			Datagram datagram = message_toserver_q.take();
-			dispatchMsg(datagram);
-		    } catch (InterruptedException ex) {
-		    }
+	Thread th = new Thread(() -> {
+	    for (;;) {
+		try {
+		    Datagram datagram = message_toserver_q.take();
+		    dispatchMsg(datagram);
+		} catch (InterruptedException ex) {
 		}
 	    }
 	});
@@ -77,48 +75,5 @@ public class Connector_RMI extends PropagandaConnector {
     @Override
     public String toString() {
 	return "Connector_RMI{" + name + "}";
-    }
-
-    static class Main extends Appl {
-
-	class MainClient extends com.femtioprocent.propaganda.client.PropagandaClient {
-
-	    MainClient() {
-		super("Main");
-	    }
-
-	    void start() {
-		try {
-		    sendMsg(new Datagram(anonymousAddrType,
-			    serverAddrType,
-			    register,
-			    new Message("main.test@DEMO")
-		    ));
-		    for (;;) {
-			Datagram datagram = getConnector().recvMsg();
-			System.err.println("got: " + datagram);
-		    }
-		} catch (PropagandaException ex) {
-		    System.err.println("MainClient: " + ex);
-		}
-	    }
-	}
-
-	@Override
-	public void main() {
-	    Connector_RMI conn = new Connector_RMI("Main");
-	    MainClient client = new MainClient();
-
-	    client.setConnector(conn);
-	    conn.attachClient(client);
-	    System.err.println("conn " + conn);
-
-	    client.start();
-	}
-
-	public static void main(String[] args) {
-	    decodeArgs(args);
-	    main(new Connector_RMI.Main());
-	}
     }
 }

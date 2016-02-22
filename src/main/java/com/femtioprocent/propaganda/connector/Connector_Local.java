@@ -9,7 +9,6 @@ import com.femtioprocent.propaganda.exception.PropagandaException;
 public class Connector_Local extends PropagandaConnector {
 
     private BlockingQueue<Datagram> message_q = new LinkedBlockingQueue<Datagram>();
-    Thread th;
 
     public Connector_Local(String name) {
 	super(name);

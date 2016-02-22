@@ -97,17 +97,4 @@ abstract public class PropagandaConnector implements ServerConnector, ClientConn
 	}
 	return false;
     }
-
-    private void delay(int size) {
-	try {
-	    long a = 1L << size;
-	    if (a > 1000L * 60 * 60 || a <= 0) {
-		a = 1000L * 60 * 60;
-	    }
-	    Thread.sleep(a);
-	} catch (InterruptedException ex) {
-	    Logger.getLogger(PropagandaConnector.class.getName()).log(Level.SEVERE, null, ex);
-	}
-    }
-
 }

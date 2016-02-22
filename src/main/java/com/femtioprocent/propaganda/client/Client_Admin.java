@@ -40,130 +40,126 @@ public class Client_Admin extends PropagandaClient {
 	init();
     }
 
-    @Override
     protected void init() {
-	super.init();
-	Thread th2 = new Thread(new Runnable() {
-	    public void run() {
-		for (;;) {
-		    if (connector != null) {
-			Datagram datagram = connector.recvMsg();
-			getLogger().finest("datagram: " + S.ct() + ' ' + name + " =----> " + datagram);
-			if ("list-id".equals(datagram.getMessage().getMessage())) {
-			    try {
-				Set<String> set = new HashSet<String>();
-				for (final ClientGhost cg : server.clientghost_hm.values()) {
-				    set.add(cg.getDefaultSecureAddrType().getUnsecureId());
-				}
-				sendMsg(new Datagram(serverAddrType,
-					datagram.getSender(),
-					new Message("list-id-is",
-						"" + set.toString().replace(" ", ""))));
-			    } catch (PropagandaException ex) {
-				System.err.println("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
+	Thread th = new Thread(() -> {
+	    for (;;) {
+		if (connector != null) {
+		    Datagram datagram = connector.recvMsg();
+		    getLogger().finest("datagram: " + S.ct() + ' ' + name + " =----> " + datagram);
+		    if ("list-id".equals(datagram.getMessage().getMessage())) {
+			try {
+			    Set<String> set = new HashSet<String>();
+			    for (final ClientGhost cg : server.clientghost_hm.values()) {
+				set.add(cg.getDefaultSecureAddrType().getUnsecureId());
 			    }
-
-			} else if ("list".equals(datagram.getMessage().getMessage())) {
-			    try {
-				HashMap<String, ClientGhost> map = new HashMap<String, ClientGhost>();
-				for (final ClientGhost cg : server.clientghost_hm.values()) {
-				    map.put(cg.getDefaultAddrType().getId(), cg);
-				}
-				StringBuilder sb = new StringBuilder();
-				for (Map.Entry<String, ClientGhost> ent : map.entrySet()) {
-				    String id = ent.getKey();
-				    ClientGhost cg = ent.getValue();
-				    if (sb.length() > 0) {
-					sb.append(";");
-				    }
-				    sb.append(cg.getDefaultSecureAddrType().getUnsecureId());
-				    final Set<String> atgSet = cg.getAddrTypeGroupSet();
-				    sb.append("@" + atgSet.toString().replace(" ", ""));
-				}
-				sendMsg(new Datagram(serverAddrType,
-					datagram.getSender(),
-					new Message("list-is",
-						"" + sb.toString())));
-			    } catch (PropagandaException ex) {
-				System.err.println("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
-			    }
-
-			} else if ("list-group".equals(datagram.getMessage().getMessage())) {
-			    try {
-				Set<String> set = new HashSet<String>();
-				for (final ClientGhost cg : server.clientghost_hm.values()) {
-				    set.addAll(cg.getAddrTypeGroupSet());
-				}
-				sendMsg(new Datagram(serverAddrType,
-					datagram.getSender(),
-					new Message("list-group-is",
-						"" + set.toString().replace(" ", ""))));
-			    } catch (PropagandaException ex) {
-				System.err.println("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
-			    }
-
-			} else if ("list-connector".equals(datagram.getMessage().getMessage())) {
-			    try {
-				HashMap<String, ClientGhost> map = new HashMap<String, ClientGhost>();
-				for (final ClientGhost cg : server.clientghost_hm.values()) {
-				    map.put(cg.getDefaultAddrType().getId(), cg);
-				}
-				StringBuilder sb = new StringBuilder();
-				for (Map.Entry<String, ClientGhost> ent : map.entrySet()) {
-				    String id = ent.getKey();
-				    ClientGhost cg = ent.getValue();
-				    if (sb.length() > 0) {
-					sb.append(";");
-				    }
-				    sb.append(cg.getDefaultSecureAddrType().getUnsecureId());
-				    sb.append(Constants.CONNECTOR_INDICATOR + cg.getConnector().name);
-				}
-				sendMsg(new Datagram(serverAddrType,
-					datagram.getSender(),
-					new Message("list-connector-is",
-						"" + sb.toString())));
-			    } catch (PropagandaException ex) {
-				System.err.println("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
-			    }
-
-			} else if ("list-ports".equals(datagram.getMessage().getMessage())) {
-			    try {
-				HashMap<String, ClientGhost> map = new HashMap<String, ClientGhost>();
-				for (final ClientGhost cg : server.clientghost_hm.values()) {
-				    map.put(cg.getDefaultAddrType().getId(), cg);
-				}
-				StringBuilder sb = new StringBuilder();
-				sb.append("" + "port=" + PropagandaServer.DEFAULT_SERVER_PORT);
-				sb.append(" " + "http=" + PropagandaServer.DEFAULT_HTTP_PORT);
-				sb.append(" " + "ws=" + PropagandaServer.DEFAULT_WS_PORT);
-				sb.append(" " + "discover=" + PropagandaServer.DEFAULT_DISCOVER_PORT);
-				sb.append(" " + "fed=" + PropagandaServer.DEFAULT_FEDERATION_PORT);
-				sendMsg(new Datagram(serverAddrType,
-					datagram.getSender(),
-					new Message("list-ports-is",
-						"" + sb.toString())));
-			    } catch (PropagandaException ex) {
-				System.err.println("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
-			    }
-
-			} else if ("version".equals(datagram.getMessage().getMessage())) {
-			    try {
-				sendMsg(new Datagram(serverAddrType,
-					datagram.getSender(),
-					new Message("version",
-						"" + com.femtioprocent.propaganda.Version.projectVersion + ' ' + com.femtioprocent.propaganda.Version.mavenBuildTimestamp)));
-			    } catch (PropagandaException ex) {
-				System.err.println("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
-			    }
-
+			    sendMsg(new Datagram(serverAddrType,
+				    datagram.getSender(),
+				    new Message("list-id-is",
+					    "" + set.toString().replace(" ", ""))));
+			} catch (PropagandaException ex) {
+			    System.err.println("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
 			}
-		    } else {
-			S.m_sleep(200);
+
+		    } else if ("list".equals(datagram.getMessage().getMessage())) {
+			try {
+			    HashMap<String, ClientGhost> map = new HashMap<String, ClientGhost>();
+			    for (final ClientGhost cg : server.clientghost_hm.values()) {
+				map.put(cg.getDefaultAddrType().getId(), cg);
+			    }
+			    StringBuilder sb = new StringBuilder();
+			    for (Map.Entry<String, ClientGhost> ent : map.entrySet()) {
+				String id = ent.getKey();
+				ClientGhost cg = ent.getValue();
+				if (sb.length() > 0) {
+				    sb.append(";");
+				}
+				sb.append(cg.getDefaultSecureAddrType().getUnsecureId());
+				final Set<String> atgSet = cg.getAddrTypeGroupSet();
+				sb.append("@" + atgSet.toString().replace(" ", ""));
+			    }
+			    sendMsg(new Datagram(serverAddrType,
+				    datagram.getSender(),
+				    new Message("list-is",
+					    "" + sb.toString())));
+			} catch (PropagandaException ex) {
+			    System.err.println("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
+			}
+
+		    } else if ("list-group".equals(datagram.getMessage().getMessage())) {
+			try {
+			    Set<String> set = new HashSet<String>();
+			    for (final ClientGhost cg : server.clientghost_hm.values()) {
+				set.addAll(cg.getAddrTypeGroupSet());
+			    }
+			    sendMsg(new Datagram(serverAddrType,
+				    datagram.getSender(),
+				    new Message("list-group-is",
+					    "" + set.toString().replace(" ", ""))));
+			} catch (PropagandaException ex) {
+			    System.err.println("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
+			}
+
+		    } else if ("list-connector".equals(datagram.getMessage().getMessage())) {
+			try {
+			    HashMap<String, ClientGhost> map = new HashMap<String, ClientGhost>();
+			    for (final ClientGhost cg : server.clientghost_hm.values()) {
+				map.put(cg.getDefaultAddrType().getId(), cg);
+			    }
+			    StringBuilder sb = new StringBuilder();
+			    for (Map.Entry<String, ClientGhost> ent : map.entrySet()) {
+				String id = ent.getKey();
+				ClientGhost cg = ent.getValue();
+				if (sb.length() > 0) {
+				    sb.append(";");
+				}
+				sb.append(cg.getDefaultSecureAddrType().getUnsecureId());
+				sb.append(Constants.CONNECTOR_INDICATOR + cg.getConnector().name);
+			    }
+			    sendMsg(new Datagram(serverAddrType,
+				    datagram.getSender(),
+				    new Message("list-connector-is",
+					    "" + sb.toString())));
+			} catch (PropagandaException ex) {
+			    System.err.println("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
+			}
+
+		    } else if ("list-ports".equals(datagram.getMessage().getMessage())) {
+			try {
+			    HashMap<String, ClientGhost> map = new HashMap<String, ClientGhost>();
+			    for (final ClientGhost cg : server.clientghost_hm.values()) {
+				map.put(cg.getDefaultAddrType().getId(), cg);
+			    }
+			    StringBuilder sb = new StringBuilder();
+			    sb.append("" + "port=" + PropagandaServer.DEFAULT_SERVER_PORT);
+			    sb.append(" " + "http=" + PropagandaServer.DEFAULT_HTTP_PORT);
+			    sb.append(" " + "ws=" + PropagandaServer.DEFAULT_WS_PORT);
+			    sb.append(" " + "discover=" + PropagandaServer.DEFAULT_DISCOVER_PORT);
+			    sb.append(" " + "fed=" + PropagandaServer.DEFAULT_FEDERATION_PORT);
+			    sendMsg(new Datagram(serverAddrType,
+				    datagram.getSender(),
+				    new Message("list-ports-is",
+					    "" + sb.toString())));
+			} catch (PropagandaException ex) {
+			    System.err.println("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
+			}
+
+		    } else if ("version".equals(datagram.getMessage().getMessage())) {
+			try {
+			    sendMsg(new Datagram(serverAddrType,
+				    datagram.getSender(),
+				    new Message("version",
+					    "" + com.femtioprocent.propaganda.Version.projectVersion + ' ' + com.femtioprocent.propaganda.Version.mavenBuildTimestamp)));
+			} catch (PropagandaException ex) {
+			    System.err.println("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
+			}
+
 		    }
+		} else {
+		    S.m_sleep(200);
 		}
 	    }
 	});
-	th2.start();
+	th.start();
     }
 
     public void setServer(PropagandaServer server) {

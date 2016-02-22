@@ -1,6 +1,5 @@
 package com.femtioprocent.propaganda.server;
 
-
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Date;
@@ -81,9 +80,6 @@ public class PropagandaServer {
 
     private void initPropagandaClients() {
 	try {
-	    PropagandaClient client;
-	    ;
-
 	    if (true) {
 		getLogger().finest("--------- admin --------");
 		client_admin = (Client_Admin) PropagandaClientFactory.create("Admin", "propaganda-admin");
@@ -143,7 +139,6 @@ public class PropagandaServer {
 	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-
     public class TcpConnectorSupport {
 
 	private AtomicInteger cnt = new AtomicInteger(1000);
@@ -156,18 +151,16 @@ public class PropagandaServer {
 	}
 
 	void init() {
-	    Thread th = new Thread(new Runnable() {
-		public void run() {
-		    try {
-			for (;;) {
-			    Connector_Tcp.initListen(port);
-			    Socket so = Connector_Tcp.acceptClient();
-			    Connector_Tcp connector_tcp = (Connector_Tcp) PropagandaConnectorFactory.create("Tcp", null, PropagandaServer.this, null);
-			    connector_tcp.serve(so);
-			}
-		    } catch (IOException ex) {
-			System.err.println("Can't run TcpConnectorSupport: " + ex);
+	    Thread th = new Thread(() -> {
+		try {
+		    for (;;) {
+			Connector_Tcp.initListen(port);
+			Socket so = Connector_Tcp.acceptClient();
+			Connector_Tcp connector_tcp = (Connector_Tcp) PropagandaConnectorFactory.create("Tcp", null, PropagandaServer.this, null);
+			connector_tcp.serve(so);
 		    }
+		} catch (IOException ex) {
+		    System.err.println("Can't run TcpConnectorSupport: " + ex);
 		}
 	    });
 	    th.start();
@@ -212,16 +205,14 @@ public class PropagandaServer {
 	}
 
 	void init() {
-	    Thread th = new Thread(new Runnable() {
-		public void run() {
-		    try {
-			for (;;) {
-			    HttpWSServer.start(PropagandaServer.this);
-			    break;
-			}
-		    } catch (Exception ex) {
-			System.err.println("Can't run WsConnectorSupport: " + ex);
+	    Thread th = new Thread(() -> {
+		try {
+		    for (;;) {
+			HttpWSServer.start(PropagandaServer.this);
+			break;
 		    }
+		} catch (Exception ex) {
+		    System.err.println("Can't run WsConnectorSupport: " + ex);
 		}
 	    });
 	    th.start();
@@ -240,19 +231,17 @@ public class PropagandaServer {
 	}
 
 	void init() {
-	    Thread th = new Thread(new Runnable() {
-		public void run() {
-		    try {
+	    Thread th = new Thread(() -> {
+		try {
+		    for (;;) {
+			MQTTServer s = new MQTTServer(PropagandaServer.this);
+			s.start(PropagandaServer.this);
 			for (;;) {
-			    MQTTServer s = new MQTTServer(PropagandaServer.this);
-			    s.start(PropagandaServer.this);
-			    for (;;) {
-				s.processMqttPayload();
-			    }
+			    s.processMqttPayload();
 			}
-		    } catch (Exception ex) {
-			System.err.println("Can't run MqttConnectorSupport: " + ex);
 		    }
+		} catch (Exception ex) {
+		    System.err.println("Can't run MqttConnectorSupport: " + ex);
 		}
 	    });
 	    th.start();
@@ -260,39 +249,37 @@ public class PropagandaServer {
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
     private void initFedaration() {
-        getLogger().finest("init federation: " + federation_join + ' ' + federation_port);
+	getLogger().finest("init federation: " + federation_join + ' ' + federation_port);
 
-        if (federation_port != 0) {
-            try {
-                if (federation_join == null) {
-                    federationServer = new FederationServer(this, federation_port);
+	if (federation_port != 0) {
+	    try {
+		if (federation_join == null) {
+		    federationServer = new FederationServer(this, federation_port);
 		    System.err.println("Running FederationServer: " + federation_port);
-                } else {
-                    federationClient = new FederationClient(this, federation_join, federation_port);
+		} else {
+		    federationClient = new FederationClient(this, federation_join, federation_port);
 		    System.err.println("Running FederationClient: " + federation_join + ':' + federation_port);
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(PropagandaServer.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+		}
+	    } catch (IOException ex) {
+		Logger.getLogger(PropagandaServer.class.getName()).log(Level.SEVERE, null, ex);
+	    }
+	}
     }
 
     public void sendToFed(String s, PrintWriter avoid) {
 
-        if (federationServer != null) {
-            federationServer.sendToFederatedPropaganda(s, avoid);
-            return;
-        }
-        if (federationClient != null) {
-            federationClient.sendToFed(s, avoid);
-            return;
-        }
+	if (federationServer != null) {
+	    federationServer.sendToFederatedPropaganda(s, avoid);
+	    return;
+	}
+	if (federationClient != null) {
+	    federationClient.sendToFed(s, avoid);
+	    return;
+	}
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
     /**
      * using the secured address (not SHA1)
      *

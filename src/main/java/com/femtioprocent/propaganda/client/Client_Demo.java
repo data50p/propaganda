@@ -24,7 +24,6 @@ public class Client_Demo extends PropagandaClient {
 	init();
     }
 
-    @Override
     protected void init() {
 	final PropagandaConnector connector;
 
@@ -36,36 +35,32 @@ public class Client_Demo extends PropagandaClient {
 	    exit(0);
 	}
 
-	Thread th = new Thread(new Runnable() {
-	    public void run() {
-		try {
-		    AddrType receiver_at = createAddrType("*@DEMO");
+	Thread th = new Thread(() -> {
+	    try {
+		AddrType receiver_at = createAddrType("*@DEMO");
 
-		    int cnt = 0;
-		    Random rand = new Random();
-		    for (;;) {
-			S.m_sleep(rand.nextInt(cnt == 0 ? 2000 : 20000));
-			sendMsg(new Datagram(getDefaultAddrType(), receiver_at, new Message("hello-" + name + '-' + cnt++)));
-		    }
-		} catch (PropagandaException ex) {
-		    System.err.println("Demo: " + ex);
+		int cnt = 0;
+		Random rand = new Random();
+		for (;;) {
+		    S.m_sleep(rand.nextInt(cnt == 0 ? 2000 : 20000));
+		    sendMsg(new Datagram(getDefaultAddrType(), receiver_at, new Message("hello-" + name + '-' + cnt++)));
 		}
+	    } catch (PropagandaException ex) {
+		System.err.println("Demo: " + ex);
 	    }
 	});
 	th.start();
 
-	Thread th2 = new Thread(new Runnable() {
-	    public void run() {
-		try {
-		    for (;;) {
-			Datagram datagram = connector.recvMsg();
-			if (standardProcessMessage(datagram, MessageType.plain) == MessageTypeFilter.FILTERED) {
-			    getLogger().finest("datagram: " + S.ct() + ' ' + name + " =----> " + datagram);
-			}
+	Thread th2 = new Thread(() -> {
+	    try {
+		for (;;) {
+		    Datagram datagram = connector.recvMsg();
+		    if (standardProcessMessage(datagram, MessageType.plain) == MessageTypeFilter.FILTERED) {
+			getLogger().finest("datagram: " + S.ct() + ' ' + name + " =----> " + datagram);
 		    }
-		} catch (PropagandaException ex) {
-		    System.err.println("Demo " + ex);
 		}
+	    } catch (PropagandaException ex) {
+		System.err.println("Demo " + ex);
 	    }
 	});
 	th2.start();

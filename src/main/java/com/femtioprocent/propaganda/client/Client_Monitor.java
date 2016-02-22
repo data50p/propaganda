@@ -14,27 +14,23 @@ public class Client_Monitor extends PropagandaClient {
 	init();
     }
 
-    @Override
     protected void init() {
-	super.init();
-	Thread th2 = new Thread(new Runnable() {
-	    public void run() {
-		for (;;) {
-		    try {
-			if (connector != null) {
-			    Datagram datagram = connector.recvMsg();
-			    if (standardProcessMessage(datagram, MessageType.plain) == MessageTypeFilter.FILTERED) {
-				getLogger("monitor").fine("got: " + S.ct() + ' ' + name + " → " + datagram);
-			    }
-			} else {
-			    S.m_sleep(200);
+	Thread th = new Thread(() -> {
+	    for (;;) {
+		try {
+		    if (connector != null) {
+			Datagram datagram = connector.recvMsg();
+			if (standardProcessMessage(datagram, MessageType.plain) == MessageTypeFilter.FILTERED) {
+			    getLogger("monitor").fine("got: " + S.ct() + ' ' + name + " → " + datagram);
 			}
-		    } catch (PropagandaException ex) {
-			System.err.println("Monitor: " + ex);
+		    } else {
+			S.m_sleep(200);
 		    }
+		} catch (PropagandaException ex) {
+		    System.err.println("Monitor: " + ex);
 		}
 	    }
 	});
-	th2.start();
+	th.start();
     }
 }

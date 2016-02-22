@@ -39,9 +39,6 @@ abstract public class PropagandaClient {
 	setConnectorAndAttach(conn);
     }
 
-    protected void init() {
-    }
-
     public void register(String addr_type_group) throws PropagandaException {
 	int ix = addr_type_group.indexOf('@');
 	if (ix != -1) {
@@ -104,13 +101,13 @@ abstract public class PropagandaClient {
 	return AddrType.defaultAddrType;
     }
 
-    public void setConnector(PropagandaConnector con) {
-	this.connector = con;
+    public void setConnector(PropagandaConnector connector) {
+	this.connector = connector;
     }
 
-    public void setConnectorAndAttach(PropagandaConnector con) {
-	this.connector = con;
-	con.attachClient(this);
+    public void setConnectorAndAttach(PropagandaConnector connector) {
+	this.connector = connector;
+	this.connector.attachClient(this);
     }
 
     public PropagandaConnector getConnector() {

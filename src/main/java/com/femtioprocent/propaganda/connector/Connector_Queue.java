@@ -9,23 +9,21 @@ import com.femtioprocent.propaganda.exception.PropagandaException;
 
 public class Connector_Queue extends PropagandaConnector {
 
-    private BlockingQueue<Datagram> message_toserver_q = new LinkedBlockingQueue<Datagram>();
-    private BlockingQueue<Datagram> message_toclient_q = new LinkedBlockingQueue<Datagram>();
+    private final BlockingQueue<Datagram> message_toserver_q = new LinkedBlockingQueue<>();
+    private final BlockingQueue<Datagram> message_toclient_q = new LinkedBlockingQueue<>();
 
     public Connector_Queue(String name) {
 	super(name);
 	init();
     }
 
-    void init() {
-	Thread th = new Thread(new Runnable() {
-	    public void run() {
-		for (;;) {
-		    try {
-			Datagram datagram = message_toserver_q.take();
-			dispatchMsg(datagram);
-		    } catch (InterruptedException ex) {
-		    }
+    private void init() {
+	Thread th = new Thread(() -> {
+	    for (;;) {
+		try {
+		    Datagram datagram = message_toserver_q.take();
+		    dispatchMsg(datagram);
+		} catch (InterruptedException ex) {
 		}
 	    }
 	});

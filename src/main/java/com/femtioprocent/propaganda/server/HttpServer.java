@@ -36,14 +36,14 @@ public class HttpServer extends Thread {
     }
 
     public void serve() {
-	try {
-	    for (;;) {
+	for (;;) {
+	    try {
 		pool.execute(new Handler(serverSocket.accept()));
 		getLogger().info("pool status: : " + pool.toString());
+	    } catch (IOException ex) {
+//ZZZ	    pool.shutdown();
+		getLogger().severe("HttpServer: " + ex);
 	    }
-	} catch (IOException ex) {
-	    pool.shutdown();
-	    getLogger().severe("pool-shutdown: " + ex);
 	}
     }
 

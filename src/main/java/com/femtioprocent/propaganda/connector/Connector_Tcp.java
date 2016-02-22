@@ -1,10 +1,6 @@
 package com.femtioprocent.propaganda.connector;
 
-import static com.femtioprocent.propaganda.context.Config.getLogger;
-import static com.femtioprocent.propaganda.data.AddrType.anonymousAddrType;
-import static com.femtioprocent.propaganda.data.AddrType.serverAddrType;
 import static com.femtioprocent.propaganda.data.AddrType.defaultAddrType;
-import static com.femtioprocent.propaganda.data.MessageType.register;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,22 +11,12 @@ import java.util.logging.Level;
 
 import com.femtioprocent.propaganda.client.PropagandaClient;
 import com.femtioprocent.propaganda.data.Datagram;
-import com.femtioprocent.propaganda.data.Message;
 import com.femtioprocent.propaganda.exception.PropagandaException;
-import com.femtioprocent.propaganda.server.PropagandaServer;
 import com.femtioprocent.propaganda.server.federation.ClientGhost;
-import com.femtioprocent.fpd.appl.Appl;
-import com.femtioprocent.fpd.sundry.S;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-import static com.femtioprocent.propaganda.context.Config.getLogger;
-import static com.femtioprocent.propaganda.context.Config.getLogger;
-import static com.femtioprocent.propaganda.context.Config.getLogger;
-import static com.femtioprocent.propaganda.context.Config.getLogger;
-import static com.femtioprocent.propaganda.context.Config.getLogger;
-import static com.femtioprocent.propaganda.context.Config.getLogger;
 import static com.femtioprocent.propaganda.context.Config.getLogger;
 
 public class Connector_Tcp extends PropagandaConnector {
@@ -44,7 +30,6 @@ public class Connector_Tcp extends PropagandaConnector {
 
     public Connector_Tcp(String name, boolean do_connect) {
 	super(name);
-	init();
 	if (do_connect) {
 	    connect();
 	}
@@ -52,7 +37,6 @@ public class Connector_Tcp extends PropagandaConnector {
 
     public Connector_Tcp(String name, PropagandaClient client) {
 	super(name);
-	init();
 	connect();
 	client.setConnectorAndAttach(this);
     }
@@ -90,11 +74,11 @@ public class Connector_Tcp extends PropagandaConnector {
     public boolean connect(String host, int port) {
 	try {
 	    so = new Socket(host, port);
-	    getLogger().fine("connected : " + so);
+	    getLogger().fine("Connector_Tcp: connected : " + so);
 	    return true;
 
 	} catch (IOException ex) {
-	    getLogger().severe("no-connection: ");
+	    getLogger().severe("Connector_Tcp: no-connection: ");
 	}
 	return false;
     }
@@ -126,7 +110,7 @@ public class Connector_Tcp extends PropagandaConnector {
 
 	@Override
 	public void run() {
-	    System.err.println("ServerThread running " + so);
+	    System.err.println("Connector_Tcp: ServerThread running " + so);
 	    try {
 		BufferedReader rd = new BufferedReader(new InputStreamReader(so.getInputStream(), "utf-8"));
 
@@ -159,7 +143,7 @@ public class Connector_Tcp extends PropagandaConnector {
 			    transmitReceipt(receipt + ',' + dmCnt);
 			}
 		    } catch (Exception ex) {
-			getLogger().log(Level.SEVERE, "exception: [" + sin + "];", ex);
+			getLogger().log(Level.SEVERE, "Connector_Tcp: exception: [" + sin + "];", ex);
 		    }
 		}
 	    } catch (IOException ex) {
@@ -176,24 +160,14 @@ public class Connector_Tcp extends PropagandaConnector {
 	pool.execute(new MyServerThread(so));
 	String state = pool.toString();
 
-	getLogger().log(Level.INFO, "plain thread pool state: " + state);
+	getLogger().log(Level.INFO, "Connector_Tcp: plain thread pool state: " + state);
     }
 
     public static Socket acceptClient() throws IOException {
 	Socket so = sso.accept();
-	getLogger().finest("accept: " + sso.toString());
+	getLogger().finest("Connector_Tcp: accept: " + sso.toString());
 
 	return so;
-    }
-
-    /**
-     */
-    @Override
-    public void attachServer(PropagandaServer server) {
-	this.server = server;
-    }
-
-    void init() {
     }
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -233,7 +207,7 @@ public class Connector_Tcp extends PropagandaConnector {
 	try {
 	    cl_dos = new BufferedWriter(new OutputStreamWriter(so.getOutputStream(), "utf-8"));
 	} catch (IOException ex) {
-	    getLogger().severe("no-socket: " + so.toString());
+	    getLogger().severe("Connector_Tcp: no-socket: " + so.toString());
 	}
     }
 
@@ -259,11 +233,11 @@ public class Connector_Tcp extends PropagandaConnector {
 		    cl_dos.write(s);
 		    cl_dos.newLine();
 		    cl_dos.flush();
-		    getLogger().finest("transm2client: " + ' ' + this + ' ' + datagram);
+		    getLogger().finest("Connector_Tcp: transm2client: " + ' ' + this + ' ' + datagram);
 
 		}
 	    } catch (IOException ex) {
-		throw new PropagandaException("transmit error 1: " + datagram);
+		throw new PropagandaException("Connector_Tcp: transmit error 1: " + datagram);
 	    }
 	}
     }
@@ -283,16 +257,16 @@ public class Connector_Tcp extends PropagandaConnector {
 		cg_dos.write(data);
 		cg_dos.newLine();
 		cg_dos.flush();
-		getLogger().finest("transmitted: " + so.toString() + ' ' + data);
+		getLogger().finest("Connector_Tcp: transmitted: " + so.toString() + ' ' + data);
 	    }
 
 	    return;
 	} catch (IOException ex) {
 	    getLogger().finest("ex: " + so.toString() + ' ' + ex);
-	    throw new PropagandaException("transmit error 2: " + datagram);
+	    throw new PropagandaException("Connector_Tcp: transmit error 2: " + datagram);
 	} catch (NullPointerException ex) {
 	    getLogger().finest("ex: " + ex);
-	    throw new PropagandaException("transmit error 3: " + datagram);
+	    throw new PropagandaException("Connector_Tcp: transmit error 3: " + datagram);
 	} finally {//catch (InterruptedException ex) {
 	}
     }
@@ -300,52 +274,6 @@ public class Connector_Tcp extends PropagandaConnector {
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     @Override
     public String toString() {
-	return "Connector_Plain{" + name + ',' + so + "}";
-    }
-
-    static class Main extends Appl {
-
-	class MainClient extends com.femtioprocent.propaganda.client.PropagandaClient {
-
-	    MainClient() {
-		super("MainTcp");
-	    }
-
-	    void start() {
-		try {
-		    sendMsg(new Datagram(anonymousAddrType,
-			    serverAddrType,
-			    register,
-			    new Message("maintcp.test@DEMO")));
-		    for (;;) {
-			Datagram datagram = getConnector().recvMsg();
-			System.err.println("Connector_Tcp.Main got: " + datagram);
-			if (datagram == null) {
-			    break;
-			}
-		    }
-		} catch (PropagandaException ex) {
-		    System.err.println("MainClient: " + ex);
-		}
-	    }
-	}
-
-	@Override
-	public void main() {
-	    Connector_Tcp conn = new Connector_Tcp("MainTcp");
-	    MainClient client = new MainClient();
-	    conn.connect();
-
-	    client.setConnector(conn);
-	    conn.attachClient(client);
-	    System.err.println("conn " + conn);
-
-	    client.start();
-	}
-
-	public static void main(String[] args) {
-	    decodeArgs(args);
-	    main(new Connector_Tcp.Main());
-	}
+	return "Connector_Tcp{" + name + ',' + so + "}";
     }
 }
