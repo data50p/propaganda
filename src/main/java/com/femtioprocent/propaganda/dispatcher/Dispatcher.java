@@ -292,7 +292,8 @@ public class Dispatcher {
 
 		// reset _ to client addr???
 		try {
-		    client_ghost.sendToClient(datagram);
+		    if ( datagram.canSend(client_ghost) )
+			client_ghost.sendToClient(datagram);
 		    dmCnt++;
 		    cnt_sendClient++;
 		    if (datagram.getMessageType() == MessageType.single) {

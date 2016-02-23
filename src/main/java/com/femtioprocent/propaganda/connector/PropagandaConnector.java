@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 abstract public class PropagandaConnector implements ServerConnector, ClientConnector {
 
-    public String name; // is this necessary
+    public String name; // is this necessary -> yes
     PropagandaServer server;
     private ArrayList<ClientGhost> client_ghost_li = new ArrayList<ClientGhost>();
     public PropagandaClient client;             // have client if it is Connector_{Queue,Local}
@@ -89,6 +89,12 @@ abstract public class PropagandaConnector implements ServerConnector, ClientConn
 	return dmCnt;
     }
 
+    /**
+     * Validate sender is one of this connectors ghosts.
+     * 
+     * @param datagram
+     * @return 
+     */
     public boolean validateDatagram(Datagram datagram) {
 	for (ClientGhost cg : client_ghost_li) {
 	    if (cg.matchAddrType(datagram.getSender())) {

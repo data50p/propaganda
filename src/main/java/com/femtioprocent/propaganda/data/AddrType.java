@@ -17,7 +17,8 @@ public class AddrType {
     String addr_type = "?";
     boolean regex = false;
     boolean secure = false;
-
+    public boolean strict = false; // receive only messages from my own group
+    
     public static AddrType serverAddrType = new AddrType("@");
     public static AddrType anonymousAddrType = new AddrType(".");
     @Deprecated
@@ -122,7 +123,7 @@ public class AddrType {
 	if (secure) {
 	    return "AddrType{" + getUnsecureAddrTypeString() + "}";
 	} else {
-	    return "AddrType{" + getAddrTypeString() + "}";
+	    return "AddrType{" + getAddrTypeString() + "," + (strict?"=":"") + "}";
 	}
     }
 

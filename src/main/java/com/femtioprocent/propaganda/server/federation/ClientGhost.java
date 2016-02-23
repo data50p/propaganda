@@ -22,6 +22,7 @@ public class ClientGhost {
     PropagandaServer server;
     PropagandaConnector connector;
     private HashMap<String, Object> clientData;
+    public boolean strict;
 
     public ClientGhost(String id, String unsecure_id, String addr_type_group, PropagandaConnector connector) {
 	this.id = id;

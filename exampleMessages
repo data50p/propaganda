@@ -6,6 +6,7 @@ echo
 echo '. @ register; request-id aa@TESTING'
 echo '. @ register; request-id aa@TESTING2'
 echo '. @ register; request-id aa@TESTING3'
+echo '. @ register; request-id-strict aa@TESTING'
 echo '. @ register; request-id bb@TESTING'
 echo '. @ register; request-id bb@TESTING2'
 echo '. @ register; request-id bb@TESTING3'

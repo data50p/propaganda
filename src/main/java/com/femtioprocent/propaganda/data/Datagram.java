@@ -4,6 +4,7 @@ import static java.lang.Long.parseLong;
 import static com.femtioprocent.propaganda.context.Config.getLogger;
 import static com.femtioprocent.propaganda.data.AddrType.createAddrType;
 import com.femtioprocent.fpd.sundry.S;
+import com.femtioprocent.propaganda.server.federation.ClientGhost;
 
 public class Datagram {
 
@@ -16,6 +17,27 @@ public class Datagram {
     Message msg;
     String datagram_string;
     Status status;
+
+    public boolean canSend(ClientGhost client_ghost) {
+	if (!client_ghost.strict) {
+	    return true;
+	}
+
+	if (matchStrictGroup(sender.addr_type, receiver.addr_type)) {
+	    return true;
+	}
+	return false;
+    }
+
+    private boolean matchStrictGroup(String s_at, String r_at) {
+	if (s_at.equals(AddrType.serverAddrType.addr_type)) {
+	    return true;
+	}
+	if (s_at.equals(r_at)) {
+	    return true;
+	}
+	return false;
+    }
 
     public enum Status {
 

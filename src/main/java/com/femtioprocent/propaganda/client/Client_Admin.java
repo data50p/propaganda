@@ -15,6 +15,7 @@ import java.util.Set;
 import static com.femtioprocent.propaganda.data.AddrType.*;
 import static com.femtioprocent.propaganda.context.Config.*;
 import com.femtioprocent.propaganda.util.SecureUtil;
+import com.femtioprocent.propaganda.util.Util;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -85,6 +86,32 @@ public class Client_Admin extends PropagandaClient {
 			    System.err.println("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
 			}
 
+		    } else if ("list-me".equals(datagram.getMessage().getMessage())) {
+			try {
+			    HashMap<String, ClientGhost> map = new HashMap<String, ClientGhost>();
+			    for (final ClientGhost cg : server.clientghost_hm.values()) {
+				if ( cg.getDefaultAddrType().getId().equals(datagram.getSender().getId()) )
+				    map.put(cg.getDefaultAddrType().getId(), cg);
+			    }
+			    StringBuilder sb = new StringBuilder();
+			    for (Map.Entry<String, ClientGhost> ent : map.entrySet()) {
+				String id = ent.getKey();
+				ClientGhost cg = ent.getValue();
+				if (sb.length() > 0) {
+				    sb.append(";");
+				}
+				sb.append(cg.getDefaultSecureAddrType().getUnsecureId());
+				final Set<String> atgSet = cg.getAddrTypeGroupSet();
+				sb.append("@" + atgSet.toString().replace(" ", ""));
+			    }
+			    sendMsg(new Datagram(serverAddrType,
+				    datagram.getSender(),
+				    new Message("list-me-is",
+					    "" + sb.toString())));
+			} catch (PropagandaException ex) {
+			    System.err.println("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
+			}
+
 		    } else if ("list-group".equals(datagram.getMessage().getMessage())) {
 			try {
 			    Set<String> set = new HashSet<String>();
@@ -112,8 +139,9 @@ public class Client_Admin extends PropagandaClient {
 				if (sb.length() > 0) {
 				    sb.append(";");
 				}
+				sb.append(cg.getConnector().name + Constants.CONNECTOR_INDICATOR);
 				sb.append(cg.getDefaultSecureAddrType().getUnsecureId());
-				sb.append(Constants.CONNECTOR_INDICATOR + cg.getConnector().name);
+				sb.append(cg.getAddrTypeGroupSet().toString().replace(" ", ""));
 			    }
 			    sendMsg(new Datagram(serverAddrType,
 				    datagram.getSender(),
@@ -193,6 +221,9 @@ public class Client_Admin extends PropagandaClient {
 	    request_status = true;
 	} else if ("request-id".equals(datagram.getMessage().getMessage())) {
 	    client_addr = createAddrType(mkAddrType(datagram.getMessage().getAddendum(), orig_connector));
+	} else if ("request-id-strict".equals(datagram.getMessage().getMessage())) {
+	    client_addr = createAddrType(mkAddrType(datagram.getMessage().getAddendum(), orig_connector));
+	    client_addr.strict = true;
 	} else if ("request-secure-id".equals(datagram.getMessage().getMessage())) {
 	    String at = datagram.getMessage().getAddendum();
 	    String salt = "";
@@ -218,7 +249,16 @@ public class Client_Admin extends PropagandaClient {
 	}
 	if (datagram.getMessage().getAddendum() == null) {
 	    final String message = datagram.getMessage().getMessage();
-	    client_addr = createAddrType(mkAddrType(message, orig_connector));
+	    String myId;
+	    if ( Util.empty(message) ) {
+		myId = datagram.getSender().getAddrTypeString();
+	    } else
+		myId = message;
+	    if ( AddrType.anonymousAddrType.getAddrTypeString().equals(myId) ) {
+	        System.err.println("ClientGhost.registerMsg: Invalid addr " + myId);
+	    } else {
+		client_addr = createAddrType(mkAddrType(myId, orig_connector));
+	    }
 	}
 
 	if (client_addr != null) {
@@ -232,6 +272,7 @@ public class Client_Admin extends PropagandaClient {
 			return null;
 		    } else {
 			client_ghost = new ClientGhost(client_addr.getId(), client_addr.getUnsecureIdALt(), client_addr.getAddrTypeGroup(), orig_connector);
+			client_ghost.strict = client_addr.strict;
 			orig_connector.attachClientGhost(client_ghost); // this connector might have another ClGh.othername FATAL?
 			boolean again = server.addClientGhost(client_ghost);
 			try {
@@ -297,7 +338,7 @@ public class Client_Admin extends PropagandaClient {
 		    }
 		}
 	    } else {
-		getLogger().finest("OK: already registered my self: " + client_addr);
+		getLogger().finest("OK: already registered myself: " + client_addr);
 	    }
 	    return client_ghost;
 	}
