@@ -12,53 +12,48 @@ import static com.femtioprocent.propaganda.context.Config.*;
 public class Client_Status extends PropagandaClient {
 
     public Client_Status(String name) {
-        super(name);
-        init();
+	super(name);
+	init();
     }
 
-    @Override
     protected void init() {
-        super.init();
-        final int[] status_cnt = new int[1];
+	final int[] status_cnt = new int[1];
 
-        Thread th2 = new Thread(new Runnable() {
-            public void run() {
-                while (connector == null) {
-                    S.m_sleep(1000);
-                    System.err.print(".");
-                }
+	Thread th = new Thread(() -> {
+	    while (connector == null) {
+		S.m_sleep(1000);
+	    }
 
-                for (;;) {
-                    try {
-                        Datagram datagram = connector.recvMsg();
-                        getLogger().finest("msg: " + S.ct() + ' ' + name + " → " + datagram);
+	    for (;;) {
+		try {
+		    Datagram datagram = connector.recvMsg();
+		    getLogger().finest("msg: " + S.ct() + ' ' + name + " → " + datagram);
 
-                        if (standardProcessMessage(datagram) == MessageTypeFilter.NOT_PROCESSED) {
-                            if (false) {
-                                status_cnt[0]++;
-                                PropagandaServer server = PropagandaServer.getDefaultServer();
+		    if (standardProcessMessage(datagram) == MessageTypeFilter.NOT_PROCESSED) {
+			if (false) {
+			    status_cnt[0]++;
+			    PropagandaServer server = PropagandaServer.getDefaultServer();
 
-                                int level = 0;
-                                try {
-                                    level = Integer.parseInt(datagram.getMessage().getMessage());
-                                } catch (NumberFormatException ex) {
-                                }
+			    int level = 0;
+			    try {
+				level = Integer.parseInt(datagram.getMessage().getMessage());
+			    } catch (NumberFormatException ex) {
+			    }
 
-                                sendMsg(new Datagram(getDefaultAddrType(),
-                                        datagram.getSender(),
-                                        MessageType.plain,
-                                        new Message("status",
-                                                "status-cnt=" + status_cnt[0] + ' '
-                                                + server.getStatus(level)
-                                        )));
-                            }
-                        }
-                    } catch (PropagandaException ex) {
-                        S.pL("Status: " + ex);
-                    }
-                }
-            }
-        });
-        th2.start();
+			    sendMsg(new Datagram(getDefaultAddrType(),
+				    datagram.getSender(),
+				    MessageType.plain,
+				    new Message("status",
+					    "status-cnt=" + status_cnt[0] + ' '
+					    + server.getStatus(level)
+				    )));
+			}
+		    }
+		} catch (PropagandaException ex) {
+		    System.err.println("Status: " + ex);
+		}
+	    }
+	});
+	th.start();
     }
 }

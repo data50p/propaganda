@@ -32,7 +32,7 @@ public interface HttpWSServive {
     @ResponseWrapper(localName = "processDatagramResponse", targetNamespace = "http://server.propaganda/", className = "propaganda.server.ProcessDatagramResponse")
     @Action(input = "http://server.propaganda/HttpWSServive/processDatagramRequest", output = "http://server.propaganda/HttpWSServive/processDatagramResponse")
     public List<String> processDatagram(
-            @WebParam(name = "arg0", targetNamespace = "") List<String> arg0,
-            @WebParam(name = "arg1", targetNamespace = "") int arg1);
+	    @WebParam(name = "arg0", targetNamespace = "") List<String> arg0,
+	    @WebParam(name = "arg1", targetNamespace = "") int arg1);
 
 }

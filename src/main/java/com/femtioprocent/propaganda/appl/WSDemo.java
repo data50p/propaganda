@@ -21,16 +21,16 @@ public class WSDemo extends Appl {
 
     @Override
     public void main() {
-        HttpWSService s = new HttpWSService();
-        final HttpWSServive port = s.getHttpWSServiceSOAPHttpPort();
-        ArrayList<String> list = new ArrayList<String>();
-        list.add("_ @;list");
-        final List<String> rl = port.processDatagram(list, 1000);
-        System.out.println("GOT: " + rl);
+	HttpWSService s = new HttpWSService();
+	final HttpWSServive port = s.getHttpWSServiceSOAPHttpPort();
+	ArrayList<String> list = new ArrayList<String>();
+	list.add("_ @;list");
+	final List<String> rl = port.processDatagram(list, 1000);
+	System.out.println("GOT: " + rl);
     }
 
     public static void main(String[] args) {
-        decodeArgs(args);
-        main(new WSDemo());
+	decodeArgs(args);
+	main(new WSDemo());
     }
 }

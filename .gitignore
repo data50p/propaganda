@@ -8,9 +8,11 @@
 /src/main/java/com/femtioprocent/propaganda/Version.java
 dist
 build
+.idea
 *~
 logs
 derby.log
 .DS_Store
 #.build_number
 target/
+moquette_store*

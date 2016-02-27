@@ -41,8 +41,8 @@ public class ProcessDatagramResponse {
      * Gets the value of the return property.
      *
      * <p>
-     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present
-     * inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the return property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the return property.
      *
      * <p>
      * For example, to add a new item, do as follows:
@@ -57,10 +57,10 @@ public class ProcessDatagramResponse {
      *
      */
     public List<String> getReturn() {
-        if (_return == null) {
-            _return = new ArrayList<String>();
-        }
-        return this._return;
+	if (_return == null) {
+	    _return = new ArrayList<String>();
+	}
+	return this._return;
     }
 
 }

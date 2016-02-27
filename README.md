@@ -40,7 +40,7 @@ Connecting via socket
 
 5. All other registred on @DEMO will reveive the message (including yourself):
 
-       aa@DEMO *@DEMO plain 1334489087597;This is my message
+       aa@DEMO *@DEMO 1334489087597;This is my message
 
 
 Note

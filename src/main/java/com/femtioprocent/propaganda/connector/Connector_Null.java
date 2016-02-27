@@ -8,7 +8,7 @@ public class Connector_Null extends PropagandaConnector {
     String name;
 
     public Connector_Null(String name) {
-        super(name);
+	super(name);
     }
 
     /**
@@ -16,8 +16,8 @@ public class Connector_Null extends PropagandaConnector {
      */
     @Override
     public Datagram recvMsg(long timeout_ms) {
-        S.m_sleep((int) timeout_ms);
-        return null;
+	S.m_sleep((int) timeout_ms);
+	return null;
     }
 
     @Override

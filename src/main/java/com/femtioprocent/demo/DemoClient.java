@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-/*
+ /*
  * DemoClient.java
  *
  * Created on 2011-apr-03, 19:37:16
@@ -17,7 +17,7 @@ import com.femtioprocent.propaganda.data.MessageType;
 import com.femtioprocent.propaganda.data.AddrType;
 import com.femtioprocent.propaganda.connector.PropagandaConnector;
 import com.femtioprocent.propaganda.connector.PropagandaConnectorFactory;
-import com.femtioprocent.propaganda.connector.Connector_Plain;
+import com.femtioprocent.propaganda.connector.Connector_Tcp;
 import com.femtioprocent.propaganda.client.PropagandaClient;
 import java.util.Date;
 import com.femtioprocent.propaganda.exception.PropagandaException;
@@ -32,57 +32,54 @@ public class DemoClient extends javax.swing.JFrame {
 
     public static interface Eval {
 
-        public String eval(PropagandaConnector connector, Datagram datagram);
+	public String eval(PropagandaConnector connector, Datagram datagram);
     }
 
     class MyPropagandaClient extends PropagandaClient {
 
-        private Eval eval;
+	private Eval eval;
 
-        public MyPropagandaClient(Eval eval) {
-            super("demoClient-" + (new Date()).getTime());
-            this.eval = eval;
-            init();
-        }
+	public MyPropagandaClient(Eval eval) {
+	    super("demoClient-" + (new Date()).getTime());
+	    this.eval = eval;
+	    init();
+	}
 
-        @Override
-        protected void init() {
+	protected void init() {
 
-            final Connector_Plain connector = (Connector_Plain) PropagandaConnectorFactory.create("Plain", "DemoClient", server, this);
-            connector.connect();
-            System.err.println("connector " + connector);
+	    final Connector_Tcp connector = (Connector_Tcp) PropagandaConnectorFactory.create("Tcp", "DemoClient", server, this);
+	    connector.connect();
+	    System.err.println("connector " + connector);
 
-            Thread th2 = new Thread(new Runnable() {
+	    Thread th = new Thread(() -> {
+		try {
+		    for (;;) {
+			Datagram datagram = connector.recvMsg();
+			if (standardProcessMessage(datagram, MessageType.plain) == MessageTypeFilter.FILTERED) {
+			    System.err.println("got datagram: " + name + " =----> " + datagram);
+			    if (eval != null) {
+				eval.eval(connector, datagram);
+			    }
+			} else {
+			    System.err.println("got datagram: _ " + name + " =----> " + datagram);
+			}
+		    }
+		} catch (Exception ex) {
+		    System.err.println("Exception " + ex);
+		}
+	    });
+	    th.start();
 
-                public void run() {
-                    try {
-                        for (;;) {
-                            Datagram datagram = connector.recvMsg();
-                            if (standardProcessMessage(datagram, MessageType.plain) == MessageTypeFilter.FILTERED) {
-                                System.err.println("got datagram: " + name + " =----> " + datagram);
-                                if (eval != null) {
-                                    eval.eval(connector, datagram);
-                                }
-                            } else {
-                                System.err.println("got datagram: _ " + name + " =----> " + datagram);
-                            }
-                        }
-                    } catch (Exception ex) {
-                        System.err.println("Exception " + ex);
-                    }
-                }
-            });
-            th2.start();
-            try {
-                register("demo");
-                final String name_id = name + "@demo";
-                myRegName.setText("My registred name: " + name_id);
-                sendTo.getModel().setSelectedItem(name_id);
-                sendFrom.addItem(name_id);
-            } catch (PropagandaException ex) {
-                myRegName.setText("NO SERVER RUNNING: " + ex);
-            }
-        }
+	    try {
+		register("demo");
+		final String name_id = name + "@demo";
+		myRegName.setText("My registred name: " + name_id);
+		sendTo.getModel().setSelectedItem(name_id);
+		sendFrom.addItem(name_id);
+	    } catch (PropagandaException ex) {
+		myRegName.setText("NO SERVER RUNNING: " + ex);
+	    }
+	}
     }
 
     PropagandaClient propagandaClient;
@@ -91,34 +88,34 @@ public class DemoClient extends javax.swing.JFrame {
      * Creates new form Client
      */
     public DemoClient() {
-        initComponents();
-        initPropaganda();
-        status.setText("Status: running");
+	initComponents();
+	initPropaganda();
+	status.setText("Status: running");
     }
 
     int rcnt = 0;
 
     private void initPropaganda() {
-        propagandaClient = new MyPropagandaClient(new Eval() {
+	propagandaClient = new MyPropagandaClient(new Eval() {
 
-            @Override
-            public String eval(PropagandaConnector connector, Datagram datagram) {
-                String msg = datagram.getMessage().getText();
-                rcnt++;
-                receivedMsgs.append("" + rcnt + " received from: " + datagram.getSender().getUnsecureAddrTypeString()
-                        + " to: " + datagram.getReceiver().getUnsecureAddrTypeString() + " msg: " + msg + "\n");
-                receivedMsgs.setCaretPosition(receivedMsgs.getText().length());
-                return msg;
-            }
-        });
+	    @Override
+	    public String eval(PropagandaConnector connector, Datagram datagram) {
+		String msg = datagram.getMessage().getText();
+		rcnt++;
+		receivedMsgs.append("" + rcnt + " received from: " + datagram.getSender().getUnsecureAddrTypeString()
+			+ " to: " + datagram.getReceiver().getUnsecureAddrTypeString() + " msg: " + msg + "\n");
+		receivedMsgs.setCaretPosition(receivedMsgs.getText().length());
+		return msg;
+	    }
+	});
     }
 
     int cnt = 0;
 
     void lastRegAs(String s) {
-        sendFrom.addItem(s);
-        sendFrom.getModel().setSelectedItem(s);
-        lastReg.setText(lastReg.getText() + (cnt++ == 0 ? " " : ", ") + s);
+	sendFrom.addItem(s);
+	sendFrom.getModel().setSelectedItem(s);
+	lastReg.setText(lastReg.getText() + (cnt++ == 0 ? " " : ", ") + s);
     }
 
     /**
@@ -302,42 +299,42 @@ public class DemoClient extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void sendBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendBtnActionPerformed
-        String send_to = sendTo.getSelectedItem().toString();
-        String send_from = sendFrom.getSelectedItem().toString();
-        String msg = message.getText().toString().replace("\n", "¶");
-        System.err.println("send_to: " + send_to);
-        System.err.println("send_from: " + send_from);
-        System.err.println("message: " + msg);
-        try {
-            Datagram datagram = new Datagram(AddrType.createAddrType(send_from),
-                    AddrType.createAddrType(send_to),
-                    new Message(msg));
-            propagandaClient.sendMsg(datagram);
-        } catch (PropagandaException ex) {
-            System.err.println("message: " + ex);
-        }
+	String send_to = sendTo.getSelectedItem().toString();
+	String send_from = sendFrom.getSelectedItem().toString();
+	String msg = message.getText().toString().replace("\n", "¶");
+	System.err.println("send_to: " + send_to);
+	System.err.println("send_from: " + send_from);
+	System.err.println("message: " + msg);
+	try {
+	    Datagram datagram = new Datagram(AddrType.createAddrType(send_from),
+		    AddrType.createAddrType(send_to),
+		    new Message(msg));
+	    propagandaClient.sendMsg(datagram);
+	} catch (PropagandaException ex) {
+	    System.err.println("message: " + ex);
+	}
     }//GEN-LAST:event_sendBtnActionPerformed
 
     private void regBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regBtnActionPerformed
-        String reg_name = regName.getSelectedItem().toString();
-        System.err.println("reg_name: " + reg_name);
-        try {
-            propagandaClient.register(reg_name);
-        } catch (Exception ex) {
-            receivedMsgs.append("" + ex + "\n");
-            return;
-        }
-        lastRegAs(reg_name);
+	String reg_name = regName.getSelectedItem().toString();
+	System.err.println("reg_name: " + reg_name);
+	try {
+	    propagandaClient.register(reg_name);
+	} catch (Exception ex) {
+	    receivedMsgs.append("" + ex + "\n");
+	    return;
+	}
+	lastRegAs(reg_name);
     }//GEN-LAST:event_regBtnActionPerformed
 
     private void pingBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pingBtnActionPerformed
-        String send_to = sendTo.getSelectedItem().toString();
-        System.err.println("send_to: " + send_to);
-        try {
-            propagandaClient.sendMsg(new Datagram(AddrType.defaultAddrType, AddrType.createAddrType(send_to), MessageType.ping, new Message("")));
-        } catch (PropagandaException ex) {
-            receivedMsgs.append("" + ex + "\n");
-        }
+	String send_to = sendTo.getSelectedItem().toString();
+	System.err.println("send_to: " + send_to);
+	try {
+	    propagandaClient.sendMsg(new Datagram(AddrType.defaultAddrType, AddrType.createAddrType(send_to), MessageType.ping, new Message("")));
+	} catch (PropagandaException ex) {
+	    receivedMsgs.append("" + ex + "\n");
+	}
 
     }//GEN-LAST:event_pingBtnActionPerformed
 
@@ -345,12 +342,12 @@ public class DemoClient extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
+	java.awt.EventQueue.invokeLater(new Runnable() {
 
-            public void run() {
-                new DemoClient().setVisible(true);
-            }
-        });
+	    public void run() {
+		new DemoClient().setVisible(true);
+	    }
+	});
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;

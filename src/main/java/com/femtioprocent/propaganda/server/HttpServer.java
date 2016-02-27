@@ -23,49 +23,49 @@ public class HttpServer extends Thread {
     private AtomicInteger connection_cnt = new AtomicInteger(1000);
 
     public HttpServer(PropagandaServer server, int port) throws IOException {
-        super("httpd");
-        this.server = server;
-        this.port = port;
+	super("httpd");
+	this.server = server;
+	this.port = port;
 
-        serverSocket = new ServerSocket(port);
-        pool = Executors.newCachedThreadPool();
+	serverSocket = new ServerSocket(port);
+	pool = Executors.newCachedThreadPool();
     }
 
     public String getHostName() {
-        return ""; // sso.getInetAddress().getHostName();
+	return ""; // sso.getInetAddress().getHostName();
     }
 
     public void serve() {
-        try {
-            for (;;) {
-                pool.execute(new Handler(serverSocket.accept()));
-                getLogger().info("pool status: : " + pool.toString());
-            }
-        } catch (IOException ex) {
-            pool.shutdown();
-            getLogger().severe("pool-shutdown: " + ex);
-        }
+	for (;;) {
+	    try {
+		pool.execute(new Handler(serverSocket.accept()));
+		getLogger().info("pool status: : " + pool.toString());
+	    } catch (IOException ex) {
+//ZZZ	    pool.shutdown();
+		getLogger().severe("HttpServer: " + ex);
+	    }
+	}
     }
 
     class Handler implements Runnable {
 
-        private final Socket connectedSocket;
+	private final Socket connectedSocket;
 
-        Handler(Socket socket) {
-            this.connectedSocket = socket;
-        }
+	Handler(Socket socket) {
+	    this.connectedSocket = socket;
+	}
 
-        public void run() {
-            Connector_Http connector_http = (Connector_Http) PropagandaConnectorFactory.create("Http", "http", server, null);
-            connector_http.setSocket(connectedSocket);
+	public void run() {
+	    Connector_Http connector_http = (Connector_Http) PropagandaConnectorFactory.create("Http", "http", server, null);
+	    connector_http.setSocket(connectedSocket);
 
-            HttpConnectedServer con = new HttpConnectedServer(connector_http, HttpServer.this);
-            con.prepareAndServe();
-        }
+	    HttpConnectedServer con = new HttpConnectedServer(connector_http, HttpServer.this);
+	    con.prepareAndServe();
+	}
     }
 
     @Override
     public void run() {
-        serve();
+	serve();
     }
 }

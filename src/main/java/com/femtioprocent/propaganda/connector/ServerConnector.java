@@ -3,7 +3,7 @@ package com.femtioprocent.propaganda.connector;
 import com.femtioprocent.propaganda.data.Datagram;
 import com.femtioprocent.propaganda.exception.PropagandaException;
 import com.femtioprocent.propaganda.server.PropagandaServer;
-import com.femtioprocent.propaganda.server.clientsupport.ClientGhost;
+import com.femtioprocent.propaganda.server.federation.ClientGhost;
 
 public interface ServerConnector {
 

@@ -6,6 +6,7 @@ echo
 echo '. @ register; request-id aa@TESTING'
 echo '. @ register; request-id aa@TESTING2'
 echo '. @ register; request-id aa@TESTING3'
+echo '. @ register; request-id-strict aa@TESTING'
 echo '. @ register; request-id bb@TESTING'
 echo '. @ register; request-id bb@TESTING2'
 echo '. @ register; request-id bb@TESTING3'
@@ -16,6 +17,10 @@ echo '. @ register; request-id a3@TESTING'
 echo '. @ register; request-secure-id a4@CCFCLIENT'
 echo '_ @ register; unsecure-id'
 echo '_ @ register; request-status aa@TESTING'
+
+echo '_ *; hello'
+echo '_ *; hello2'
+echo '_ *; hello3'
 
 echo '. @ register'
 

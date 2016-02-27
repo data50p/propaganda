@@ -9,10 +9,9 @@ import com.femtioprocent.propaganda.exception.PropagandaException;
 public class Connector_Local extends PropagandaConnector {
 
     private BlockingQueue<Datagram> message_q = new LinkedBlockingQueue<Datagram>();
-    Thread th;
 
     public Connector_Local(String name) {
-        super(name);
+	super(name);
     }
 
     // - - - - - - - - - - - - - - - - - - - -
@@ -21,12 +20,12 @@ public class Connector_Local extends PropagandaConnector {
      */
     @Override
     public Datagram recvMsg(long timeout_ms) {
-        try {
-            Datagram datagram = message_q.take();
-            return datagram;
-        } catch (InterruptedException ex) {
-            return null;
-        }
+	try {
+	    Datagram datagram = message_q.take();
+	    return datagram;
+	} catch (InterruptedException ex) {
+	    return null;
+	}
     }
 
     // - - - - - - - - - - - - - - - - - - - -
@@ -35,14 +34,14 @@ public class Connector_Local extends PropagandaConnector {
      */
     @Override
     protected void transmitMsgToClient(Datagram datagram) throws PropagandaException {
-        for (;;) {
-            try {
-                message_q.put(datagram);
-                return;
-            } catch (InterruptedException ex) {
-                throw new PropagandaException("transmit error: " + datagram);
-            }
-        }
+	for (;;) {
+	    try {
+		message_q.put(datagram);
+		return;
+	    } catch (InterruptedException ex) {
+		throw new PropagandaException("transmit error: " + datagram);
+	    }
+	}
     }
 
     /**
@@ -50,12 +49,12 @@ public class Connector_Local extends PropagandaConnector {
      */
     @Override
     protected void transmitMsgToClientGhost(Datagram datagram) throws PropagandaException {
-        dispatchMsg(datagram);
+	dispatchMsg(datagram);
     }
 
     // - - - - - - - - - - - - - - - - - - - -
     @Override
     public String toString() {
-        return "Connector_Local{" + name + "}";
+	return "Connector_Local{" + name + "}";
     }
 }
