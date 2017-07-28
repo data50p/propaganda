@@ -136,7 +136,7 @@ public class PropagandaServer {
     }
 
     public void stopServer() {
-	throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+	System.err.println("Propaganda Server stopped");
     }
 
     public class TcpConnectorSupport {
