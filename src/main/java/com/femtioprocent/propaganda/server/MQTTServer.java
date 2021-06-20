@@ -125,7 +125,7 @@ public class MQTTServer {
 	if (Appl.flags.containsKey("MB")) {
 	    try {
 		String[] args = {};
-		io.moquette.server.Server.main(args);
+		io.moquette.broker.Server.main(args);
 		System.out.println("MQTTServer: moquette started");
 		Thread.sleep(2000);
 

@@ -253,7 +253,7 @@ public class HttpConnectedServer {
 	try {
 	    String to = hm.get("to");
 	    timeOut = Integer.parseInt(to);
-	} catch (Exception _) {
+	} catch (Exception ex) {
 	}
 
 	if (propagandaRequest) {
