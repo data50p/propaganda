@@ -1,4 +1,4 @@
-FROM openjdk:16-alpine3.13
+FROM openjdk:8
 
 EXPOSE 8899
 EXPOSE 8889
