@@ -28,7 +28,80 @@
     <orderEntry type="library" name="Maven: javax.activation:javax.activation-api:1.2.0" level="project" />
     <orderEntry type="library" name="Maven: javax.xml.soap:javax.xml.soap-api:1.4.0" level="project" />
     <orderEntry type="library" name="Maven: javax.annotation:javax.annotation-api:1.3.2" level="project" />
-    <orderEntry type="module" module-name="fpd" />
+    <orderEntry type="library" name="Maven: io.moquette:moquette-broker:0.15-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.slf4j:slf4j-log4j12:1.7.25" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.59.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.59.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.59.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-resolver:4.1.59.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.59.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec:4.1.59.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-http:4.1.59.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-mqtt:4.1.59.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-epoll:linux-x86_64:4.1.59.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-unix-common:4.1.59.Final" level="project" />
+    <orderEntry type="library" name="Maven: com.h2database:h2-mvstore:1.4.199" level="project" />
+    <orderEntry type="library" name="Maven: com.zaxxer:HikariCP:2.4.7" level="project" />
+    <orderEntry type="library" name="Maven: io.dropwizard.metrics:metrics-core:3.2.2" level="project" />
+    <orderEntry type="library" name="Maven: io.dropwizard.metrics:metrics-jvm:3.2.2" level="project" />
+    <orderEntry type="library" name="Maven: com.librato.metrics:metrics-librato:5.1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.librato.metrics:librato-java:2.1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.8.8" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.8.8" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.8.8" level="project" />
+    <orderEntry type="library" name="Maven: com.bugsnag:bugsnag:3.6.2" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.xml.ws:jaxws-tools:2.3.3" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.xml.bind:jaxb-xjc:2.3.3" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.xml.bind:jaxb-jxc:2.3.3" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.xml.ws:jaxws-eclipselink-plugin:2.3.3" level="project" />
+    <orderEntry type="library" name="Maven: jakarta.persistence:jakarta.persistence-api:2.2.3" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.persistence:org.eclipse.persistence.moxy:2.7.6" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.persistence:org.eclipse.persistence.core:2.7.6" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.persistence:org.eclipse.persistence.asm:2.7.6" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.mail:jakarta.mail:1.6.5" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.xml.ws:sdo-eclipselink-plugin:2.3.3" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.persistence:org.eclipse.persistence.sdo:2.7.6" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.persistence:commonj.sdo:2.1.1" level="project" />
+    <orderEntry type="library" name="Maven: jakarta.xml.bind:jakarta.xml.bind-api:2.3.3" level="project" />
+    <orderEntry type="library" name="Maven: jakarta.xml.soap:jakarta.xml.soap-api:1.4.2" level="project" />
+    <orderEntry type="library" name="Maven: jakarta.jws:jakarta.jws-api:2.1.0" level="project" />
+    <orderEntry type="library" name="Maven: jakarta.annotation:jakarta.annotation-api:1.3.5" level="project" />
+    <orderEntry type="library" name="Maven: jakarta.xml.ws:jakarta.xml.ws-api:2.3.3" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.xml.ws:jaxws-rt:2.3.3" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.xml.ws:policy:2.7.10" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.xml.bind:jaxb-impl:2.3.3" level="project" />
+    <orderEntry type="library" name="Maven: org.glassfish.ha:ha-api:3.1.12" level="project" />
+    <orderEntry type="library" name="Maven: org.glassfish.external:management-api:3.2.2" level="project" />
+    <orderEntry type="library" name="Maven: org.glassfish.gmbal:gmbal:4.0.1" level="project" />
+    <orderEntry type="library" name="Maven: org.glassfish.pfl:pfl-tf:4.1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.glassfish.pfl:pfl-basic:4.1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.jvnet.staxex:stax-ex:1.8.3" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.xml.stream.buffer:streambuffer:1.5.9" level="project" />
+    <orderEntry type="library" name="Maven: org.jvnet.mimepull:mimepull:1.9.13" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.xml.fastinfoset:FastInfoset:1.2.18" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.activation:jakarta.activation:1.2.2" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: com.sun.xml.messaging.saaj:saaj-impl:1.5.2" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: com.fasterxml.woodstox:woodstox-core:5.1.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.codehaus.woodstox:stax2-api:4.1" level="project" />
+    <orderEntry type="library" name="Maven: javax.xml.ws:jaxws-api:2.3.1" level="project" />
+    <orderEntry type="library" name="Maven: javax.xml.bind:jaxb-api:2.3.1" level="project" />
+    <orderEntry type="library" name="Maven: javax.activation:javax.activation-api:1.2.0" level="project" />
+    <orderEntry type="library" name="Maven: javax.xml.soap:javax.xml.soap-api:1.4.0" level="project" />
+    <orderEntry type="library" name="Maven: javax.annotation:javax.annotation-api:1.3.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.plugins:maven-clean-plugin:maven-plugin:3.1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven:maven-plugin-api:3.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven:maven-model:3.0" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.plexus:plexus-utils:2.0.4" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven:maven-artifact:3.0" level="project" />
+    <orderEntry type="library" name="Maven: org.sonatype.sisu:sisu-inject-plexus:1.4.2" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.plexus:plexus-component-annotations:1.5.4" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.plexus:plexus-classworlds:2.2.3" level="project" />
+    <orderEntry type="library" name="Maven: org.sonatype.sisu:sisu-inject-bean:1.4.2" level="project" />
+    <orderEntry type="library" name="Maven: org.sonatype.sisu:sisu-guice:noaop:2.1.7" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.shared:maven-shared-utils:3.2.1" level="project" />
+    <orderEntry type="library" name="Maven: commons-io:commons-io:2.5" level="project" />
+    <orderEntry type="library" name="Maven: com.femtioprocent:fpd:0.1.0.0" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.6" level="project" />
     <orderEntry type="library" name="Maven: org.swinglabs:swing-layout:1.0.3" level="project" />
     <orderEntry type="library" name="Maven: org.fusesource.mqtt-client:mqtt-client:1.5" level="project" />

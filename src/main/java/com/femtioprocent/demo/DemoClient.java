@@ -54,7 +54,7 @@ public class DemoClient extends javax.swing.JFrame {
 	    Thread th = new Thread(() -> {
 		try {
 		    for (;;) {
-			Datagram datagram = connector.recvMsg();
+			Datagram datagram = recvMsg();
 			if (standardProcessMessage(datagram, MessageType.plain) == MessageTypeFilter.FILTERED) {
 			    System.err.println("got datagram: " + name + " =----> " + datagram);
 			    if (eval != null) {

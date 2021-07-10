@@ -54,7 +54,7 @@ public class Client_Demo extends PropagandaClient {
 	Thread th2 = new Thread(() -> {
 	    try {
 		for (;;) {
-		    Datagram datagram = connector.recvMsg();
+		    Datagram datagram = recvMsg();
 		    if (standardProcessMessage(datagram, MessageType.plain) == MessageTypeFilter.FILTERED) {
 			getLogger().finest("datagram: " + S.ct() + ' ' + name + " =----> " + datagram);
 		    }

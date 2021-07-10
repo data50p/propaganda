@@ -19,7 +19,7 @@ public class Client_Monitor extends PropagandaClient {
 	    for (;;) {
 		try {
 		    if (connector != null) {
-			Datagram datagram = connector.recvMsg();
+			Datagram datagram = recvMsg();
 			if (standardProcessMessage(datagram, MessageType.plain) == MessageTypeFilter.FILTERED) {
 			    getLogger("monitor").fine("got: " + S.ct() + ' ' + name + " → " + datagram);
 			}

@@ -26,7 +26,7 @@ public class Client_Status extends PropagandaClient {
 
 	    for (;;) {
 		try {
-		    Datagram datagram = connector.recvMsg();
+		    Datagram datagram = recvMsg();
 		    getLogger().finest("msg: " + S.ct() + ' ' + name + " → " + datagram);
 
 		    if (standardProcessMessage(datagram) == MessageTypeFilter.NOT_PROCESSED) {

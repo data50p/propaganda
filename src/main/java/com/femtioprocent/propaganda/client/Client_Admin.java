@@ -45,7 +45,7 @@ public class Client_Admin extends PropagandaClient {
 	Thread th = new Thread(() -> {
 	    for (;;) {
 		if (connector != null) {
-		    Datagram datagram = connector.recvMsg();
+		    Datagram datagram = recvMsg();
 		    getLogger().finest("datagram: " + S.ct() + ' ' + name + " =----> " + datagram);
 		    if ("list-id".equals(datagram.getMessage().getMessage())) {
 			try {
