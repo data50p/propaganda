@@ -114,7 +114,7 @@ public class Client_Admin extends PropagandaClient {
 
 		    } else if ("list-group".equals(datagram.getMessage().getMessage())) {
 			try {
-			    Set<String> set = new HashSet<String>();
+			    Set<String> set = new HashSet<>();
 			    for (final ClientGhost cg : server.clientghost_hm.values()) {
 				set.addAll(cg.getAddrTypeGroupSet());
 			    }
@@ -128,7 +128,7 @@ public class Client_Admin extends PropagandaClient {
 
 		    } else if ("list-connector".equals(datagram.getMessage().getMessage())) {
 			try {
-			    HashMap<String, ClientGhost> map = new HashMap<String, ClientGhost>();
+			    HashMap<String, ClientGhost> map = new HashMap<>();
 			    for (final ClientGhost cg : server.clientghost_hm.values()) {
 				map.put(cg.getDefaultAddrType().getId(), cg);
 			    }
@@ -139,7 +139,8 @@ public class Client_Admin extends PropagandaClient {
 				if (sb.length() > 0) {
 				    sb.append(";");
 				}
-				sb.append(cg.getConnector().name + Constants.CONNECTOR_INDICATOR);
+				sb.append(cg.getConnector().name);
+				sb.append(Constants.CONNECTOR_INDICATOR);
 				sb.append(cg.getDefaultSecureAddrType().getUnsecureId());
 				sb.append(cg.getAddrTypeGroupSet().toString().replace(" ", ""));
 			    }
@@ -153,16 +154,21 @@ public class Client_Admin extends PropagandaClient {
 
 		    } else if ("list-ports".equals(datagram.getMessage().getMessage())) {
 			try {
-			    HashMap<String, ClientGhost> map = new HashMap<String, ClientGhost>();
+			    HashMap<String, ClientGhost> map = new HashMap<>();
 			    for (final ClientGhost cg : server.clientghost_hm.values()) {
 				map.put(cg.getDefaultAddrType().getId(), cg);
 			    }
 			    StringBuilder sb = new StringBuilder();
-			    sb.append("" + "port=" + PropagandaServer.DEFAULT_SERVER_PORT);
-			    sb.append(" " + "http=" + PropagandaServer.DEFAULT_HTTP_PORT);
-			    sb.append(" " + "ws=" + PropagandaServer.DEFAULT_WS_PORT);
-			    sb.append(" " + "discover=" + PropagandaServer.DEFAULT_DISCOVER_PORT);
-			    sb.append(" " + "fed=" + PropagandaServer.DEFAULT_FEDERATION_PORT);
+			    sb.append("port=");
+			    sb.append(PropagandaServer.DEFAULT_SERVER_PORT);
+			    sb.append(" http=");
+			    sb.append(PropagandaServer.DEFAULT_HTTP_PORT);
+			    sb.append(" ws=");
+			    sb.append(PropagandaServer.DEFAULT_WS_PORT);
+			    sb.append(" discover=");
+			    sb.append(PropagandaServer.DEFAULT_DISCOVER_PORT);
+			    sb.append(" fed=");
+			    sb.append(PropagandaServer.DEFAULT_FEDERATION_PORT);
 			    sendMsg(new Datagram(serverAddrType,
 				    datagram.getSender(),
 				    new Message("list-ports-is",
@@ -320,7 +326,7 @@ public class Client_Admin extends PropagandaClient {
 			try {
 			    client_ghost.sendToClient(new Datagram(serverAddrType,
 				    client_addr,
-				    new Message("already-registered",
+				    new Message("already-registered-as",
 					    client_addr.getAddrTypeString() + " @" + client_ghost.getAddrTypeGroupSet())));
 			} catch (PropagandaException ex) {
 			    System.err.println("ClientGhost.registerMsg: Can't send 'registered' (1) " + ex);
