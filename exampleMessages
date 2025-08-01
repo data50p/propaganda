@@ -3,6 +3,8 @@ echo
 echo nc localhost 8899
 echo nc fpd-cl01 8990
 echo
+echo '. @ register; {"request-id": "aa@TESTING"}'
+echo '. @ register; {"q": "request-id", "a": "aa@TESTING"}'
 echo '. @ register; request-id aa@TESTING'
 echo '. @ register; request-id aa@TESTING2'
 echo '. @ register; request-id aa@TESTING3'
